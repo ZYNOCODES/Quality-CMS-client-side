@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  border: none;
+  text-decoration: none;
+  letter-spacing: 0.5%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fff;
+}
+.CircularProgress-app{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+  min-height: 100vh;
+}
+.CircularProgress-app h1{
+  color: #DA171B;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.CircularProgress-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+.pages-container{
+  margin-inline-start: 100px;
+}

@@ -1,0 +1,26 @@
+.input-select-field-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+
+}
+.input-select-field-label{
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    align-self: self-start;
+}
+.input-select-field-form{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #e5e5e5;
+    color: #848484;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+

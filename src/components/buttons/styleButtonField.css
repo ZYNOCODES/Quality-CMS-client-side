@@ -1,0 +1,27 @@
+.TVDetails-content-navbar-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px 40px;
+    font-weight: 600;
+}
+@media screen and (max-width: 900px){
+    .navbar-buttons-delete-icon{
+        display: block !important;
+        justify-content: center;
+        align-self: center;
+    }
+    .TVDetails-content-navbar-buttons h1{
+        display: none;
+    }
+    .TVDetails-content-navbar-buttons{
+        border-radius: 50%;
+        padding: 10px;
+        margin-inline-end: 10px;
+
+    }
+}

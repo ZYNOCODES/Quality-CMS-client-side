@@ -1,0 +1,176 @@
+.AsideBar-container{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80px;
+    min-height: 100vh;
+    height: 100%;
+    background-color: #0080ff;
+    transition: all 0.5s ease;
+    border-top-right-radius: 0.8rem;
+    border-bottom-right-radius: 0.8rem;
+    z-index: 99;
+}
+.AsideBar-container.active{
+    width: calc(100% - 250px);
+}
+.AsideBar-container.active{
+    width: 250px;
+}
+.AsideBar-container.active .AsideBar-logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 3.2rem 0;
+    background-color: #FFFBEB;
+}
+.AsideBar-logo img{
+    width: 50%;
+}
+.AsideBar-container #menu-btn{
+    position: absolute;
+    color: #fff;
+    top: .8rem;
+    left: 50%;
+    font-size: 1.8rem;
+    line-height: 50px;
+    transform: translate(-50%);
+    cursor: pointer;
+}
+.AsideBar-container.active #menu-btn{
+    left: 90%;
+    top: 4.5%;
+    color: #0080ff;
+}
+.AsideBar-container .AsideBar-top .AsideBar-logo{
+    color: #fff;
+    display: flex;
+    height: 50px;
+    width: 100%;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+}
+.AsideBar-container.active .AsideBar-top .AsideBar-logo{
+    opacity: 1;
+}
+.AsideBar-top .AsideBar-logo .AsideBar-icon{
+    font-size: 2rem;
+    margin-right: 5px;
+}
+.AsideBar-user{
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    padding: 0 0.8rem;
+}
+.user-img{
+    width: 25px;
+    height: 25px;
+    margin-inline-start: 14px;
+    color: #fff;
+}
+.AsideBar-user p{
+    color: #fff;
+    opacity: 1;
+    margin-left: 1rem;
+}
+.AsideBar-user:hover{
+    cursor: pointer;
+}
+.user-name{
+    font-weight: 600;
+}
+.AsideBar-container p{
+    opacity: 0;
+}
+.AsideBar-container.active p{
+    opacity: 1;
+}
+.AsideBar-container ul{
+    padding: 0.4rem 0.8rem;
+
+}
+.AsideBar-container ul li{
+    position: relative;
+    list-style: none;
+    height: 50px;
+    width: 90%;
+    margin: 0.8rem auto;
+    line-height: 50px;
+}
+.AsideBar-container ul li:last-child{
+    position: absolute;
+    bottom: 0;
+    list-style: none;
+    height: 50px;
+    width: 65%;
+    margin: 0.8rem auto;
+    line-height: 50px;
+}
+.AsideBar-container.active ul li:last-child{
+    width: 90%;
+}
+.AsideBar-container ul li:last-child .AsideBar-item .AsideBar-icon{
+    min-width: 25px;
+    text-align: center;
+    height: 25px;
+    line-height: 50px;
+    margin-inline-start: 14px;
+    margin-inline-end: 12px;
+}
+.AsideBar-container ul li .AsideBar-item{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 0.8rem;
+}
+.AsideBar-container ul li .AsideBar-item.aside-item-active{
+    background-color: #eee;
+    color: #0080ff;
+}
+.AsideBar-container ul li .AsideBar-item:hover{
+    background-color: #eee;
+    color: #0080ff;
+}
+.AsideBar-container ul li .AsideBar-item .AsideBar-icon{
+    min-width: 25px;
+    text-align: center;
+    height: 25px;
+    line-height: 50px;
+    margin-inline-start: 12px;
+    margin-inline-end: 12px;
+}
+.AsideBar-container .side-item{
+    opacity: 0;
+}
+.AsideBar-container.active .side-item{
+    opacity: 1;
+}
+.AsideBar-container ul li .tooltip{
+    position: absolute;
+    left: 130px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0.5rem 0.8rem rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    border-radius: .6rem;
+    padding: 0.4rem 1.2rem;
+    line-height: 1.8rem;
+    z-index: 20;
+    opacity: 0;
+    width: fit-content;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.AsideBar-container ul li:hover .tooltip{
+    opacity: 1;
+}
+.AsideBar-container.active ul li .tooltip{
+    display: none;
+}
