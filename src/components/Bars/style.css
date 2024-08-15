@@ -174,3 +174,33 @@
 .AsideBar-container.active ul li .tooltip{
     display: none;
 }
+
+@media screen and (max-width: 768px){
+    .AsideBar-container{
+        width: 40px;
+    }
+    .AsideBar-user{
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+        padding: 0 0.6rem;
+    }
+    .user-img{
+        width: 20px;
+        height: 20px;
+        margin-inline-start: 0px;
+    }
+    .AsideBar-container ul{
+        padding: 0px;
+    }
+    .AsideBar-container ul li .AsideBar-item .AsideBar-icon{
+        min-width: 20px;
+        margin-inline-start: 8px;
+        margin-inline-end: 8px;
+    }
+    .AsideBar-container ul li:last-child .AsideBar-item .AsideBar-icon{
+        min-width: 20px;
+        margin-inline-start: 8px;
+        margin-inline-end: 8px;
+    }
+}

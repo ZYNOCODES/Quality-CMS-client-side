@@ -28,7 +28,7 @@ const formatDate = (dateString) => {
     return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
 };
 
-const PannePage = () => {
+const EnReparationPanne = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -39,26 +39,45 @@ const PannePage = () => {
     }
     // fetching Pannes data
     const fetchPannesData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
+        try {
+            let response;
+            if (import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type) {
+                response = await fetch(
+                    `${import.meta.env.VITE_APP_URL_BASE}/panne/technician/${decodedToken.code}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            } else {
+                response = await fetch(
+                    `${import.meta.env.VITE_APP_URL_BASE}/panne/linked/byzone/${decodedToken.zone}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
             }
-        );
 
-        // Handle the error state
-        if (!response.ok) {
-            const errorData = await response.json();
-            if(errorData.error.statusCode == 404)
-                return [];
-            else
-                throw new Error("Error receiving Pannes data");
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des pannes");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
         }
-        // Return the data
-        return await response.json();
     };
     // useQuery hook to fetch data
     const { data: PannesData, error, isLoading, refetch } = useQuery({
@@ -116,17 +135,6 @@ const PannePage = () => {
     }
 
     const columns = [
-        {
-            name: "technician",
-            label: "Technician",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value || 'Non assosier'}</p>; // Show 'N/A' if technician is null
-                },
-            },
-        },
         {
             name: "fournisseur",
             label: "Fournisseur",
@@ -200,13 +208,6 @@ const PannePage = () => {
                             >
                                 Voir
                             </button>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
-                                <>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
-                                        Supprimer
-                                    </button>
-                                </>
-                            }
                         </div>
                     )
                 }
@@ -233,11 +234,11 @@ const PannePage = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
+            <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
             <DataTable data={filteredPannesData} columns={columns}/>
             <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <ToastContainer/>
         </div>
     );
 }
-export default PannePage;
+export default EnReparationPanne;

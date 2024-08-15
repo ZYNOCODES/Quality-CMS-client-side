@@ -34,8 +34,8 @@ const AsideBar = () => {
                 </div>
                 <IoMenu onClick={handleActive} id='menu-btn'/>
             </div>
-            <NavLink to='/profil' className={`AsideBar-item ${
-                    location.pathname === "/profil" ? "aside-item-active" : ""}`}>
+            <NavLink to='/profile' className={`AsideBar-item ${
+                    location.pathname === "/profile" ? "aside-item-active" : ""}`}>
                 <div className="AsideBar-user">
                         <div>
                             <FaUserCircle className='user-img'/>
@@ -57,15 +57,31 @@ const AsideBar = () => {
                         <span className="tooltip">Dashboard</span>
                     </li>
                 }
-                {(import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type || 
+                <li>
+                    <NavLink to='/pannes' className={`AsideBar-item ${
+                    location.pathname === "/pannes" ? "aside-item-active" : ""}`}>
+                        <IoTimer className='AsideBar-icon'/>
+                        <span className='side-item'>Panne</span>
+                    </NavLink>
+                    <span className="tooltip">Panne</span>
+                </li>
+                <li>
+                    <NavLink to='/pannes-en-reparation' className={`AsideBar-item ${
+                    location.pathname === "/pannes-en-reparation" ? "aside-item-active" : ""}`}>
+                        <IoTimer className='AsideBar-icon'/>
+                        <span className='side-item'>Reparation</span>
+                    </NavLink>
+                    <span className="tooltip">En Reparation</span>
+                </li>
+                {(import.meta.env.VITE_MANAGER_TYPE == decodedToken.type || 
                 import.meta.env.VITE_AGENT_TYPE == decodedToken.type) &&
                     <li>
-                        <NavLink to='/pannes' className={`AsideBar-item ${
-                        location.pathname === "/pannes" ? "aside-item-active" : ""}`}>
+                        <NavLink to='/archive-pannes' className={`AsideBar-item ${
+                        location.pathname === "/archive-pannes" ? "aside-item-active" : ""}`}>
                             <IoTimer className='AsideBar-icon'/>
-                            <span className='side-item'>Panne</span>
+                            <span className='side-item'>Archive</span>
                         </NavLink>
-                        <span className="tooltip">Panne</span>
+                        <span className="tooltip">Archive</span>
                     </li>
                 }
                 {(import.meta.env.VITE_MANAGER_TYPE === decodedToken.type || 

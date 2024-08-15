@@ -3,16 +3,25 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
-import CreateTvDialog from '../components/Dialogs/CreateTvDialog';
+import CreateProductDialog from '../components/Dialogs/CreateProductDialog';
 import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
+import TableHeader from '../components/tables/TableHeader';
 
 const ProductPage = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [Family, setFamily] = useState('');
+    const [Zone, setZone] = useState('');
     const decodedToken = TokenDecoder();
+    const handleFamilyChange = (event) => {
+        setFamily(event.target.value);
+    }
+    const handleZoneChange = (event) => {
+        setZone(event.target.value);
+    }
     // fetching products data
     const fetchProductsData = async () => {
         const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/product/${decodedToken.zone}`,
@@ -43,6 +52,71 @@ const ProductPage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Zones data
+    const fetchZonesData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/zone`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Zones data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: ZoneList, Zoneserror, isZonesLoading, Zonesrefetch } = useQuery({
+        queryKey: ['ZoneList', user?.token],
+        queryFn: fetchZonesData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // fetching Family data
+    const fetchFamilyData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/family`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Family data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: FamilyList, Familyerror, isFamilyLoading, Familyrefetch } = useQuery({
+        queryKey: ['FamilyList', user?.token],
+        queryFn: fetchFamilyData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // Filter ProductsData by selected zone or familly
+    const filteredProductsData = ProductsData?.filter(product => 
+        (Zone == '' || product.zone == Zone) &&
+        (Family == '' || product.family == Family)
+    );
     // Function to refetch data
     const handleRefetchDataChange = () => {
         refetch();
@@ -123,7 +197,7 @@ const ProductPage = () => {
             }
         },
         {
-            name: "id",
+            name: "code",
             label: " ",
             options: {
                 sort: false,
@@ -131,15 +205,19 @@ const ProductPage = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            <button style={{backgroundColor: '#1988ff'}} onClick={() => Redirection(`/EDIT/${value}`) }>
-                                Edit
-                            </button>
-                            <button style={{backgroundColor: '#1988ff'}} onClick={() => Redirection(`/${value}`) }>
+                            <button style={{backgroundColor: '#1988ff'}} onClick={() => Redirection(`/produit/${value}`) }>
                                 Voir
                             </button>
-                            <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
-                                Supprimer
-                            </button>
+                            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => Redirection(`/EDIT/${value}`) }>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
                         </div>
                     )
                 }
@@ -166,8 +244,9 @@ const ProductPage = () => {
     }
     return (
         <div className="pages-container">
-            <DataTable name={"Produits"} data={ProductsData} columns={columns} handleClickOpen={handleClickOpen}/>
-            <CreateTvDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
+            <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
+            <DataTable data={filteredProductsData} columns={columns} />
+            <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
             <ToastContainer/>
         </div>
     );

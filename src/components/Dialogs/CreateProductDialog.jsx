@@ -31,7 +31,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function Tvdialog(props) {
+export default function ProductDialog(props) {
   const notifyFailed = (message) => toast.info(message);
   const notifySuccess = (message) => toast.success(message);
   const [Modele, setModele] = useState('');
@@ -82,7 +82,7 @@ export default function Tvdialog(props) {
     queryKey: ['familyList', props.user?.token],
     queryFn: fetchfamilyData,
     enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
-    refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
   });
   // Fetch zone data
   const fetchzoneData = async () => {
@@ -112,7 +112,7 @@ export default function Tvdialog(props) {
     queryKey: ['zoneList', props.user?.token],
     queryFn: fetchzoneData,
     enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
-    refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
   });
 
   const handleSave = async () => {
@@ -134,6 +134,7 @@ export default function Tvdialog(props) {
       );
       if (response.status === 200) {
         notifySuccess(response.data.message);
+        props.refetchData();
         props.handleClose();
       } else {
         notifyFailed(response.data.message);
@@ -149,7 +150,6 @@ export default function Tvdialog(props) {
         console.error("Error creating Product");
       }
     }
-    props.refetchData();
   };
 
   return (
@@ -181,7 +181,7 @@ export default function Tvdialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-              Ajouter un Televiseur
+              Ajouter un produit
             </Typography>
             <StyledButton autoFocus color="inherit" onClick={handleSave}>
               sauvgarder
@@ -207,7 +207,9 @@ export default function Tvdialog(props) {
                     animationDuration: '2000ms',
                   }}
                 />
-                <h1>Préparation du formulaire...</h1>
+                <h1 style={{fontSize: '1.5rem', color: '#fff', fontWeight: '500'}}>
+                  Préparation du formulaire
+                </h1>
               </Box>
               : 
               <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
@@ -224,7 +226,7 @@ export default function Tvdialog(props) {
                 <TextFieldComponent 
                     type="text" 
                     label="Modele" 
-                    initialHelperText="Entrer la zone de votre produit" 
+                    initialHelperText="Entrer le modele de votre produit" 
                     minLength={0} 
                     maxLength={100} 
                     onChange={handleModeleChange}
@@ -234,7 +236,7 @@ export default function Tvdialog(props) {
                 <TextFieldComponent 
                     type="text" 
                     label="lot" 
-                    initialHelperText="Entrer la lot de votre produit" 
+                    initialHelperText="Entrer le lot de votre produit" 
                     minLength={0} 
                     maxLength={100}
                     onChange={handlelotChange}
@@ -251,7 +253,7 @@ export default function Tvdialog(props) {
                 />
                 <SelectFieldComponent 
                     label="Zone" 
-                    initialHelperText="Selectionner votre zone" 
+                    initialHelperText="Selectionner une zone" 
                     onChange={handlezoneChange}
                     obligatory={true}
                     options={zoneList}

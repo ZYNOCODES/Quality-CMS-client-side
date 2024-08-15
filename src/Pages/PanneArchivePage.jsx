@@ -28,7 +28,7 @@ const formatDate = (dateString) => {
     return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
 };
 
-const PannePage = () => {
+const ArchivePanne = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -39,7 +39,7 @@ const PannePage = () => {
     }
     // fetching Pannes data
     const fetchPannesData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/archive/${decodedToken.zone}`,
             {
                 method: "GET",
                 headers: {
@@ -55,7 +55,7 @@ const PannePage = () => {
             if(errorData.error.statusCode == 404)
                 return [];
             else
-                throw new Error("Error receiving Pannes data");
+                throw new Error("Error receiving archive data");
         }
         // Return the data
         return await response.json();
@@ -200,13 +200,6 @@ const PannePage = () => {
                             >
                                 Voir
                             </button>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
-                                <>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
-                                        Supprimer
-                                    </button>
-                                </>
-                            }
                         </div>
                     )
                 }
@@ -233,11 +226,11 @@ const PannePage = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
+            <TableHeader name={'L\'archive des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
             <DataTable data={filteredPannesData} columns={columns}/>
             <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <ToastContainer/>
         </div>
     );
 }
-export default PannePage;
+export default ArchivePanne;

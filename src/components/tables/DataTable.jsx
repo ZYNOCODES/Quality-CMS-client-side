@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import './style.css';
+import './css/DataTableStyle.css';
 import MUIDataTable from "mui-datatables";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { IconButton, Tooltip } from '@mui/material';
@@ -7,13 +7,13 @@ import { IconButton, Tooltip } from '@mui/material';
 
 const DataTable = (props) => {
 
-    const AddButton = () => (
-        <Tooltip disableFocusListener title="Add User">
-          <IconButton onClick={props.handleClickOpen}>
-            <AddCircleOutlineIcon />
-          </IconButton>
-        </Tooltip>
-    );
+    // const AddButton = () => (
+    //     <Tooltip disableFocusListener title="Add User">
+    //       <IconButton onClick={props.handleClickOpen}>
+    //         <AddCircleOutlineIcon />
+    //       </IconButton>
+    //     </Tooltip>
+    // );
     const options = {
         selectableRows: false,
         elevation: 0,
@@ -21,7 +21,7 @@ const DataTable = (props) => {
         rowsPerPageOptions: [5, 8, 11, 20, 40],
         responsive: "vertical",
         searchPlaceholder: 'Rechercher',
-        customToolbar: AddButton,
+        // customToolbar: AddButton,
         textLabels: {
             body: {
             noMatch: 'Désolé, aucune donnée correspondante trouvée',
@@ -65,7 +65,6 @@ const DataTable = (props) => {
     return (
         <ThemeProvider theme={getMUITheme()}>
             <MUIDataTable
-                title={"Liste des "+ props.name}
                 data={props.data}
                 columns={props.columns}
                 options={options}

@@ -40,3 +40,10 @@ body {
 .pages-container{
   margin-inline-start: 100px;
 }
+/*medea screen*/
+@media screen and (max-width: 768px){
+  .pages-container{
+    margin-inline-start: 50px;
+    padding-inline-end: 10px;
+  }
+}

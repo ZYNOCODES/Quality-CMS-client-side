@@ -6,6 +6,12 @@ import NavAsideBar from './components/NavAsideBar';
 import HomePage from './Pages/HomePage';
 import ProductPage from './Pages/ProductPage';
 import PannePage from './Pages/PannePage';
+import PanneENReparationPage from './Pages/PanneENReparationPage';
+import PanneArchivePage from './Pages/PanneArchivePage';
+import ReparationPanneDetails from './Pages/ReparationPanneDetails';
+import PanneDetailsPage from './Pages/PanneDetailsPage';
+import ProductDetailsPage from './Pages/ProductDetailsPage';
+import ProfilPage from './Pages/ProfilPage';
 import { TokenDecoder } from "./util/DecodeToken";
 
 function App() {
@@ -20,8 +26,11 @@ function App() {
             {user && import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
               <>
                 <Route index element={<HomePage />} />
-                <Route path="profil" element={<HomePage />} />
+                <Route path="profile" element={<ProfilPage />} />    
                 <Route path="produits" element={<ProductPage />} />
+                <Route path="pannes" element={<PannePage />} />
+                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                <Route path="archive-pannes" element={<PanneArchivePage />} />
                 <Route path="zones" element={<HomePage />} />
                 <Route path="inventaire" element={<HomePage />} />
               </>
@@ -29,18 +38,37 @@ function App() {
             {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
               <>
                 <Route index element={<Navigate to="/pannes"/>} />
+                <Route path="profile" element={<ProfilPage />} />    
                 <Route path="pannes" element={<PannePage />} />
+                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                <Route path="archive-pannes" element={<PanneArchivePage />} />
                 <Route path="produits" element={<ProductPage />} />
               </>
             }
             {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
               <>
                 <Route index element={<Navigate to="/pannes"/>} />
+                <Route path="profile" element={<ProfilPage />} />    
                 <Route path="pannes" element={<PannePage />} />
+                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
               </>
             }
             
           </Route>
+          
+          {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
+            <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />
+          }
+
+          {user && (
+            import.meta.env.VITE_AGENT_TYPE === decodedToken.type ||
+            import.meta.env.VITE_MANAGER_TYPE === decodedToken.type 
+          )&&
+            <>
+              <Route path="panne/:code" element={<PanneDetailsPage />} />    
+              <Route path="produit/:code" element={<ProductDetailsPage />} />
+            </>      
+          }
         </Routes>
       </main>
     </BrowserRouter>
