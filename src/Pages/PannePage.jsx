@@ -4,10 +4,13 @@ import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
 import CreatePanneDialog from '../components/Dialogs/CreatePanneDialog';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
+import DeletingDialog from '../components/Dialogs/DeletingDialog';
+import axios from 'axios';
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -29,36 +32,64 @@ const formatDate = (dateString) => {
 };
 
 const PannePage = () => {
+    const notifyFailed = (message) => toast.info(message);
+    const notifySuccess = (message) => toast.success(message);
     const { user } = useAuthContext();
+    const decodedToken = TokenDecoder();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [openDeletePanneDialog, setOpenDeletePanneDialog] = useState(false);
+    const [currentCode, setCurrentCode] = useState(null);
+    const [submitionLoading, setSubmitionLoading] = useState(false);
     const [workshop, setWorkshop] = useState('');
-    const decodedToken = TokenDecoder();
+    const [Zone, setZone] = useState('');
     const handleWorkshopChange = (event) => {
         setWorkshop(event.target.value);
     }
+    const handleZoneChange = (event) => {
+        setZone(event.target.value);
+    }
     // fetching Pannes data
     const fetchPannesData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
+        try{
+            let response;
+            if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+                response = await fetch(
+                    `${import.meta.env.VITE_APP_URL_BASE}/panne`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            } else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
             }
-        );
+            
 
-        // Handle the error state
-        if (!response.ok) {
-            const errorData = await response.json();
-            if(errorData.error.statusCode == 404)
-                return [];
-            else
-                throw new Error("Error receiving Pannes data");
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la récupération des données des pannes");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
         }
-        // Return the data
-        return await response.json();
     };
     // useQuery hook to fetch data
     const { data: PannesData, error, isLoading, refetch } = useQuery({
@@ -69,34 +100,89 @@ const PannePage = () => {
     });
     // fetching Workshops data
     const fetchWorkshopsData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${decodedToken.zone}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
+        try{
+            let response;
+            if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            } else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${decodedToken.zone}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
             }
-        );
+            
 
-        // Handle the error state
-        if (!response.ok) {
-            const errorData = await response.json();
-            if(errorData.error.statusCode == 404)
-                return [];
-            else
-                throw new Error("Error receiving Workshops data");
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la récupération des données des ateliers");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
         }
-        // Return the data
-        return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: workshopList, Workshopserror, isWorkshopsLoading, Workshopsrefetch } = useQuery({
+    const { data: workshopList, error: Workshopserror, Loading: isWorkshopsLoading, refetch: Workshopsrefetch } = useQuery({
         queryKey: ['WorkshopsData', user?.token],
         queryFn: fetchWorkshopsData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Zonnes data
+    const fetchZonesData = async () => {
+        if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/zone`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+    
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Error receiving Zonnes data");
+            }
+            // Return the data
+            return await response.json();
+        }
+        return [];
+    };
+    // useQuery hook to fetch data
+    const { data: ZonesData, error: Zoneserror, Loading: isZonesLoading, refetch: Zonesrefetch } = useQuery({
+        queryKey: ['ZonesData', user?.token],
+        queryFn: fetchZonesData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // Filter WorkshopsData by selected workshop
+    const filteredWorkshopsData = workshopList?.filter(workshop => 
+        Zone == '' || workshop.zone == Zone
+    );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
         workshop == '' || panne.workshop == workshop
@@ -109,7 +195,46 @@ const PannePage = () => {
         setOpen(true);
     };
     const handleClose = () => {
+        setCurrentCode(null);
+        setOpenDeletePanneDialog(false);
         setOpen(false);
+    };
+    const handleClickOpenDeletePanneDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeletePanneDialog(true);
+    };
+    const handleDeletePanne = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/panne/${currentCode}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                handleRefetchDataChange();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting product: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting product", error);
+            }
+        }
     };
     const Redirection = (path) => {
         navigate(`${path}`)
@@ -192,7 +317,7 @@ const PannePage = () => {
                                 style={{backgroundColor: '#1988ff'}} 
                                 onClick={() => {
                                     if (import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type) 
-                                        Redirection(`/panne/reparation/${value}`);
+                                        Redirection(`/panne/prendre/${value}`);
                                     else
                                         Redirection(`/panne/${value}`);
                                     
@@ -202,7 +327,7 @@ const PannePage = () => {
                             </button>
                             {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                                 <>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeletePanneDialog(value) }>
                                         Supprimer
                                     </button>
                                 </>
@@ -233,9 +358,14 @@ const PannePage = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
+            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
             <DataTable data={filteredPannesData} columns={columns}/>
-            <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
+            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
+                <>
+                    <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    
+                    <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeletePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanne}/>
+                </>
+            }
             <ToastContainer/>
         </div>
     );

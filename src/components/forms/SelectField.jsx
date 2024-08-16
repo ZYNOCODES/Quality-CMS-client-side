@@ -6,6 +6,7 @@ const SelectFieldComponent = ({
   initialHelperText = 'Please select an option',
   options = [],
   optionName = 'name',
+  optionIdentifier = 'id',
   onChange, obligatory}) => {
   const [value, setValue] = useState('');
   const [helperText, setHelperText] = useState("");
@@ -28,7 +29,7 @@ const SelectFieldComponent = ({
       >
         <option value="" disabled>{options.length === 0 ? 'Aucune option disponible' : initialHelperText}</option>
         {options.map((option, index) => (
-          <option key={index} value={option.id}>
+          <option key={index} value={option[optionIdentifier]}>
             {option[optionName]}
           </option>
         ))}

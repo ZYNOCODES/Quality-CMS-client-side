@@ -4,17 +4,25 @@ import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
 import CreateProductDialog from '../components/Dialogs/CreateProductDialog';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
+import DeletingDialog from '../components/Dialogs/DeletingDialog';
+import axios from 'axios';
 
 const ProductPage = () => {
+    const notifyFailed = (message) => toast.info(message);
+    const notifySuccess = (message) => toast.success(message);
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [openDeleteProductDialog, setOpenDeleteProductDialog] = useState(false);
     const [Family, setFamily] = useState('');
     const [Zone, setZone] = useState('');
+    const [currentCode, setCurrentCode] = useState(null);
+    const [submitionLoading, setSubmitionLoading] = useState(false);
     const decodedToken = TokenDecoder();
     const handleFamilyChange = (event) => {
         setFamily(event.target.value);
@@ -76,7 +84,7 @@ const ProductPage = () => {
         return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: ZoneList, Zoneserror, isZonesLoading, Zonesrefetch } = useQuery({
+    const { data: ZoneList, error: Zoneserror, Loading: isZonesLoading, refetch: Zonesrefetch } = useQuery({
         queryKey: ['ZoneList', user?.token],
         queryFn: fetchZonesData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
@@ -106,7 +114,7 @@ const ProductPage = () => {
         return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: FamilyList, Familyerror, isFamilyLoading, Familyrefetch } = useQuery({
+    const { data: FamilyList, error: Familyerror, Loading: isFamilyLoading, refetch: Familyrefetch } = useQuery({
         queryKey: ['FamilyList', user?.token],
         queryFn: fetchFamilyData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
@@ -125,12 +133,50 @@ const ProductPage = () => {
         setOpen(true);
     };
     const handleClose = () => {
+        setCurrentCode(null);
+        setOpenDeleteProductDialog(false);
         setOpen(false);
     };
     const Redirection = (path) => {
         navigate(`${path}`)
     }
-
+    const handleClickOpenDeleteProductDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteProductDialog(true);
+    };
+    const handleDeleteProduct = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/product/${currentCode}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                handleRefetchDataChange();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting product: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting product", error);
+            }
+        }
+    };
     const columns = [
         {
             name: "model",
@@ -213,7 +259,7 @@ const ProductPage = () => {
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => Redirection(`/EDIT/${value}`) }>
                                         Edit
                                     </button>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => alert('delete') }>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteProductDialog(value) }>
                                         Supprimer
                                     </button>
                                 </>
@@ -246,7 +292,12 @@ const ProductPage = () => {
         <div className="pages-container">
             <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
             <DataTable data={filteredProductsData} columns={columns} />
-            <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
+            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                <>
+                    <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
+                    <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeleteProductDialog} handleClose={handleClose} handleOnDelete={handleDeleteProduct}/>
+                </>
+            }
             <ToastContainer/>
         </div>
     );

@@ -4,7 +4,7 @@ import './css/TableHeaderStyle.css';
 const TableHeader = (props) => {
     return (
         <div className="pages-header">
-            <h1 className="pages-title">{props.name}s</h1>
+            <h1 className="pages-title">{props.name}</h1>
             <div className="pages-selects-container">
                 {props.workshopList &&
                     <div className='pages-input-select-field-container'>
@@ -55,16 +55,28 @@ const TableHeader = (props) => {
                     </div>
                 }
                 {(
-                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'produit'
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des produits'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un produit</button>
                 }    
                 {
                 (
-                    import.meta.env.VITE_AGENT_TYPE == props.type && props.name == 'panne'
+                    import.meta.env.VITE_AGENT_TYPE == props.type && props.name == 'Liste des pannes'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une panne</button>
-                }                 
+                }
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des zonnes'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une zone</button>
+                }   
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des ateliers'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un atelier</button>
+                }                     
             </div>
         </div>
     );

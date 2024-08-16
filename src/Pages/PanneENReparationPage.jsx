@@ -30,12 +30,16 @@ const formatDate = (dateString) => {
 
 const EnReparationPanne = () => {
     const { user } = useAuthContext();
+    const decodedToken = TokenDecoder();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [workshop, setWorkshop] = useState('');
-    const decodedToken = TokenDecoder();
+    const [Zone, setZone] = useState('');
     const handleWorkshopChange = (event) => {
         setWorkshop(event.target.value);
+    }
+    const handleZoneChange = (event) => {
+        setZone(event.target.value);
     }
     // fetching Pannes data
     const fetchPannesData = async () => {
@@ -52,9 +56,20 @@ const EnReparationPanne = () => {
                         },
                     }
                 );
-            } else {
+            } else if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
                 response = await fetch(
                     `${import.meta.env.VITE_APP_URL_BASE}/panne/linked/byzone/${decodedToken.zone}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            } else if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+                response = await fetch(
+                    `${import.meta.env.VITE_APP_URL_BASE}/panne/linked`,
                     {
                         method: "GET",
                         headers: {
@@ -88,34 +103,89 @@ const EnReparationPanne = () => {
     });
     // fetching Workshops data
     const fetchWorkshopsData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${decodedToken.zone}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
+        try{
+            let response;
+            if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            } else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${decodedToken.zone}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
             }
-        );
+            
 
-        // Handle the error state
-        if (!response.ok) {
-            const errorData = await response.json();
-            if(errorData.error.statusCode == 404)
-                return [];
-            else
-                throw new Error("Error receiving Workshops data");
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la récupération des données des ateliers");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
         }
-        // Return the data
-        return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: workshopList, Workshopserror, isWorkshopsLoading, Workshopsrefetch } = useQuery({
+    const { data: workshopList, error: Workshopserror, Loading: isWorkshopsLoading, refetch: Workshopsrefetch } = useQuery({
         queryKey: ['WorkshopsData', user?.token],
         queryFn: fetchWorkshopsData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Zonnes data
+    const fetchZonesData = async () => {
+        if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/zone`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+    
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Error receiving Zonnes data");
+            }
+            // Return the data
+            return await response.json();
+        }
+        return [];
+    };
+    // useQuery hook to fetch data
+    const { data: ZonesData, error: Zoneserror, Loading: isZonesLoading, refetch: Zonesrefetch } = useQuery({
+        queryKey: ['ZonesData', user?.token],
+        queryFn: fetchZonesData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // Filter WorkshopsData by selected workshop
+    const filteredWorkshopsData = workshopList?.filter(workshop => 
+        Zone == '' || workshop.zone == Zone
+    );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
         workshop == '' || panne.workshop == workshop
@@ -136,9 +206,21 @@ const EnReparationPanne = () => {
 
     const columns = [
         {
+            name: "tempInitial",
+            label: "Temp initial",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDate(value)}</p>;
+                },
+            },
+        },
+        {
             name: "fournisseur",
             label: "Fournisseur",
             options: {
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
@@ -160,6 +242,7 @@ const EnReparationPanne = () => {
             name: "ligne",
             label: "Ligne",
             options: {
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
@@ -170,6 +253,7 @@ const EnReparationPanne = () => {
             name: "panne",
             label: "Panne",
             options: {
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
@@ -234,9 +318,8 @@ const EnReparationPanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={workshopList}/>
+            <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
             <DataTable data={filteredPannesData} columns={columns}/>
-            <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <ToastContainer/>
         </div>
     );

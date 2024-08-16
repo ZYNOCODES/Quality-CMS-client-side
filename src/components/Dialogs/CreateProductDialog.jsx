@@ -114,7 +114,14 @@ export default function ProductDialog(props) {
     enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
     refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
   });
-
+  // empty all fields
+  const clearFields = () => {
+    setModele('');
+    setMarque('');
+    setFamily('');
+    setZone('');
+    setLot('');
+  }
   const handleSave = async () => {
     try {
       const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/product`, 
@@ -134,6 +141,7 @@ export default function ProductDialog(props) {
       );
       if (response.status === 200) {
         notifySuccess(response.data.message);
+        clearFields();
         props.refetchData();
         props.handleClose();
       } else {
