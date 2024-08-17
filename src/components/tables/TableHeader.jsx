@@ -76,7 +76,25 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des ateliers'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un atelier</button>
-                }                     
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des actions'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une action</button>
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des pieces'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une piece</button>
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des utilisateurs'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un utilisateur</button>
+                }                           
             </div>
         </div>
     );

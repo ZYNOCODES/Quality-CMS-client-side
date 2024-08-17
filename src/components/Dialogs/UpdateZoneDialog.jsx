@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
 
-export default function DeletingDialog(props) {
+export default function UpdateZoneDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);

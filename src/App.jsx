@@ -14,7 +14,9 @@ import ProductDetailsPage from './Pages/ProductDetailsPage';
 import ProfilPage from './Pages/ProfilPage';
 import TakeInChargePanne from './Pages/TakeInChargePanne';
 import ZonePage from './Pages/ZonePage';
-
+import InventairePage from './Pages/InventairePage';
+import UsersPage from './Pages/UsersPage';
+import UserDetailsPage from './Pages/UserDetailsPage';
 import { TokenDecoder } from "./util/DecodeToken";
 
 function App() {
@@ -35,7 +37,8 @@ function App() {
                 <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
                 <Route path="archive-pannes" element={<PanneArchivePage />} />
                 <Route path="zones" element={<ZonePage />} />
-                <Route path="inventaire" element={<HomePage />} />
+                <Route path="inventaire" element={<InventairePage />} />
+                <Route path="utilisateurs" element={<UsersPage />} />
               </>
             }
             {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
@@ -58,7 +61,13 @@ function App() {
             }
             
           </Route>
-          
+
+          {user && import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
+            <>
+              <Route path="utilisateur/:code" element={<UserDetailsPage />} />
+            </>      
+          }
+
           {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
             <>
               <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />

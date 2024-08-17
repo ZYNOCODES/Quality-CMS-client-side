@@ -292,7 +292,7 @@ const ArchivePanne = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'L\'archive des pannes'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredPannesData} columns={columns}/>
+            <DataTable data={filteredPannesData} columns={columns} />
             <ToastContainer/>
         </div>
     );

@@ -28,7 +28,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function ZoneDialog(props) {
+export default function PieceDialog(props) {
   const notifyFailed = (message) => toast.info(message);
   const notifySuccess = (message) => toast.success(message);
   const [Name, setName] = useState('');
@@ -41,7 +41,7 @@ export default function ZoneDialog(props) {
   }
   const handleSave = async () => {
     try {
-      const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/zone`, 
+      const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/piece`, 
         { 
           name: Name,
         }, 
@@ -65,10 +65,10 @@ export default function ZoneDialog(props) {
         notifyFailed(error.response.data.message);
       } else if (error.request) {
         // Request was made but no response was received
-        console.error("Error creating zone: No response received");
+        console.error("Error creating piece: No response received");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.error("Error creating zone");
+        console.error("Error creating piece");
       }
     }
   };
@@ -102,7 +102,7 @@ export default function ZoneDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-              Ajouter une zone
+              Ajouter une piece
             </Typography>
             <StyledButton autoFocus color="inherit" onClick={handleSave}>
               sauvgarder
@@ -115,7 +115,7 @@ export default function ZoneDialog(props) {
             <TextFieldComponent 
                 type="text" 
                 label="Name" 
-                initialHelperText="Entrer le nom du zone" 
+                initialHelperText="Entrer le nom du piece" 
                 onChange={handleNameChange}
                 obligatory={true}
                 color='#fff'

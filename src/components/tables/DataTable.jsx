@@ -17,8 +17,8 @@ const DataTable = (props) => {
     const options = {
         selectableRows: false,
         elevation: 0,
-        rowsPerPage: 11,
-        rowsPerPageOptions: [5, 8, 11, 20, 40],
+        rowsPerPage: props.rows!= null ? props.rows : 11,
+        rowsPerPageOptions: [props.rows!= null ? props.rows : 5, 8, 11, 20, 40],
         responsive: "vertical",
         searchPlaceholder: 'Rechercher',
         // customToolbar: AddButton,

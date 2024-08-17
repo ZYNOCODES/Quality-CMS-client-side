@@ -12,9 +12,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
-import SelectFieldComponent from '../forms/SelectField';
 
-export default function UpdateWorkshopDialog(props) {
+export default function UpdateActionDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
@@ -23,27 +22,22 @@ export default function UpdateWorkshopDialog(props) {
     const handleNameChange = (event) => {
         setName(event.target.value);
     };
-    const [ Zone, setZone ] = useState('');
-    const handleZoneChange = (event) => {
-        setZone(event.target.value);
-    };
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
         setconfirmation(event.target.checked);
     };
 
     const handleOnUpdate = async (event) => {
-        if(!Name && !Zone){
-            notifyFailed("Un des champs doivent être remplis");
+        if(!Name){
+            notifyFailed("Tous les champs doivent être remplis");
             return;
         }
         if (confirmation) {
             try {
                 setLoading(true);
-                const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${props.code}`, 
+                const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/action/${props.code}`, 
                     {
-                        name: Name,
-                        zone: Zone
+                        name: Name
                     },
                     {
                         headers: {
@@ -67,15 +61,14 @@ export default function UpdateWorkshopDialog(props) {
                     setLoading(false);
                 } else if (error.request) {
                     // Request was made but no response was received
-                    console.error("Error updating zone: No response received");
+                    console.error("Error updating action: No response received");
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    console.error("Error updating zone", error);
+                    console.error("Error updating action", error);
                 }
             }
             setconfirmation(false);
             setName('');
-            setZone('');
         }else{
             notifyWarning("Veuillez confirmer la modification");
         }
@@ -101,21 +94,12 @@ export default function UpdateWorkshopDialog(props) {
                         <DialogContentText>
                             Cette modification sera appliquée directement après la confirmation.
                         </DialogContentText>
-                        <SelectFieldComponent
-                            label="Zone" 
-                            initialHelperText="Selectionner une zone" 
-                            onChange={handleZoneChange}
-                            obligatory={true}
-                            options={props.ZoneList}
-                            optionName='name'
-                            optionIdentifier='code'
-                        />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
                             name="Nom"
-                            label="Entrez le nom de l'atelier"
+                            label="Entrez le nom du action"
                             type="text"
                             fullWidth
                             variant="standard"

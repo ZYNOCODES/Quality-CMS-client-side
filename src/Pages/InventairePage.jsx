@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
-import CreateZoneDialog from '../components/Dialogs/CreateZoneDialog';
-import CreateWorkshopDialog from '../components/Dialogs/CreateWorkshopDialog';
+import CreateActionDialog from '../components/Dialogs/CreateActionDialog';
+import CreatePieceDialog from '../components/Dialogs/CreatePieceDialog';
 import DeletingDialog from '../components/Dialogs/DeletingDialog';
-import UpdateZoneDialog from '../components/Dialogs/UpdateZoneDialog';
-import UpdateWorkshopDialog from '../components/Dialogs/UpdateWorkshopDialog';
+import UpdateActionDialog from '../components/Dialogs/UpdateActionDialog';
+import UpdatePieceDialog from '../components/Dialogs/UpdatePieceDialog';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
@@ -14,45 +14,23 @@ import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import axios from 'axios';
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
-
-const ZonePage = () => {
+const ActionPage = () => {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const { user } = useAuthContext();
-    const [openCreateZoneDialog, setOpenCreateZoneDialog] = useState(false);
-    const [openCreateWorkshopDialog, setOpenCreateWorkshopDialog] = useState(false);
-    const [openUpdateZoneDialog, setOpenUpdateZoneDialog] = useState(false);
-    const [openUpdateWorkshopDialog, setOpenUpdateWorkshopDialog] = useState(false);
-    const [openDeleteZoneDialog, setOpenDeleteZoneDialog] = useState(false);
-    const [openDeleteWorkshopDialog, setOpenDeleteWorkshopDialog] = useState(false);
+    const [openCreateActionDialog, setOpenCreateActionDialog] = useState(false);
+    const [openCreatePieceDialog, setOpenCreatePieceDialog] = useState(false);
+    const [openUpdateActionDialog, setOpenUpdateActionDialog] = useState(false);
+    const [openUpdatePieceDialog, setOpenUpdatePieceDialog] = useState(false);
+    const [openDeleteActionDialog, setOpenDeleteActionDialog] = useState(false);
+    const [openDeletePieceDialog, setOpenDeletePieceDialog] = useState(false);
     const [currentCode, setCurrentCode] = useState(null);
     const [submitionLoading, setSubmitionLoading] = useState(false);
-    const [Zone, setZone] = useState('');
     const decodedToken = TokenDecoder();
-    const handleZoneChange = (event) => {
-        setZone(event.target.value);
-    }
+
     // fetching Zonnes data
-    const fetchZonesData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/zone`,
+    const fetchActionsData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/action`,
             {
                 method: "GET",
                 headers: {
@@ -68,21 +46,21 @@ const ZonePage = () => {
             if(errorData.error.statusCode == 404)
                 return [];
             else
-                throw new Error("Error receiving Zonnes data");
+                throw new Error("Error receiving actions data");
         }
         // Return the data
         return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: ZonesData, error: Zoneerror, isLoading: isZoneLoading, refetch: Zonerefetch } = useQuery({
-        queryKey: ['ZonesData', user?.token],
-        queryFn: fetchZonesData,
+    const { data: ActionsData, error: Actionerror, isLoading: isActionLoading, refetch: Actionrefetch } = useQuery({
+        queryKey: ['ActionsData', user?.token],
+        queryFn: fetchActionsData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-    // fetching Workshops data
-    const fetchWorkshopsData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop`,
+    // fetching Pieces data
+    const fetchPiecesData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/piece`,
             {
                 method: "GET",
                 headers: {
@@ -98,64 +76,61 @@ const ZonePage = () => {
             if(errorData.error.statusCode == 404)
                 return [];
             else
-                throw new Error("Error receiving Workshops data");
+                throw new Error("Error receiving pieces data");
         }
         // Return the data
         return await response.json();
     };
     // useQuery hook to fetch data
-    const { data: workshopList, error: Workshopserror, isLoading: isWorkshopsLoading, refetch: Workshopsrefetch } = useQuery({
-        queryKey: ['WorkshopsData', user?.token],
-        queryFn: fetchWorkshopsData,
+    const { data: PieceList, error: Pieceserror, isLoading: isPiecesLoading, refetch: Piecesrefetch } = useQuery({
+        queryKey: ['PiecesData', user?.token],
+        queryFn: fetchPiecesData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-    // Filter WorkshopsData by selected workshop
-    const filteredWorkshopsData = workshopList?.filter(workshop => 
-        Zone == '' || workshop.zone == Zone
-    );
+
     // Function to refetch data
     const handleRefetchDataChange = () => {
-        Zonerefetch();
-        Workshopsrefetch();
+        Actionrefetch();
+        Piecesrefetch();
     }
-    const handleClickOpenCreateZoneDialog = (code) => {
+    const handleClickOpenCreateActionDialog = (code) => {
         setCurrentCode(code);
-        setOpenCreateZoneDialog(true);
+        setOpenCreateActionDialog(true);
     };
-    const handleClickOpenCreateWorkshopDialog = (code) => {
+    const handleClickOpenCreatePieceDialog = (code) => {
         setCurrentCode(code);
-        setOpenCreateWorkshopDialog(true);
+        setOpenCreatePieceDialog(true);
     };
-    const handleClickOpenUpdateZoneDialog = (code) => {
+    const handleClickOpenUpdateActionDialog = (code) => {
         setCurrentCode(code);
-        setOpenUpdateZoneDialog(true);
+        setOpenUpdateActionDialog(true);
     };
-    const handleClickOpenUpdateWorkshopDialog = (code) => {
+    const handleClickOpenUpdatePieceDialog = (code) => {
         setCurrentCode(code);
-        setOpenUpdateWorkshopDialog(true);
+        setOpenUpdatePieceDialog(true);
     };
-    const handleClickOpenDeleteZoneDialog = (code) => {
+    const handleClickOpenDeleteActionDialog = (code) => {
         setCurrentCode(code);
-        setOpenDeleteZoneDialog(true);
+        setOpenDeleteActionDialog(true);
     };
-    const handleClickOpenDeleteWorkshopDialog = (code) => {
+    const handleClickOpenDeletePieceDialog = (code) => {
         setCurrentCode(code);
-        setOpenDeleteWorkshopDialog(true);
+        setOpenDeletePieceDialog(true);
     };
     const handleClose = () => {
         setCurrentCode(null);
-        setOpenCreateZoneDialog(false);
-        setOpenCreateWorkshopDialog(false);
-        setOpenUpdateZoneDialog(false);
-        setOpenUpdateWorkshopDialog(false);
-        setOpenDeleteZoneDialog(false);
-        setOpenDeleteWorkshopDialog(false);
+        setOpenCreateActionDialog(false);
+        setOpenCreatePieceDialog(false);
+        setOpenUpdateActionDialog(false);
+        setOpenUpdatePieceDialog(false);
+        setOpenDeleteActionDialog(false);
+        setOpenDeletePieceDialog(false);
     };
-    const handleDeleteZone = async () => {
+    const handleDeleteAction = async () => {
         try {
             setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/zone/${currentCode}`, 
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/action/${currentCode}`, 
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -178,17 +153,17 @@ const ZonePage = () => {
                 setSubmitionLoading(false);
             } else if (error.request) {
                 // Request was made but no response was received
-                console.error("Error deleting zone: No response received");
+                console.error("Error deleting action: No response received");
             } else {
                 // Something happened in setting up the request that triggered an Error
-                console.error("Error deleting zone");
+                console.error("Error deleting action");
             }
         }
     };
-    const handleDeleteWorkshop = async () => {
+    const handleDeletePiece = async () => {
         try {
             setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/workshop/${currentCode}`, 
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/piece/${currentCode}`, 
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -211,14 +186,14 @@ const ZonePage = () => {
                 setSubmitionLoading(false);
             } else if (error.request) {
                 // Request was made but no response was received
-                console.error("Error deleting workshop: No response received");
+                console.error("Error deleting piece: No response received");
             } else {
                 // Something happened in setting up the request that triggered an Error
-                console.error("Error deleting workshop");
+                console.error("Error deleting piece");
             }
         }
     };
-    const columnsZone = [
+    const columnsAction = [
         {
             name: "code",
             label: "Code",
@@ -252,10 +227,10 @@ const ZonePage = () => {
                         <div>
                             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                                 <>
-                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateZoneDialog(value)}>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateActionDialog(value)}>
                                         Edit
                                     </button>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteZoneDialog(value)}>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteActionDialog(value)}>
                                         Supprimer
                                     </button>
                                 </>
@@ -266,7 +241,7 @@ const ZonePage = () => {
             }
         },
     ]; 
-    const columnsWorkshop = [
+    const columnsPiece = [
         {
             name: "code",
             label: "Code",
@@ -290,17 +265,6 @@ const ZonePage = () => {
             },
         },
         {
-            name: "zoneAssociation",
-            label: "Zone",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value.name}</p>;
-                },
-            },
-        },
-        {
             name: "code",
             label: " ",
             options: {
@@ -311,10 +275,10 @@ const ZonePage = () => {
                         <div>
                             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                                 <>
-                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateWorkshopDialog(value)}>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdatePieceDialog(value)}>
                                         Edit
                                     </button>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteWorkshopDialog(value)}>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeletePieceDialog(value)}>
                                         Supprimer
                                     </button>
                                 </>
@@ -326,7 +290,7 @@ const ZonePage = () => {
         },
     ]; 
 
-    if (isZoneLoading || isWorkshopsLoading) {
+    if (isActionLoading || isPiecesLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -336,33 +300,35 @@ const ZonePage = () => {
           </div>
         );
     }
-    if (Zoneerror || Workshopserror) {
+    if (Actionerror || Pieceserror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
-                {Zoneerror &&
-                    <h1> {Zoneerror.message} </h1>
+                {Actionerror &&
+                    <h1> {Actionerror.message} </h1>
                 }
-                {Workshopserror &&
-                    <h1> {Workshopserror.message} </h1>
+                {Pieceserror &&
+                    <h1> {Pieceserror.message} </h1>
                 }
             </div>
         );
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des zonnes'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateZoneDialog} />
-            <DataTable data={ZonesData} columns={columnsZone} rows={3}/>
-            <CreateZoneDialog open={openCreateZoneDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
-            <UpdateZoneDialog  name={'d\'une zone'} code={currentCode} user={user} open={openUpdateZoneDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
-            <DeletingDialog name={'d\'une zone'} loading={submitionLoading} open={openDeleteZoneDialog} handleClose={handleClose} handleOnDelete={handleDeleteZone}/>
-            <TableHeader name={'Liste des ateliers'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateWorkshopDialog} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredWorkshopsData} columns={columnsWorkshop} rows={4}/>
-            <CreateWorkshopDialog open={openCreateWorkshopDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone} ZoneList={ZonesData}/>
-            <UpdateWorkshopDialog  name={'d\'un atelier'} code={currentCode} user={user} open={openUpdateWorkshopDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ZoneList={ZonesData}/>
-            <DeletingDialog name={'d\'un atelier'} loading={submitionLoading} open={openDeleteWorkshopDialog} handleClose={handleClose} handleOnDelete={handleDeleteWorkshop}/>
+            {/* Action */}
+            <TableHeader name={'Liste des actions'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateActionDialog} />
+            <DataTable data={ActionsData} columns={columnsAction} rows={3} />
+            <CreateActionDialog open={openCreateActionDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
+            <UpdateActionDialog  name={'d\'une action'} code={currentCode} user={user} open={openUpdateActionDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+            <DeletingDialog name={'d\'une action'} loading={submitionLoading} open={openDeleteActionDialog} handleClose={handleClose} handleOnDelete={handleDeleteAction}/>
+            {/* Piece */}
+            <TableHeader name={'Liste des pieces'} type={decodedToken.type} handleClickOpen={handleClickOpenCreatePieceDialog} />
+            <DataTable data={PieceList} columns={columnsPiece} rows={4} />
+            <CreatePieceDialog open={openCreatePieceDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
+            <UpdatePieceDialog  name={'d\'un piece'} code={currentCode} user={user} open={openUpdatePieceDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+            <DeletingDialog name={'d\'un piece'} loading={submitionLoading} open={openDeletePieceDialog} handleClose={handleClose} handleOnDelete={handleDeletePiece}/>
             <ToastContainer/>
         </div>
     );
 }
-export default ZonePage;
+export default ActionPage;

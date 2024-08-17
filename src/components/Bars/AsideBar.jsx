@@ -96,24 +96,32 @@ const AsideBar = () => {
                     </li>
                 }
                 {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
-                    <li>
-                        <NavLink to='/zones' className={`AsideBar-item ${
-                        location.pathname === "/zones" ? "aside-item-active" : ""}`}>
-                            <CategoryIcon className='AsideBar-icon'/>
-                            <span className='side-item'>Zone</span>
-                        </NavLink>
-                        <span className="tooltip">Zone</span>
-                    </li>
-                }
-                {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
-                    <li>
-                        <NavLink to='/inventaire' className={`AsideBar-item ${
-                        location.pathname === "/inventaire" ? "aside-item-active" : ""}`}>
-                            <IoTimer className='AsideBar-icon'/>
-                            <span className='side-item'>Inventaire</span>
-                        </NavLink>
-                        <span className="tooltip">Inventaire</span>
-                    </li>
+                    <>
+                        <li>
+                            <NavLink to='/zones' className={`AsideBar-item ${
+                            location.pathname === "/zones" ? "aside-item-active" : ""}`}>
+                                <CategoryIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Zone</span>
+                            </NavLink>
+                            <span className="tooltip">Zone</span>
+                        </li>
+                        <li>
+                            <NavLink to='/inventaire' className={`AsideBar-item ${
+                            location.pathname === "/inventaire" ? "aside-item-active" : ""}`}>
+                                <IoTimer className='AsideBar-icon'/>
+                                <span className='side-item'>Inventaire</span>
+                            </NavLink>
+                            <span className="tooltip">Inventaire</span>
+                        </li>
+                        <li>
+                            <NavLink to='/utilisateurs' className={`AsideBar-item ${
+                            location.pathname === "/utilisateurs" ? "aside-item-active" : ""}`}>
+                                <IoTimer className='AsideBar-icon'/>
+                                <span className='side-item'>Utilisateurs</span>
+                            </NavLink>
+                            <span className="tooltip">Utilisateurs</span>
+                        </li>
+                    </>
                 }
                 <li>
                     <NavLink to='/' className="AsideBar-item" onClick={submitLogout}>
