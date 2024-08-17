@@ -4,6 +4,8 @@ import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
 import CreateProductDialog from '../components/Dialogs/CreateProductDialog';
+import CreateFamilyDialog from '../components/Dialogs/CreateFamilyDialog';
+import UpdateFamilyDialog from '../components/Dialogs/UpdateFamilyDialog';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +20,10 @@ const ProductPage = () => {
     const { user } = useAuthContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+    const [openCreateFamilyDialog, setOpenCreateFamilyDialog] = useState(false);
     const [openDeleteProductDialog, setOpenDeleteProductDialog] = useState(false);
+    const [openDeleteFamilyDialog, setOpenDeleteFamilyDialog] = useState(false);
+    const [openUpdateFamilyDialog, setOpenUpdateFamilyDialog] = useState(false);
     const [Family, setFamily] = useState('');
     const [Zone, setZone] = useState('');
     const [currentCode, setCurrentCode] = useState(null);
@@ -128,6 +133,8 @@ const ProductPage = () => {
     // Function to refetch data
     const handleRefetchDataChange = () => {
         refetch();
+        Zonesrefetch();
+        Familyrefetch();
     }
     const handleClickOpen = () => {
         setOpen(true);
@@ -135,6 +142,9 @@ const ProductPage = () => {
     const handleClose = () => {
         setCurrentCode(null);
         setOpenDeleteProductDialog(false);
+        setOpenUpdateFamilyDialog(false);
+        setOpenDeleteFamilyDialog(false);
+        setOpenCreateFamilyDialog(false);
         setOpen(false);
     };
     const Redirection = (path) => {
@@ -174,6 +184,50 @@ const ProductPage = () => {
             } else {
                 // Something happened in setting up the request that triggered an Error
                 console.error("Error deleting product", error);
+            }
+        }
+    };
+    const handleClickOpenCreateFamilyDialog = () => {
+        setOpenCreateFamilyDialog(true);
+    };
+    const handleClickOpenUpdateFamilyDialog = (code) => {
+        setCurrentCode(code);
+        setOpenUpdateFamilyDialog(true);
+    };
+    const handleClickOpenDeleteFamilyDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteFamilyDialog(true);
+    };
+    const handleDeleteFamily = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/family/${currentCode}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                handleRefetchDataChange();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting family: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting family");
             }
         }
     };
@@ -270,8 +324,61 @@ const ProductPage = () => {
             }
         },
     ]; 
-
-    if (isLoading) {
+    const columnsFamily = [
+        {
+            name: "code",
+            label: "Code",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            name: "name",
+            label: "Nom",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            name: "code",
+            label: " ",
+            options: {
+                sort: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return (
+                        <div>
+                            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateFamilyDialog(value) }>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteFamilyDialog(value) }>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    )
+                }
+            }
+        },
+    ]; 
+    if (isLoading || isZonesLoading || isFamilyLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -281,7 +388,7 @@ const ProductPage = () => {
           </div>
         );
     }
-    if (error) {
+    if (error || Zoneserror || Familyerror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite: {error.message}</h1>
@@ -290,12 +397,18 @@ const ProductPage = () => {
     }
     return (
         <div className="pages-container">
+            <TableHeader name={'Liste des familles'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFamilyDialog}/>
+            <DataTable data={FamilyList} columns={columnsFamily} rows={3} />
             <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
-            <DataTable data={filteredProductsData} columns={columns} />
+            <DataTable data={filteredProductsData} columns={columns} rows={4}/>
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
                     <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeleteProductDialog} handleClose={handleClose} handleOnDelete={handleDeleteProduct}/>
+                    <CreateFamilyDialog  open={openCreateFamilyDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
+                    <UpdateFamilyDialog  name={'d\'une famille'} code={currentCode} user={user} open={openUpdateFamilyDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+                    <DeletingDialog name={'d\'un famille'} loading={submitionLoading} open={openDeleteFamilyDialog} handleClose={handleClose} handleOnDelete={handleDeleteFamily}/>
+
                 </>
             }
             <ToastContainer/>

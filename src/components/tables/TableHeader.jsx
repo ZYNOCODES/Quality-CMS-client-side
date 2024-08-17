@@ -6,7 +6,7 @@ const TableHeader = (props) => {
         <div className="pages-header">
             <h1 className="pages-title">{props.name}</h1>
             <div className="pages-selects-container">
-                {props.workshopList &&
+                {props.workshopList && props.handleWorkshopChange &&
                     <div className='pages-input-select-field-container'>
                     <select
                         className='pages-input-select-field'
@@ -22,7 +22,7 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
-                {props.FamilyList &&
+                {props.FamilyList && props.handleFamilyChange &&
                     <div className='pages-input-select-field-container'>
                     <select
                         className='pages-input-select-field'
@@ -38,7 +38,7 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
-                {props.ZoneList && import.meta.env.VITE_MANAGER_TYPE == props.type &&
+                {props.ZoneList && props.handleZoneChange && import.meta.env.VITE_MANAGER_TYPE == props.type &&
                     <div className='pages-input-select-field-container'>
                     <select
                         className='pages-input-select-field'
@@ -94,7 +94,13 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des utilisateurs'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un utilisateur</button>
-                }                           
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des familles'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une famille</button>
+                }                            
             </div>
         </div>
     );
