@@ -261,11 +261,11 @@ const UsersPage = () => {
           </div>
         );
     }
-    if (error) {
+    if (error || Zoneserror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
-                <h1>{error.message}</h1>
+                {/* <h1>{error.message}</h1> */}
             </div>
         );
     }

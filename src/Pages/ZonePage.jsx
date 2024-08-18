@@ -340,12 +340,12 @@ const ZonePage = () => {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
-                {Zoneerror &&
+                {/* {Zoneerror &&
                     <h1> {Zoneerror.message} </h1>
                 }
                 {Workshopserror &&
                     <h1> {Workshopserror.message} </h1>
-                }
+                } */}
             </div>
         );
     }

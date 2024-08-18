@@ -391,16 +391,23 @@ const ProductPage = () => {
     if (error || Zoneserror || Familyerror) {
         return (
             <div className="CircularProgress-app">
-                <h1>Une erreur s'est produite: {error.message}</h1>
+                <h1>Une erreur s'est produite</h1>
+                {/* <h1>{error.message}</h1> */}
             </div>
         );
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des familles'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFamilyDialog}/>
-            <DataTable data={FamilyList} columns={columnsFamily} rows={3} />
+            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                <>
+                    <TableHeader name={'Liste des familles'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFamilyDialog}/>
+                    <DataTable data={FamilyList} columns={columnsFamily} rows={3} />
+                </>
+            }
             <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
-            <DataTable data={filteredProductsData} columns={columns} rows={4}/>
+            <DataTable data={filteredProductsData} columns={columns} rows={
+                import.meta.env.VITE_MANAGER_TYPE == decodedToken.type ? 4 : 11
+                }/>
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>

@@ -1,0 +1,93 @@
+.panne-page-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fff;
+    width: 100%;
+}
+.panne-navbar-page-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    color: #fff;
+    gap: 15px;
+}
+.panne-icon-container-navbar-page-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 15px;
+    cursor: pointer;
+}
+.panne-backIcon-icon-container{
+    font-size: 2rem;
+    color: #0056ac;
+}
+.panne-navbar-page-container h1{
+    font-size: 1.5rem;
+}
+.panne-page-details-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    gap: 15px;
+}
+.panne-page-form-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+    place-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    border-radius: 10px;
+}
+.panne-page-header-container{
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: row;
+}
+.panne-page-header-container h1{
+    font-size: 1.3rem;
+    color: #0056ac;
+}
+.icon-panne-page-header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+.icon-panne-page-header-container p{
+    font-size: 1rem;
+    color: #0056ac;
+    font-weight: 600;
+}
+.view-icon-panne-page-header-container{
+    font-size: 1rem;
+    color: #0056ac;
+}
+
+/*medea screen*/
+@media screen and (max-width: 768px){
+    .panne-page-form-container{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    .panne-navbar-page-container{
+        justify-content: center;
+    }
+}

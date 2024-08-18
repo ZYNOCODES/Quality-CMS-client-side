@@ -304,12 +304,12 @@ const ActionPage = () => {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
-                {Actionerror &&
+                {/* {Actionerror &&
                     <h1> {Actionerror.message} </h1>
                 }
                 {Pieceserror &&
                     <h1> {Pieceserror.message} </h1>
-                }
+                } */}
             </div>
         );
     }
