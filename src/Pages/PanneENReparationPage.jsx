@@ -299,7 +299,7 @@ const EnReparationPanne = () => {
         },
     ]; 
 
-    if (isLoading) {
+    if (isLoading || isWorkshopsLoading || isZonesLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -309,10 +309,13 @@ const EnReparationPanne = () => {
           </div>
         );
     }
-    if (error) {
+    if (error || Workshopserror || Zoneserror) {
         return (
             <div className="CircularProgress-app">
-                <h1>Une erreur s'est produite: {error.message}</h1>
+                <h1>Une erreur s'est produite</h1>
+                <h1>{error ? error.message : ''}</h1>
+                <h1>{Workshopserror ? Workshopserror.message : ''}</h1>
+                <h1>{Zoneserror ? Zoneserror.message : ''}</h1>
             </div>
         );
     }

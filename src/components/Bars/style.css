@@ -5,7 +5,7 @@
     width: 80px;
     min-height: 100vh;
     height: 100%;
-    background-color: #0080ff;
+    background-color: #0056ac;
     transition: all 0.5s ease;
     border-top-right-radius: 0.8rem;
     border-bottom-right-radius: 0.8rem;
@@ -43,7 +43,7 @@
 .AsideBar-container.active #menu-btn{
     left: 90%;
     top: 4.5%;
-    color: #0080ff;
+    color: #0056ac;
 }
 .AsideBar-container .AsideBar-top .AsideBar-logo{
     color: #fff;
@@ -131,11 +131,11 @@
 }
 .AsideBar-container ul li .AsideBar-item.aside-item-active{
     background-color: #eee;
-    color: #0080ff;
+    color: #0056ac;
 }
 .AsideBar-container ul li .AsideBar-item:hover{
     background-color: #eee;
-    color: #0080ff;
+    color: #0056ac;
 }
 .AsideBar-container ul li .AsideBar-item .AsideBar-icon{
     min-width: 25px;
