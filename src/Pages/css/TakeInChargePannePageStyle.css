@@ -1,0 +1,127 @@
+.taken-panne-page-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #fff;
+    width: 100%;
+}
+.taken-panne-navbar-page-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+}
+.taken-panne-navbar-page-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    color: #fff;
+    gap: 15px;
+}
+.take-in-charge-button{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    color: #0056ac;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.taken-panne-icon-container-navbar-page-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 100%;
+    padding: 15px;
+    cursor: pointer;
+}
+.taken-panne-backIcon-icon-container{
+    font-size: 2rem;
+    color: #0056ac;
+}
+.taken-panne-navbar-page-container h1{
+    font-size: 1.5rem;
+}
+.taken-panne-page-details-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    gap: 15px;
+}
+.taken-panne-page-form-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+    place-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    border-radius: 10px;
+}
+.taken-panne-page-header-container{
+    display: flex;
+    align-self: flex-start;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: row;
+}
+.taken-panne-page-header-container h1{
+    font-size: 1.3rem;
+    color: #0056ac;
+}
+.icon-taken-panne-page-header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+.icon-taken-panne-page-header-container p{
+    font-size: 1rem;
+    color: #0056ac;
+    font-weight: 600;
+}
+.view-icon-taken-panne-page-header-container{
+    font-size: 1rem;
+    color: #0056ac;
+}
+/*medea screen*/
+@media screen and (max-width: 768px){
+    .taken-panne-page-form-container{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    .taken-panne-navbar-page-container{
+        justify-content: center;
+        gap: 10px;
+    }
+    .taken-panne-navbar-page-content{
+        flex-direction: column;
+    }
+    .take-in-charge-button{
+        width: 100%;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .taken-panne-icon-container-navbar-page-container{
+        padding: 5px;
+    }
+    .taken-panne-navbar-page-container h1{
+        font-size: 1.3rem;
+    }
+}

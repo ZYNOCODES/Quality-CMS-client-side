@@ -107,7 +107,7 @@ const ProductDetails = () => {
     // fetching Workshops data
     const fetchWorkshopsData = async () => {
         try{
-            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/${ProductData.zone}`,
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/workshop/byID/${ProductData.zone}`,
                 {
                     method: "GET",
                     headers: {
@@ -249,7 +249,7 @@ const ProductDetails = () => {
                 <div className='icon-container-navbar-page-container' onClick={() => Redirection(-1)}>
                     <ArrowBackIcon className='backIcon-icon-container'/>
                 </div>
-                <h1>Product Details</h1>
+                <h1>Détails du produit</h1>
             </div>
             <div className="product-details-container">
                 <h1>Détails :</h1>

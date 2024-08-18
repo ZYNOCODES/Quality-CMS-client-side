@@ -72,6 +72,8 @@ function App() {
             <>
               <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />
               <Route path="panne/prendre/:code" element={<TakeInChargePanne />} />
+              <Route path="produit/:code" element={<ProductDetailsPage />} />
+              <Route path="panne/:code" element={<PanneDetailsPage />} />    
             </>
           }
 
