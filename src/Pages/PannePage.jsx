@@ -232,7 +232,7 @@ const PannePage = () => {
                 console.error("Error deleting product: No response received");
             } else {
                 // Something happened in setting up the request that triggered an Error
-                console.error("Error deleting product", error);
+                console.error("Error deleting product");
             }
         }
     };

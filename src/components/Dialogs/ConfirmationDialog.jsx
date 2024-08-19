@@ -44,7 +44,7 @@ export default function ConfirmationDialog(props) {
                     <DialogTitle>Confirmation de {props.name}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Cette prise en charge sera appliquée directement après la confirmation.
+                            Cette {props.name} sera appliquée directement après la confirmation.
                         </DialogContentText>
                         <FormControlLabel
                             sx={{ mt: 1 }}
