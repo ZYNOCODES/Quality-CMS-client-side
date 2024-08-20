@@ -1,0 +1,38 @@
+.profil-navbar-page-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+}
+.profil-details-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    gap: 15px;
+}
+.profil-form-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+    place-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    border-radius: 10px;
+}
+.profil-details-container h1{
+    align-self: flex-start;
+    font-size: 1.5rem;
+    color: #0056ac;
+}
+/*medea screen*/
+@media screen and (max-width: 768px){
+    .profil-form-container{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}

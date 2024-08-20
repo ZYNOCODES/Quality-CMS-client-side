@@ -3,7 +3,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
-import CreatePanneDialog from '../components/Dialogs/CreatePanneDialog';
 import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";

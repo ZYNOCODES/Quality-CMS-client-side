@@ -1,0 +1,195 @@
+.dashboar-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    background-color: #cadaff;
+    gap: 15px;
+    padding-inline-start: 95px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-inline-end: 15px;
+}
+.nav-bar-dashboard-conainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: fit-content;
+}
+.nav-bar-dashboard-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+}
+.nav-bar-dashboard-card h1{
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.top-bar-dashboard-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: fit-content;
+}
+.top-bar-dashboard-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+}
+.top-bar-dashboard-card h1{
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.top-bar-dashboard-card p{
+    color: #DA171B;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.middle-bar-dashboard-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: fit-content;
+}
+.middle-bar-dashboard-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+}
+.middle-bar-dashboard-card:nth-child(2){
+    width: 60%;
+}
+.middle-bar-dashboard-card h1{
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+.dashboard-view-card-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    border: solid 1px #dbdbdb;
+    border-radius: 10px;
+    padding: 15px;
+    gap: 10px;
+}
+.dashboard-view-card-item h1{
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+.dashboard-view-card-item-icon{
+    color: #0080ff;
+    cursor: pointer;
+}
+.bottom-bar-dashboard-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    height: fit-content;
+}
+.bottom-bar-dashboard-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 320px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+}
+.bottom-bar-dashboard-card h1{
+    color: #000;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+/*medea screen*/
+@media screen and (max-width: 768px){
+    .dashboar-container{
+        padding-inline-start: 50px;
+        padding-inline-end: 10px;
+        height: fit-content;
+    }
+    .nav-bar-dashboard-conainer{
+        flex-direction: column;
+    }
+    .nav-bar-dashboard-card{
+        width: 100%;
+    }
+    .nav-bar-dashboard-card h1{
+        font-size: 0.8rem;
+    }
+    .top-bar-dashboard-container{
+        flex-direction: column;
+    }
+    .top-bar-dashboard-card h1{
+        font-size: 0.8rem;
+    }
+    .top-bar-dashboard-card p{
+        font-size: 1.3rem;
+    }
+    .middle-bar-dashboard-container{
+        flex-direction: column;
+    }
+    .middle-bar-dashboard-card:nth-child(2){
+        width: 100%;
+    }
+    .middle-bar-dashboard-card h1{
+        font-size: 0.8rem;
+    }
+    .bottom-bar-dashboard-container{
+        flex-direction: column;
+    }
+    .bottom-bar-dashboard-card h1{
+        font-size: 0.8rem;
+    }
+
+}

@@ -52,6 +52,22 @@
     background-color: #0056ac;
     border-radius: 10px;
 }
+.Duree-reparation-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background-color: #0056ac;
+    border-radius: 10px;
+    gap: 15px;
+}
+.Duree-reparation-container span{
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+}
 .product-details-container h1{
     align-self: flex-start;
     font-size: 1.5rem;

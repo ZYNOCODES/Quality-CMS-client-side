@@ -4,7 +4,6 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import './css/PanneDetailsPageStyle.css';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
