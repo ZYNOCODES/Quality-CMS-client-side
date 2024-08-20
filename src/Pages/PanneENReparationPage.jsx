@@ -322,7 +322,7 @@ const EnReparationPanne = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredPannesData} columns={columns} />
+            <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );

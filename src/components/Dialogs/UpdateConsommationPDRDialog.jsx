@@ -14,22 +14,18 @@ import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
 import SelectFieldComponent from '../forms/SelectField';
 
-export default function ActionCorrectiveDialog(props) {
+export default function UpdateConsommationPDRDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const [ loading, setLoading ] = useState(false);
-    const [ Mesure, setMesure ] = useState('');
-    const handleMesureChange = (event) => {
-        setMesure(event.target.value);
+    const [ Quantity, setQuantity ] = useState('');
+    const handleQuantityChange = (event) => {
+        setQuantity(event.target.value);
     };
-    const [ Resultat, setResultat ] = useState('');
-    const handleResultatChange = (event) => {
-        setResultat(event.target.value);
-    };
-    const [ Action, setAction ] = useState('');
-    const handleActionChange = (event) => {
-        setAction(event.target.value);
+    const [ Piece, setPiece ] = useState('');
+    const handlePieceChange = (event) => {
+        setPiece(event.target.value);
     };
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
@@ -37,18 +33,17 @@ export default function ActionCorrectiveDialog(props) {
     };
 
     const handleOnCreate = async (event) => {
-        if(!Action){
+        if(!Quantity && !Piece){
             notifyFailed("Un des champs doivent être remplis");
             return;
         }
         if (confirmation) {
             try {
                 setLoading(true);
-                const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${props.code}`, 
+                const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/consommation/${props.code}`, 
                     {
-                        mesure: Mesure,
-                        resultat: Resultat,
-                        action: Action
+                        quantity: Quantity,
+                        piece: Piece
                     },
                     {
                         headers: {
@@ -72,18 +67,17 @@ export default function ActionCorrectiveDialog(props) {
                     setLoading(false);
                 } else if (error.request) {
                     // Request was made but no response was received
-                    console.error("Error creating action corrective: No response received");
+                    console.error("Error updating Consommation PDR: No response received");
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    console.error("Error creating action corrective", error);
+                    console.error("Error updating Consommation PDR", error);
                 }
             }
             setconfirmation(false);
-            setMesure('');
-            setResultat('');
-            setAction('');
+            setQuantity('');
+            setPiece('');
         }else{
-            notifyWarning("Veuillez confirmer la creation");
+            notifyWarning("Veuillez confirmer la modification");
         }
     };
 
@@ -102,17 +96,17 @@ export default function ActionCorrectiveDialog(props) {
         >
             {!loading && 
                 <>
-                    <DialogTitle>Creation d'une action corrective</DialogTitle>
+                    <DialogTitle>Modification d'une comsommation PDR</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Cette creation sera appliquée directement après la confirmation.
+                            Cette modification sera appliquée directement après la confirmation.
                         </DialogContentText>
                         <SelectFieldComponent
-                            label="Action" 
-                            initialHelperText="Selectionner une Action" 
-                            onChange={handleActionChange}
+                            label="Piece" 
+                            initialHelperText="Selectionner une piece" 
+                            onChange={handlePieceChange}
                             obligatory={true}
-                            options={props.ActionList}
+                            options={props.PieceList}
                             optionName='name'
                             optionIdentifier='code'
                         />
@@ -120,30 +114,19 @@ export default function ActionCorrectiveDialog(props) {
                             autoFocus
                             margin="dense"
                             id="name"
-                            name="Mesure"
-                            label="Entrez une mesure"
+                            name="Quantite"
+                            label="Entrez la quantite consome"
                             type="text"
                             fullWidth
                             variant="standard"
-                            onChange={handleMesureChange}
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name="Resultat"
-                            label="Entrez une resultat"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                            onChange={handleResultatChange}
+                            onChange={handleQuantityChange}
                         />
                         <FormControlLabel
                             sx={{ mt: 1 }}
                             control={
                                 <Switch checked={confirmation} onChange={handleConfirmation} />
                             }
-                            label="Oui je confirme cette creation"
+                            label="Oui je confirme cette modification"
                         />
                     </DialogContent>
                     <DialogActions>

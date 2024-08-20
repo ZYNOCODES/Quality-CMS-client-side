@@ -274,7 +274,7 @@ const UsersPage = () => {
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     <TableHeader name={'Liste des utilisateurs'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
-                    <DataTable data={filteredUsersData} columns={columns} />
+                    <DataTable data={filteredUsersData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
                     <CreateUserDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <UpdateUserDialog code={currentCode}  open={openUpdateUserDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <DeletingDialog name={'d\'un utilisateur'} loading={submitionLoading} open={openDeleteUserDialog} handleClose={handleClose} handleOnDelete={handleDeleteUser}/>

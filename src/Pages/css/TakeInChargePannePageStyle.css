@@ -107,13 +107,20 @@
 .taken-panne-page-form-container.red{
     background-color: #d00000;
 }
-.time-counter{
+.time-counter-container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
+}
+.time-counter-container h1{ 
     color: #fff;
-    padding: 10px;
-    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.time-counter-container span{
+    color: #fff;
     font-size: 1.5rem;
     font-weight: 600;
 }

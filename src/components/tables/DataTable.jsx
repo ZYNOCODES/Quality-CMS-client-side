@@ -6,14 +6,6 @@ import { IconButton, Tooltip } from '@mui/material';
 
 
 const DataTable = (props) => {
-
-    // const AddButton = () => (
-    //     <Tooltip disableFocusListener title="Add User">
-    //       <IconButton onClick={props.handleClickOpen}>
-    //         <AddCircleOutlineIcon />
-    //       </IconButton>
-    //     </Tooltip>
-    // );
     const options = {
         selectableRows: false,
         elevation: 0,
@@ -21,12 +13,16 @@ const DataTable = (props) => {
         rowsPerPageOptions: [props.rows!= null ? props.rows : 5, 8, 11, 20, 40],
         responsive: "vertical",
         searchPlaceholder: 'Rechercher',
-        // customToolbar: AddButton,
         textLabels: {
             body: {
             noMatch: 'Désolé, aucune donnée correspondante trouvée',
             }
-        }
+        },
+        print: false,
+        download: props.download,
+        viewColumns: props.viewColumns,
+        filter: props.filter,
+        search: props.search
     };
     const getMUITheme = () => createTheme({
         typography: {

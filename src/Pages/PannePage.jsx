@@ -360,7 +360,7 @@ const PannePage = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredPannesData} columns={columns} />
+            <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
             {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                 <>
                     <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    

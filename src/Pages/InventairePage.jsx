@@ -317,13 +317,13 @@ const ActionPage = () => {
         <div className="pages-container">
             {/* Action */}
             <TableHeader name={'Liste des actions'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateActionDialog} />
-            <DataTable data={ActionsData} columns={columnsAction} rows={3} />
+            <DataTable data={ActionsData} columns={columnsAction} rows={3} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateActionDialog open={openCreateActionDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
             <UpdateActionDialog  name={'d\'une action'} code={currentCode} user={user} open={openUpdateActionDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'une action'} loading={submitionLoading} open={openDeleteActionDialog} handleClose={handleClose} handleOnDelete={handleDeleteAction}/>
             {/* Piece */}
             <TableHeader name={'Liste des pieces'} type={decodedToken.type} handleClickOpen={handleClickOpenCreatePieceDialog} />
-            <DataTable data={PieceList} columns={columnsPiece} rows={4} />
+            <DataTable data={PieceList} columns={columnsPiece} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
             <CreatePieceDialog open={openCreatePieceDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
             <UpdatePieceDialog  name={'d\'un piece'} code={currentCode} user={user} open={openUpdatePieceDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'un piece'} loading={submitionLoading} open={openDeletePieceDialog} handleClose={handleClose} handleOnDelete={handleDeletePiece}/>

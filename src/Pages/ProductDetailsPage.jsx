@@ -279,7 +279,7 @@ const ProductDetails = () => {
                                     ))}
                                 </select>
                             </div>      
-                            <DataTable data={filteredPannesData} columns={columns} />
+                            <DataTable data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
                         </div>
                     </>
                 )}

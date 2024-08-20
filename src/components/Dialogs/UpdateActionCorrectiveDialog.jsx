@@ -14,7 +14,7 @@ import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
 import SelectFieldComponent from '../forms/SelectField';
 
-export default function ActionCorrectiveDialog(props) {
+export default function UpdateActionCorrectiveDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
@@ -37,14 +37,14 @@ export default function ActionCorrectiveDialog(props) {
     };
 
     const handleOnCreate = async (event) => {
-        if(!Action){
+        if(!Action && !Mesure && !Resultat){
             notifyFailed("Un des champs doivent être remplis");
             return;
         }
         if (confirmation) {
             try {
                 setLoading(true);
-                const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${props.code}`, 
+                const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${props.code}`, 
                     {
                         mesure: Mesure,
                         resultat: Resultat,
@@ -72,10 +72,10 @@ export default function ActionCorrectiveDialog(props) {
                     setLoading(false);
                 } else if (error.request) {
                     // Request was made but no response was received
-                    console.error("Error creating action corrective: No response received");
+                    console.error("Error updating action corrective: No response received");
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    console.error("Error creating action corrective", error);
+                    console.error("Error updating action corrective", error);
                 }
             }
             setconfirmation(false);
@@ -83,7 +83,7 @@ export default function ActionCorrectiveDialog(props) {
             setResultat('');
             setAction('');
         }else{
-            notifyWarning("Veuillez confirmer la creation");
+            notifyWarning("Veuillez confirmer la modification");
         }
     };
 
@@ -102,10 +102,10 @@ export default function ActionCorrectiveDialog(props) {
         >
             {!loading && 
                 <>
-                    <DialogTitle>Creation d'une action corrective</DialogTitle>
+                    <DialogTitle>Modification d'une action corrective</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Cette creation sera appliquée directement après la confirmation.
+                            Cette modification sera appliquée directement après la confirmation.
                         </DialogContentText>
                         <SelectFieldComponent
                             label="Action" 
@@ -143,7 +143,7 @@ export default function ActionCorrectiveDialog(props) {
                             control={
                                 <Switch checked={confirmation} onChange={handleConfirmation} />
                             }
-                            label="Oui je confirme cette creation"
+                            label="Oui je confirme cette modification"
                         />
                     </DialogContent>
                     <DialogActions>

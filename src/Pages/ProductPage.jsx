@@ -401,13 +401,13 @@ const ProductPage = () => {
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     <TableHeader name={'Liste des familles'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFamilyDialog}/>
-                    <DataTable data={FamilyList} columns={columnsFamily} rows={3} />
+                    <DataTable data={FamilyList} columns={columnsFamily} rows={3}  download={true} viewColumns={true} filter={true} search={true}/>
                 </>
             }
             <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
             <DataTable data={filteredProductsData} columns={columns} rows={
                 import.meta.env.VITE_MANAGER_TYPE == decodedToken.type ? 4 : 11
-                }/>
+                }  download={true} viewColumns={true} filter={true} search={true}/>
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>

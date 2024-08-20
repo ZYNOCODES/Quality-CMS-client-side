@@ -12,43 +12,54 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
-import SelectFieldComponent from '../forms/SelectField';
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
-export default function ActionCorrectiveDialog(props) {
+export default function UpdateStepTwoPanneDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const [ loading, setLoading ] = useState(false);
-    const [ Mesure, setMesure ] = useState('');
-    const handleMesureChange = (event) => {
-        setMesure(event.target.value);
-    };
-    const [ Resultat, setResultat ] = useState('');
-    const handleResultatChange = (event) => {
-        setResultat(event.target.value);
-    };
-    const [ Action, setAction ] = useState('');
-    const handleActionChange = (event) => {
-        setAction(event.target.value);
-    };
+    const [ Source, setSource ] = useState('');
+    const [ Etat, setEtat ] = useState('');
+    const [ Liberation, setLiberation ] = useState(false);
+    const [ DateLibiration, setDateLibiration ] = useState('');
+    const handleSourceChange = (event) => {
+        setSource(event.target.value);
+    }
+    const handleEtatChange = (event) => {
+        setEtat(event.target.value);
+    }
+    const handleLiberationChange = (event) => {
+        setLiberation(event.target.checked);
+        if(Liberation == false)
+            setDateLibiration('')
+    }
+    const handleDateLibirationChange = (newValue) => {
+        setDateLibiration(newValue.format('YYYY-MM-DD'));
+    }
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
         setconfirmation(event.target.checked);
     };
 
-    const handleOnCreate = async (event) => {
-        if(!Action){
+    const handleOnUpdate = async (event) => {
+        if(!Source && !Etat && !Liberation){
             notifyFailed("Un des champs doivent être remplis");
             return;
         }
         if (confirmation) {
             try {
                 setLoading(true);
-                const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${props.code}`, 
+                const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/third/${props.code}`, 
                     {
-                        mesure: Mesure,
-                        resultat: Resultat,
-                        action: Action
+                        source: Source,
+                        etat: Etat,
+                        liberation: Liberation,
+                        DateLiberation: DateLibiration
                     },
                     {
                         headers: {
@@ -72,18 +83,16 @@ export default function ActionCorrectiveDialog(props) {
                     setLoading(false);
                 } else if (error.request) {
                     // Request was made but no response was received
-                    console.error("Error creating action corrective: No response received");
+                    console.error("Error updating step two panne: No response received");
                 } else {
                     // Something happened in setting up the request that triggered an Error
-                    console.error("Error creating action corrective", error);
+                    console.error("Error updating step two panne", error);
                 }
             }
             setconfirmation(false);
-            setMesure('');
-            setResultat('');
-            setAction('');
+            setName('');
         }else{
-            notifyWarning("Veuillez confirmer la creation");
+            notifyWarning("Veuillez confirmer la modification");
         }
     };
 
@@ -91,7 +100,7 @@ export default function ActionCorrectiveDialog(props) {
         setconfirmation(false);
         props.handleClose();
     };
-
+    
     return (
         <Dialog
             open={props.open}
@@ -102,53 +111,60 @@ export default function ActionCorrectiveDialog(props) {
         >
             {!loading && 
                 <>
-                    <DialogTitle>Creation d'une action corrective</DialogTitle>
+                    <DialogTitle>Modification {props.name}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Cette creation sera appliquée directement après la confirmation.
+                            Cette modification sera appliquée directement après la confirmation.
                         </DialogContentText>
-                        <SelectFieldComponent
-                            label="Action" 
-                            initialHelperText="Selectionner une Action" 
-                            onChange={handleActionChange}
-                            obligatory={true}
-                            options={props.ActionList}
-                            optionName='name'
-                            optionIdentifier='code'
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            name="Source"
+                            label="Entrez la source"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={handleSourceChange}
                         />
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            name="Mesure"
-                            label="Entrez une mesure"
+                            name="Etat"
+                            label="Entrez l'etat"
                             type="text"
                             fullWidth
                             variant="standard"
-                            onChange={handleMesureChange}
+                            onChange={handleEtatChange}
                         />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name="Resultat"
-                            label="Entrez une resultat"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                            onChange={handleResultatChange}
+                        <FormControlLabel
+                            sx={{ mt: 1 }}
+                            control={
+                                <Switch checked={Liberation} onChange={handleLiberationChange} />
+                            }
+                            label="Liberation"
                         />
+                        {Liberation &&
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <MobileDatePicker
+                                    label="Date de liberation"
+                                    onChange={handleDateLibirationChange}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        }
                         <FormControlLabel
                             sx={{ mt: 1 }}
                             control={
                                 <Switch checked={confirmation} onChange={handleConfirmation} />
                             }
-                            label="Oui je confirme cette creation"
+                            label="Oui je confirme cette modification"
                         />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Annuler</Button>
-                        <Button onClick={handleOnCreate}>confirmer</Button>
+                        <Button onClick={handleOnUpdate}>confirmer</Button>
                     </DialogActions>
                 </>
             }
