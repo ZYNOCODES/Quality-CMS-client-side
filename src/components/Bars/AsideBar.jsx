@@ -5,12 +5,20 @@ import { AiFillProduct } from "react-icons/ai";
 import { GiExitDoor } from "react-icons/gi";
 import { FaSitemap } from "react-icons/fa";
 import { IoTimer } from "react-icons/io5";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
-import CategoryIcon from '@mui/icons-material/Category';
 import { TokenDecoder } from "../../util/DecodeToken";
+import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import AutoModeIcon from '@mui/icons-material/AutoMode';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import CategoryIcon from '@mui/icons-material/Category';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import DnsIcon from '@mui/icons-material/Dns';
 
 const AsideBar = () => {
     const [active, setActive] = useState(false);
@@ -51,37 +59,33 @@ const AsideBar = () => {
                     <li>
                         <NavLink to='/' className={`AsideBar-item ${
                         location.pathname === "/" ? "aside-item-active" : ""}`}>
-                            <AiFillProduct className='AsideBar-icon'/>
+                            <SpaceDashboardIcon className='AsideBar-icon'/>
                             <span className='side-item'>Dashboard</span>
                         </NavLink>
-                        <span className="tooltip">Dashboard</span>
                     </li>
                 }
                 <li>
                     <NavLink to='/pannes' className={`AsideBar-item ${
                     location.pathname === "/pannes" ? "aside-item-active" : ""}`}>
-                        <IoTimer className='AsideBar-icon'/>
+                        <DnsIcon className='AsideBar-icon'/>
                         <span className='side-item'>Panne</span>
                     </NavLink>
-                    <span className="tooltip">Panne</span>
                 </li>
                 <li>
                     <NavLink to='/pannes-en-reparation' className={`AsideBar-item ${
                     location.pathname === "/pannes-en-reparation" ? "aside-item-active" : ""}`}>
-                        <IoTimer className='AsideBar-icon'/>
+                        <AutoModeIcon className='AsideBar-icon'/>
                         <span className='side-item'>Reparation</span>
                     </NavLink>
-                    <span className="tooltip">En Reparation</span>
                 </li>
                 {(import.meta.env.VITE_MANAGER_TYPE == decodedToken.type || 
                 import.meta.env.VITE_AGENT_TYPE == decodedToken.type) &&
                     <li>
                         <NavLink to='/archive-pannes' className={`AsideBar-item ${
                         location.pathname === "/archive-pannes" ? "aside-item-active" : ""}`}>
-                            <IoTimer className='AsideBar-icon'/>
+                            <Inventory2Icon className='AsideBar-icon'/>
                             <span className='side-item'>Archive</span>
                         </NavLink>
-                        <span className="tooltip">Archive</span>
                     </li>
                 }
                 {(import.meta.env.VITE_MANAGER_TYPE === decodedToken.type || 
@@ -89,10 +93,9 @@ const AsideBar = () => {
                     <li>
                         <NavLink to='/produits' className={`AsideBar-item ${
                         location.pathname === "/produits" ? "aside-item-active" : ""}`}>
-                            <FaSitemap className='AsideBar-icon'/>
+                            <CategoryIcon className='AsideBar-icon'/>
                             <span className='side-item'>Produit</span>
                         </NavLink>
-                        <span className="tooltip">Produit</span>
                     </li>
                 }
                 {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
@@ -100,26 +103,23 @@ const AsideBar = () => {
                         <li>
                             <NavLink to='/zones' className={`AsideBar-item ${
                             location.pathname === "/zones" ? "aside-item-active" : ""}`}>
-                                <CategoryIcon className='AsideBar-icon'/>
+                                <HomeWorkIcon className='AsideBar-icon'/>
                                 <span className='side-item'>Zone</span>
                             </NavLink>
-                            <span className="tooltip">Zone</span>
                         </li>
                         <li>
                             <NavLink to='/inventaire' className={`AsideBar-item ${
                             location.pathname === "/inventaire" ? "aside-item-active" : ""}`}>
-                                <IoTimer className='AsideBar-icon'/>
+                                <PrecisionManufacturingIcon className='AsideBar-icon'/>
                                 <span className='side-item'>Inventaire</span>
                             </NavLink>
-                            <span className="tooltip">Inventaire</span>
                         </li>
                         <li>
                             <NavLink to='/utilisateurs' className={`AsideBar-item ${
                             location.pathname === "/utilisateurs" ? "aside-item-active" : ""}`}>
-                                <IoTimer className='AsideBar-icon'/>
+                                <SupervisedUserCircleIcon className='AsideBar-icon'/>
                                 <span className='side-item'>Utilisateurs</span>
                             </NavLink>
-                            <span className="tooltip">Utilisateurs</span>
                         </li>
                     </>
                 }
@@ -128,7 +128,7 @@ const AsideBar = () => {
                         <GiExitDoor className='AsideBar-icon'/>
                         <span className='side-item'>Déconnecter</span>
                     </NavLink>
-                    <span className="tooltip">Déconnecter</span>
+                    {/* <span className="tooltip">Déconnecter</span> */}
                 </li>
             </ul>
         </div>

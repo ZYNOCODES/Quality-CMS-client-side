@@ -7,14 +7,15 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { useQuery } from '@tanstack/react-query';
 import DashboardCalendar from '../components/DashboardCalendar';
 import { CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const { user } = useAuthContext();
+    const navigate = useNavigate();
     const [dateRange, setDateRange] = useState({
         startDate: null,
         endDate: null,
     }); 
-    console.log(dateRange);
     const chartSetting = {
         yAxis: [
           {
@@ -109,6 +110,41 @@ const HomePage = () => {
     const { data: CountAllPannesMonthData, error: CountAllPannesMontherror, isLoading: isCountAllPannesMonthLoading, refetch: CountAllPannesMonthrefetch } = useQuery({
         queryKey: ['CountAllPannesMonthData', user?.token],
         queryFn: CountAllPannesMonth,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    //count top 5 Technician corrective
+    const CountTop5Technician = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/technician`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top technician");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top5TechnicianData, error: Top5Technicianerror, isLoading: isTop5TechnicianLoading, refetch: Top5Technicianrefetch } = useQuery({
+        queryKey: ['Top5TechnicianData', user?.token],
+        queryFn: CountTop5Technician,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
     });
@@ -341,28 +377,27 @@ const HomePage = () => {
                     }
                 </div>
                 <div className="middle-bar-dashboard-card">
-                    <h1>Top technician</h1>
-                    <div className="dashboard-view-card-item">
-                        <h1>Technician 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Technician 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Technician 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Technician 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Technician 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    
+                    {isTop5TechnicianLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top5Technicianerror || Top5TechnicianData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top technician</h1>
+                            {Top5TechnicianData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <div className="dashboard-view-card-item-title">
+                                        <h1>{`${item.technicianAssociation.fullname ? item.technicianAssociation.fullname : item.technicianAssociation.username}`}</h1>
+                                        <p>{`${item.averageRepairTime}`}</p>
+                                    </div>
+                                    <VisibilityIcon className='dashboard-view-card-item-icon' onClick={() => navigate(`/utilisateur/${item.technicianAssociation.code}`)}/>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
                 </div>
             </div>
             <div className="bottom-bar-dashboard-container">
@@ -378,7 +413,7 @@ const HomePage = () => {
                             <h1>Top pannes</h1>
                             {Top4PannesData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
-                                    <h1>{`${item.panne}`}</h1>
+                                    <h1>{`${item.typepanneAssociation.name}`}</h1>
                                     <h1>{`${item.count} fois`}</h1>
                                 </div>
                             ))}

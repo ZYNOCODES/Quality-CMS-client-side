@@ -11,9 +11,7 @@
     border-bottom-right-radius: 0.8rem;
     z-index: 99;
 }
-.AsideBar-container.active{
-    width: calc(100% - 250px);
-}
+
 .AsideBar-container.active{
     width: 250px;
 }
@@ -102,6 +100,7 @@
     margin: 0.8rem auto;
     line-height: 50px;
 }
+
 .AsideBar-container ul li:last-child{
     position: absolute;
     bottom: 0;
@@ -119,15 +118,23 @@
     text-align: center;
     height: 25px;
     line-height: 50px;
-    margin-inline-start: 14px;
-    margin-inline-end: 12px;
+
 }
 .AsideBar-container ul li .AsideBar-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: #fff;
     display: flex;
     align-items: center;
     text-decoration: none;
     border-radius: 0.8rem;
+    padding: 10px;
+}
+.AsideBar-container.active ul li .AsideBar-item{
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 5px;
 }
 .AsideBar-container ul li .AsideBar-item.aside-item-active{
     background-color: #eee;
@@ -142,13 +149,14 @@
     text-align: center;
     height: 25px;
     line-height: 50px;
-    margin-inline-start: 12px;
-    margin-inline-end: 12px;
 }
 .AsideBar-container .side-item{
+    display: none;
     opacity: 0;
 }
 .AsideBar-container.active .side-item{
+    display: block;
+    text-align: start;
     opacity: 1;
 }
 .AsideBar-container ul li .tooltip{
@@ -195,12 +203,9 @@
     }
     .AsideBar-container ul li .AsideBar-item .AsideBar-icon{
         min-width: 20px;
-        margin-inline-start: 8px;
-        margin-inline-end: 8px;
+
     }
     .AsideBar-container ul li:last-child .AsideBar-item .AsideBar-icon{
         min-width: 20px;
-        margin-inline-start: 8px;
-        margin-inline-end: 8px;
     }
 }

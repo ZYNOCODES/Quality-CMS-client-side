@@ -351,11 +351,13 @@ const ZonePage = () => {
     }
     return (
         <div className="pages-container">
+            {/* zonnes */}
             <TableHeader name={'Liste des zonnes'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateZoneDialog} />
             <DataTable data={ZonesData} columns={columnsZone} rows={3} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateZoneDialog open={openCreateZoneDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <UpdateZoneDialog  name={'d\'une zone'} code={currentCode} user={user} open={openUpdateZoneDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'une zone'} loading={submitionLoading} open={openDeleteZoneDialog} handleClose={handleClose} handleOnDelete={handleDeleteZone}/>
+            {/* workshops */}
             <TableHeader name={'Liste des ateliers'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateWorkshopDialog} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
             <DataTable data={filteredWorkshopsData} columns={columnsWorkshop} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateWorkshopDialog open={openCreateWorkshopDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone} ZoneList={ZonesData}/>

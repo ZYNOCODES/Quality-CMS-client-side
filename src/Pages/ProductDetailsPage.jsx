@@ -179,12 +179,12 @@ const ProductDetails = () => {
             },
         },
         {
-            name: "panne",
+            name: "typepanneAssociation",
             label: "Panne",
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return <p>{value.name}</p>;
                 },
             },
         },

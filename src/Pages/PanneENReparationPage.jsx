@@ -32,14 +32,17 @@ const EnReparationPanne = () => {
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
     const [workshop, setWorkshop] = useState('');
     const [Zone, setZone] = useState('');
+    const [PanneType, setPanneType] = useState('');
     const handleWorkshopChange = (event) => {
         setWorkshop(event.target.value);
     }
     const handleZoneChange = (event) => {
         setZone(event.target.value);
+    }
+    const handlePanneTypeChange = (event) => {
+        setPanneType(event.target.value);
     }
     // fetching Pannes data
     const fetchPannesData = async () => {
@@ -98,6 +101,36 @@ const EnReparationPanne = () => {
     const { data: PannesData, error, isLoading, refetch } = useQuery({
         queryKey: ['PannesData', user?.token],
         queryFn: fetchPannesData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // fetching type de panne data
+    const fetchTypePanneData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/pannetype`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving type de panne data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: TypePanneData, error: TypePanneerror, Loading: isTypePanneLoading, refetch: TypePannerefetch } = useQuery({
+        queryKey: ['TypePanneData', user?.token],
+        queryFn: fetchTypePanneData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
@@ -188,18 +221,9 @@ const EnReparationPanne = () => {
     );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
-        workshop == '' || panne.workshop == workshop
+        (workshop == '' || panne.workshop == workshop) &&
+        (PanneType == '' || panne.panne == PanneType) 
     );
-    // Function to refetch data
-    const handleRefetchDataChange = () => {
-        refetch();
-    }
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
     const Redirection = (path) => {
         navigate(`${path}`)
     }
@@ -250,13 +274,13 @@ const EnReparationPanne = () => {
             },
         },
         {
-            name: "panne",
+            name: "typepanneAssociation",
             label: "Panne",
             options: {
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return <p>{value.name}</p>;
                 },
             },
         },
@@ -321,7 +345,7 @@ const EnReparationPanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handlePanneTypeChange={handlePanneTypeChange} PanneTypeList={TypePanneData}/>
             <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>

@@ -6,6 +6,22 @@ const TableHeader = (props) => {
         <div className="pages-header">
             <h1 className="pages-title">{props.name}</h1>
             <div className="pages-selects-container">
+                {props.PanneTypeList && props.handlePanneTypeChange &&
+                    <div className='pages-input-select-field-container'>
+                    <select
+                        className='pages-input-select-field'
+                        onChange={props.handlePanneTypeChange}
+                        placeholder="Sélectionnez un atelier"
+                    >
+                        <option value={''}>Sélectionnez un type de panne</option>
+                        {props.PanneTypeList?.map((option, index) => (
+                            <option key={index} value={option.id}>
+                                {option.name}
+                            </option>
+                        ))}
+                    </select>
+                    </div>
+                }
                 {props.workshopList && props.handleWorkshopChange &&
                     <div className='pages-input-select-field-container'>
                     <select
@@ -88,6 +104,12 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des pieces'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une piece</button>
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des types de panne'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un type de panne</button>
                 }  
                 {
                 (

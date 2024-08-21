@@ -43,11 +43,15 @@ const PannePage = () => {
     const [submitionLoading, setSubmitionLoading] = useState(false);
     const [workshop, setWorkshop] = useState('');
     const [Zone, setZone] = useState('');
+    const [PanneType, setPanneType] = useState('');
     const handleWorkshopChange = (event) => {
         setWorkshop(event.target.value);
     }
     const handleZoneChange = (event) => {
         setZone(event.target.value);
+    }
+    const handlePanneTypeChange = (event) => {
+        setPanneType(event.target.value);
     }
     // fetching Pannes data
     const fetchPannesData = async () => {
@@ -98,6 +102,37 @@ const PannePage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching type de panne data
+    const fetchTypePanneData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/pannetype`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving type de panne data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: TypePanneData, error: TypePanneerror, Loading: isTypePanneLoading, refetch: TypePannerefetch } = useQuery({
+        queryKey: ['TypePanneData', user?.token],
+        queryFn: fetchTypePanneData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+
     // fetching Workshops data
     const fetchWorkshopsData = async () => {
         try{
@@ -185,7 +220,8 @@ const PannePage = () => {
     );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
-        workshop == '' || panne.workshop == workshop
+        (workshop == '' || panne.workshop == workshop) &&
+        (PanneType == '' || panne.panne == PanneType) 
     );
     // Function to refetch data
     const handleRefetchDataChange = () => {
@@ -284,12 +320,12 @@ const PannePage = () => {
             },
         },
         {
-            name: "panne",
+            name: "typepanneAssociation",
             label: "Panne",
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return <p>{value.name}</p>;
                 },
             },
         },
@@ -359,7 +395,7 @@ const PannePage = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handlePanneTypeChange={handlePanneTypeChange} PanneTypeList={TypePanneData}/>
             <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
             {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                 <>

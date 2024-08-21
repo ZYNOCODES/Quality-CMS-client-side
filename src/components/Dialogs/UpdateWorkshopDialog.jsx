@@ -34,6 +34,7 @@ export default function UpdateWorkshopDialog(props) {
 
     const handleOnUpdate = async (event) => {
         if(!Name && !Zone){
+            setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
         }

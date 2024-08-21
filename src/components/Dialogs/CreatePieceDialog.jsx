@@ -114,7 +114,7 @@ export default function PieceDialog(props) {
           <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
             <TextFieldComponent 
                 type="text" 
-                label="Name" 
+                label="Nom" 
                 initialHelperText="Entrer le nom du piece" 
                 onChange={handleNameChange}
                 obligatory={true}

@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
+import moment from 'moment';
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -26,7 +27,37 @@ const formatDate = (dateString) => {
   
     return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
 };
+const formatDuration = (mill) => {
+    // Handle case where mill is null or undefined
+    if (mill === null || mill === undefined) {
+        return "Durée non disponible";
+    }
 
+    // Create duration object
+    const duration = moment.duration(mill);
+    const days = duration.days();
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+
+    // Build the formatted duration string
+    let formattedDuration = '';
+
+    if (days > 0) {
+        formattedDuration += `${days} jour${days > 1 ? 's' : ''}, `;
+    }
+    if (hours > 0) {
+        formattedDuration += `${hours} heure${hours > 1 ? 's' : ''}, `;
+    }
+    if (minutes > 0) {
+        formattedDuration += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
+    }
+    if (seconds > 0 || formattedDuration === '') { // Include seconds if no other units are present
+        formattedDuration += `${seconds} seconde${seconds > 1 ? 's' : ''}`;
+    }
+
+    return formattedDuration || "0 secondes";
+};
 const ArchivePanne = () => {
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
@@ -243,7 +274,7 @@ const ArchivePanne = () => {
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return <p>{formatDuration(value)}</p>;
                 },
             },
         },

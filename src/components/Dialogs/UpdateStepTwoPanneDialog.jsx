@@ -48,6 +48,7 @@ export default function UpdateStepTwoPanneDialog(props) {
 
     const handleOnUpdate = async (event) => {
         if(!Source && !Etat && !Liberation){
+            setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
         }

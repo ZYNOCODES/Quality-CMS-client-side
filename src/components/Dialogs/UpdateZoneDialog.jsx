@@ -29,6 +29,7 @@ export default function UpdateZoneDialog(props) {
 
     const handleOnUpdate = async (event) => {
         if(!Name){
+            setconfirmation(false);
             notifyFailed("Tous les champs doivent être remplis");
             return;
         }

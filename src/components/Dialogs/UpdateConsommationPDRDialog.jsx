@@ -34,6 +34,7 @@ export default function UpdateConsommationPDRDialog(props) {
 
     const handleOnCreate = async (event) => {
         if(!Quantity && !Piece){
+            setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
         }

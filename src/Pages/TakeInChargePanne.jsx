@@ -165,7 +165,7 @@ const TakeInChargePanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.panne} label='Panne' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={formatDate(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                 </div>

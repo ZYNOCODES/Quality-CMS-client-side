@@ -86,7 +86,7 @@ export default function ProductDialog(props) {
         if (!response.ok) {
         const errorData = await response.json();
         if(errorData.error.statusCode == 404)
-            throw new Error(errorData.message);
+            return [];
         else
             throw new Error("Error receiving Families data");
         } 
@@ -116,7 +116,7 @@ export default function ProductDialog(props) {
         if (!response.ok) {
             const errorData = await response.json();
             if(errorData.error.statusCode == 404)
-                throw new Error(errorData.message);
+                return [];
         else
             throw new Error("Error receiving ateliers data");
         } 
@@ -127,6 +127,36 @@ export default function ProductDialog(props) {
     const { data: atelierList, error: atelierError, isLoading: isatelierLoading, refetch: atelierRefetch } = useQuery({
         queryKey: ['atelierList', props.user?.token],
         queryFn: fetchAtelierData,
+        enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // Fetch PanneType data
+    const fetchPanneTypeData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/pannetype`,
+        {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${props.user?.token}`,
+            },
+        }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+        else
+            throw new Error("Error receiving PanneTypes data");
+        } 
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch PanneType data
+    const { data: PanneTypeList, error: PanneTypeError, isLoading: isPanneTypeLoading, refetch: PanneTypeRefetch } = useQuery({
+        queryKey: ['PanneTypeList', props.user?.token],
+        queryFn: fetchPanneTypeData,
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
@@ -275,6 +305,7 @@ export default function ProductDialog(props) {
                         obligatory={true}
                         options={familyList}
                         optionName='name'
+                        optionIdentifier='code'
                     />
                     <TextFieldComponent 
                         type="text" 
@@ -292,13 +323,14 @@ export default function ProductDialog(props) {
                         obligatory={true}
                         color='#fff'
                     />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="panne" 
-                        initialHelperText="Entrer la panne de votre produit" 
+                    <SelectFieldComponent 
+                        label="Type de panne" 
+                        initialHelperText="Selectionner un type" 
                         onChange={handlePanneChange}
                         obligatory={true}
-                        color='#fff'
+                        options={PanneTypeList}
+                        optionName='name'
+                        optionIdentifier='code'
                     />
                     <TextFieldComponent 
                         type="text" 
@@ -315,6 +347,7 @@ export default function ProductDialog(props) {
                         obligatory={true}
                         options={atelierList}
                         optionName='name'
+                        optionIdentifier='code'
                     />
                 </Box>
                 }

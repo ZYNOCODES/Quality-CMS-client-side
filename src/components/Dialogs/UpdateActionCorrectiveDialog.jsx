@@ -38,6 +38,7 @@ export default function UpdateActionCorrectiveDialog(props) {
 
     const handleOnCreate = async (event) => {
         if(!Action && !Mesure && !Resultat){
+            setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
         }

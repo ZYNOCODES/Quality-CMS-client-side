@@ -41,7 +41,7 @@ export default function ActionDialog(props) {
   }
   const handleSave = async () => {
     try {
-      const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/action`, 
+      const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/pannetype`, 
         { 
           name: Name,
         }, 
@@ -65,10 +65,10 @@ export default function ActionDialog(props) {
         notifyFailed(error.response.data.message);
       } else if (error.request) {
         // Request was made but no response was received
-        console.error("Error creating action: No response received");
+        console.error("Error creating panne type: No response received");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.error("Error creating action");
+        console.error("Error creating panne type");
       }
     }
   };
@@ -102,7 +102,7 @@ export default function ActionDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-              Ajouter une action
+              Ajouter un type de panne
             </Typography>
             <StyledButton autoFocus color="inherit" onClick={handleSave}>
               sauvgarder

@@ -29,6 +29,7 @@ export default function UpdatePieceDialog(props) {
 
     const handleOnUpdate = async (event) => {
         if(!Name){
+            setconfirmation(false);
             notifyFailed("Tous les champs doivent être remplis");
             return;
         }

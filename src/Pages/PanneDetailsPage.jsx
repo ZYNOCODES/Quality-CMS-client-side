@@ -7,6 +7,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useQuery } from '@tanstack/react-query';
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
+import { TokenDecoder } from '../util/DecodeToken';
+import moment from 'moment';
 
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -41,9 +43,41 @@ const formatDate = (dateString) => {
   
     return `${month} ${day}, ${year}`;
 };
+const formatDuration = (mill) => {
+    // Handle case where mill is null or undefined
+    if (mill === null || mill === undefined) {
+        return "Durée non disponible";
+    }
+
+    // Create duration object
+    const duration = moment.duration(mill);
+    const days = duration.days();
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+
+    // Build the formatted duration string
+    let formattedDuration = '';
+
+    if (days > 0) {
+        formattedDuration += `${days} jour${days > 1 ? 's' : ''}, `;
+    }
+    if (hours > 0) {
+        formattedDuration += `${hours} heure${hours > 1 ? 's' : ''}, `;
+    }
+    if (minutes > 0) {
+        formattedDuration += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
+    }
+    if (seconds > 0 || formattedDuration === '') { // Include seconds if no other units are present
+        formattedDuration += `${seconds} seconde${seconds > 1 ? 's' : ''}`;
+    }
+
+    return formattedDuration || "0 secondes";
+};
 const PanneDetails = () => {
     const { code } = useParams();
     const { user } = useAuthContext();
+    const decodedToken = TokenDecoder();
     const navigate = useNavigate();
     // fetching Panne data
     const fetchPanneData = async () => {
@@ -257,10 +291,12 @@ const PanneDetails = () => {
                     <>
                         <div className="panne-page-header-container">
                             <h1>Technicien :</h1>
-                            <div className="icon-panne-page-header-container" onClick={() => Redirection(`/utilisateur/${PanneData?.technicianAssociation?.code}`)}>
-                                <VisibilityIcon className='view-icon-panne-page-header-container' />
-                                <p>voir</p>
-                            </div>
+                            {import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
+                                <div className="icon-panne-page-header-container" onClick={() => Redirection(`/utilisateur/${PanneData?.technicianAssociation?.code}`)}>
+                                    <VisibilityIcon className='view-icon-panne-page-header-container' />
+                                    <p>voir</p>
+                                </div>
+                            }
                         </div>
                         <div className="panne-page-form-container">
                             <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.fullname} label='Nom complet' color={'#fff'} type='text' readOnly />
@@ -277,7 +313,7 @@ const PanneDetails = () => {
                     <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.panne} label='Panne' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                     {PanneData?.dateReparation != null &&
@@ -291,32 +327,34 @@ const PanneDetails = () => {
                         </>    
                     }
                 </div>
-                {/*Temps */}
-                <div className={`taken-panne-page-form-container`}>
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempFinal)} label='Temps finale' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.dureeDintervention} label="Durée d'intervention" color={'#fff'} type='text' readOnly />
-                </div>
-                {/*Action corrective et consommation PDR */}
                 {PanneData?.dateReparation != null &&
-                    <div className="Action-PDR-panne-page-header-container">
-                        <div className="Action-PDR-panne-page-header-content">
-                            <div className='Action-PDR-panne-navbar-page-content'>
-                                <div className="Action-PDR-panne-navbar-page-container">
-                                    <h1>Action corrective</h1>
-                                </div>
-                            </div>
-                            <DataTable rows={5} data={ActionCorrectiveData} columns={columnsAction} download={true} viewColumns={true} filter={true} search={true} />
+                    <>
+                        {/*Temps */}
+                        <div className={`taken-panne-page-form-container`}>
+                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempFinal)} label='Temps finale' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={formatDuration(PanneData?.dureeDintervention)} label="Durée d'intervention" color={'#fff'} type='text' readOnly />
                         </div>
-                        <div className="Action-PDR-panne-page-header-content">
-                            <div className='Action-PDR-panne-navbar-page-content'>
-                                <div className="Action-PDR-panne-navbar-page-container">
-                                    <h1>Consommation PDR</h1>
+                        {/*Action corrective et consommation PDR */}
+                        <div className="Action-PDR-panne-page-header-container">
+                            <div className="Action-PDR-panne-page-header-content">
+                                <div className='Action-PDR-panne-navbar-page-content'>
+                                    <div className="Action-PDR-panne-navbar-page-container">
+                                        <h1>Action corrective</h1>
+                                    </div>
                                 </div>
+                                <DataTable rows={5} data={ActionCorrectiveData} columns={columnsAction} download={true} viewColumns={true} filter={true} search={true} />
                             </div>
-                            <DataTable rows={5} data={ConsommationPDRData} columns={columnsPDR} download={true} viewColumns={true} filter={true} search={true} />
+                            <div className="Action-PDR-panne-page-header-content">
+                                <div className='Action-PDR-panne-navbar-page-content'>
+                                    <div className="Action-PDR-panne-navbar-page-container">
+                                        <h1>Consommation PDR</h1>
+                                    </div>
+                                </div>
+                                <DataTable rows={5} data={ConsommationPDRData} columns={columnsPDR} download={true} viewColumns={true} filter={true} search={true} />
+                            </div>
                         </div>
-                    </div>
+                    </>
                 }
             </div>
             

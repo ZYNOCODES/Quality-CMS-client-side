@@ -98,11 +98,23 @@
     padding: 15px;
     gap: 10px;
 }
-.dashboard-view-card-item h1{
+.dashboard-view-card-item-title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.dashboard-view-card-item-title h1{
     color: #000000;
     font-size: 1rem;
     font-weight: 600;
-    text-align: center;
+    text-align: start;
+}
+.dashboard-view-card-item-title p{
+    color: #7d7d7d;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: start;
 }
 .dashboard-view-card-item-icon{
     color: #0080ff;
