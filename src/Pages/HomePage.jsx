@@ -14,6 +14,7 @@ const HomePage = () => {
         startDate: null,
         endDate: null,
     }); 
+    console.log(dateRange);
     const chartSetting = {
         yAxis: [
           {

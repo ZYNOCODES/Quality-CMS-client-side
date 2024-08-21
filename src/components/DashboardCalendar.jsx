@@ -1,41 +1,46 @@
 import React, { useState } from "react";
 import { Calendar } from "primereact/calendar";
-import "primereact/resources/themes/saga-blue/theme.css"; // Import your theme
-import "primereact/resources/primereact.min.css"; // Import PrimeReact core styles
-import "primeicons/primeicons.css"; // Import PrimeIcons
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 import './css/DashboardCalendar.css';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
+import moment from "moment/moment";
 
 export default function DashboardCalendar({ onDateChange, refetch }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const today = new Date(); // Get today's date
+  const today = moment().toDate(); // Get today's date as a Date object
 
   const handleStartDateChange = (date) => {
-    setStartDate(date); 
-    if (endDate && date > endDate) {
-      setEndDate(null); // Clear end date if it is before the new start date
+    const formattedDate = moment(date).format("YYYY-MM-DD"); // Format date using moment
+    setStartDate(formattedDate); 
+    if (endDate && moment(date).isAfter(endDate)) {
+      setEndDate(null); // Clear end date if the start date is after it
     }
-    onDateChange(date, endDate);
+    onDateChange(formattedDate, endDate);
   };
 
   const handleEndDateChange = (date) => {
-    setEndDate(date);
-    onDateChange(startDate, date);
+    const formattedDate = moment(date).format("YYYY-MM-DD"); // Format date using moment
+    setEndDate(formattedDate);
+    onDateChange(startDate, formattedDate);
   };
-  const ClearStartEndDate = () => {
+
+  const clearStartEndDate = () => {
     setStartDate(null);
     setEndDate(null);
     onDateChange(null, null);
-    refetch();
-  }
+    refetch(); // Refetch data when dates are cleared
+  };
+
   return (
     <>
       <div className="nav-bar-dashboard-card">
         <Calendar
           id="startDate"
-          value={startDate}
+          value={startDate ? moment(startDate).toDate() : null}
           onChange={(e) => handleStartDateChange(e.value)}
           showIcon
           placeholder="Start Date"
@@ -48,18 +53,18 @@ export default function DashboardCalendar({ onDateChange, refetch }) {
       <div className="nav-bar-dashboard-card">
         <Calendar
           id="endDate"
-          value={endDate}
+          value={endDate ? moment(endDate).toDate() : null}
           onChange={(e) => handleEndDateChange(e.value)}
           showIcon
           placeholder="End Date"
           dateFormat="yy-mm-dd"
           className="nav-bar-dashboard-card-calendar"
           disabled={!startDate} // Disable end date calendar if start date is not selected
-          minDate={startDate} // Set minimum selectable date for end date calendar
+          minDate={startDate ? moment(startDate).toDate() : null} // Set minimum selectable date for end date
           maxDate={today} // Prevent selecting future dates
         />
       </div>
-      <div className="nav-bar-dashboard-conainer-clean-btn" onClick={ClearStartEndDate}>
+      <div className="nav-bar-dashboard-conainer-clean-btn" onClick={clearStartEndDate}>
         <EventBusyIcon />
       </div>
     </>
