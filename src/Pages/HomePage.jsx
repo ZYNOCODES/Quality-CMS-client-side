@@ -2,83 +2,18 @@ import './css/HomePageStyle.css';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useQuery } from '@tanstack/react-query';
+import DashboardCalendar from '../components/DashboardCalendar';
+import { CircularProgress } from '@mui/material';
 
 const HomePage = () => {
-    const [ data, setData ] = useState([
-        {
-            EnAttente: 59,
-            EnReparation: 57,
-            Repare: 86,
-            month: 'Jan',
-          },
-          {
-            EnAttente: 50,
-            EnReparation: 52,
-            Repare: 78,
-            month: 'Feb',
-          },
-          {
-            EnAttente: 47,
-            EnReparation: 53,
-            Repare: 106,
-            month: 'Mar',
-          },
-          {
-            EnAttente: 54,
-            EnReparation: 56,
-            Repare: 92,
-            month: 'Apr',
-          },
-          {
-            EnAttente: 57,
-            EnReparation: 69,
-            Repare: 92,
-            month: 'May',
-          },
-          {
-            EnAttente: 60,
-            EnReparation: 63,
-            Repare: 103,
-            month: 'June',
-          },
-          {
-            EnAttente: 59,
-            EnReparation: 60,
-            Repare: 105,
-            month: 'July',
-          },
-          {
-            EnAttente: 65,
-            EnReparation: 60,
-            Repare: 106,
-            month: 'Aug',
-          },
-          {
-            EnAttente: 51,
-            EnReparation: 51,
-            Repare: 95,
-            month: 'Sept',
-          },
-          {
-            EnAttente: 60,
-            EnReparation: 65,
-            Repare: 97,
-            month: 'Oct',
-          },
-          {
-            EnAttente: 67,
-            EnReparation: 64,
-            Repare: 76,
-            month: 'Nov',
-          },
-          {
-            EnAttente: 61,
-            EnReparation: 70,
-            Repare: 103,
-            month: 'Dec',
-          },
-    ]);
+    const { user } = useAuthContext();
+    const [dateRange, setDateRange] = useState({
+        startDate: null,
+        endDate: null,
+    }); 
     const chartSetting = {
         yAxis: [
           {
@@ -91,46 +26,318 @@ const HomePage = () => {
           },
         },
     };
-      
     const valueFormatter = (value) => `${value}mm`;
-      
+    
+    //count all pannes API
+    const CountAllPannes = async () => {
+        try{
+            let response;
+            if(dateRange.startDate != null && dateRange.endDate != null){
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/count/?start=${dateRange.startDate}&end=${dateRange.endDate}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }else{
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des pannes");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: CountAllPannesData, error: CountAllPanneserror, isLoading: isCountAllPannesLoading, refetch: CountAllPannesrefetch } = useQuery({
+        queryKey: ['CountAllPannesData', user?.token],
+        queryFn: CountAllPannes,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    //count all pannes by month API
+    const CountAllPannesMonth = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/month`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des pannes by month");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: CountAllPannesMonthData, error: CountAllPannesMontherror, isLoading: isCountAllPannesMonthLoading, refetch: CountAllPannesMonthrefetch } = useQuery({
+        queryKey: ['CountAllPannesMonthData', user?.token],
+        queryFn: CountAllPannesMonth,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    //count top 4 pannes
+    const CountTop4Pannes = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/panne`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top pannes");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top4PannesData, error: Top4Panneserror, isLoading: isTop4PannesLoading, refetch: Top4Pannesrefetch } = useQuery({
+        queryKey: ['Top4PannesData', user?.token],
+        queryFn: CountTop4Pannes,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    //count top 4 action corrective
+    const CountTop4Action = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/action`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top action");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top4ActionData, error: Top4Actionerror, isLoading: isTop4ActionLoading, refetch: Top4Actionrefetch } = useQuery({
+        queryKey: ['Top4ActionData', user?.token],
+        queryFn: CountTop4Action,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    //count top 4 consommation PDR
+    const CountTop4Consommation = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/consommation`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top action");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top4ConsommationData, error: Top4Consommationerror, isLoading: isTop4ConsommationLoading, refetch: Top4Consommationrefetch } = useQuery({
+        queryKey: ['Top4ConsommationData', user?.token],
+        queryFn: CountTop4Consommation,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    // useEffect to refetch data when the date range changes
+    useEffect(() => {
+        if (dateRange.startDate && dateRange.endDate) {
+            CountAllPannesrefetch();
+        } else if (dateRange.startDate == null && dateRange.endDate == null) {
+            CountAllPannesrefetch();
+        }
+    }, [dateRange]);
+
     return (
         <div className="dashboar-container">
             <div className="nav-bar-dashboard-conainer">
-                <div className="nav-bar-dashboard-card">
-                    <h1>Start</h1>
-                </div>
-                <div className="nav-bar-dashboard-card">
-                    <h1>End</h1>
-                </div>
+                <DashboardCalendar
+                    onDateChange={(start, end) =>
+                        setDateRange({ startDate: start, endDate: end })
+                    }
+                    refetch={CountAllPannesrefetch}
+                />
             </div>
             <div className="top-bar-dashboard-container">
                 <div className="top-bar-dashboard-card">
-                    <h1>En attente</h1>
-                    <p>200</p>
+                    {isCountAllPannesLoading ? 
+                        <>
+                            <div className="CircularProgress-container">
+                                <CircularProgress className='CircularProgress' />
+                            </div>
+                        </>
+                    :   (CountAllPanneserror ? 
+                            <>
+                                <h1>Aucune donnée disponible</h1>
+                            </>
+                        :
+                        <>
+                            <h1>En attente</h1>
+                            <p>{CountAllPannesData?.EnAttente}</p>
+                        </>
+                        )
+                    }
+                    
                 </div>
                 <div className="top-bar-dashboard-card">
-                    <h1>En réparation</h1>
-                    <p>45</p>
+                    {isCountAllPannesLoading ? 
+                        <>
+                            <div className="CircularProgress-container">
+                                <CircularProgress className='CircularProgress' />
+                            </div>
+                        </>
+                    :   (CountAllPanneserror ? 
+                            <>
+                                <h1>Aucune donnée disponible</h1>
+                            </>
+                        :
+                            <>
+                                <h1>En réparation</h1>
+                                <p>{CountAllPannesData?.EnReparation}</p>
+                            </>
+                        )
+                    }
                 </div>
                 <div className="top-bar-dashboard-card">
-                    <h1>Réparé</h1>
-                    <p>309</p>
+                    {isCountAllPannesLoading ? 
+                        <>
+                            <div className="CircularProgress-container">
+                                <CircularProgress className='CircularProgress' />
+                            </div>
+                        </>
+                    :   (CountAllPanneserror ? 
+                            <>
+                                <h1>Aucune donnée disponible</h1>
+                            </>
+                        :
+                            <>
+                                <h1>Réparé</h1>
+                                <p>{CountAllPannesData?.Repare}</p>
+                            </>
+                        )
+                    }
                 </div>
             </div>
             <div className="middle-bar-dashboard-container">
                 <div className="middle-bar-dashboard-card">
-                    <h1>Nombre de panne</h1>
-                    <BarChart
-                        dataset={data}
-                        xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-                        series={[
-                            { dataKey: 'EnAttente', label: 'En attente', valueFormatter },
-                            { dataKey: 'EnReparation', label: 'En réparation', valueFormatter },
-                            { dataKey: 'Repare', label: 'Réparé', valueFormatter },
-                        ]}
-                        {...chartSetting}
-                    />
+                    {isCountAllPannesMonthLoading ? 
+                        <>
+                                <div className="CircularProgress-container">
+                                    <CircularProgress className='CircularProgress' />
+                                </div>  
+                        </>
+                        :   
+                        (CountAllPannesMonthData && CountAllPannesMonthData.length > 0 ? 
+                            (
+                                <>
+                                    <h1>Nombre de panne</h1>
+                                    <BarChart
+                                        dataset={CountAllPannesMonthData}
+                                        xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+                                        series={[
+                                            { dataKey: 'EnAttente', label: 'En attente', valueFormatter },
+                                            { dataKey: 'Repare', label: 'Réparé', valueFormatter },
+                                            { dataKey: 'EnReparation', label: 'En réparation', valueFormatter },
+                                        ]}
+                                        {...chartSetting}
+                                    />
+                                </>
+                            ) 
+                            : 
+                            (
+                                <>
+                                    <h1>Nombre de panne</h1>
+                                    <BarChart
+                                        dataset={[]}
+                                        xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+                                        series={[
+                                            { dataKey: 'EnAttente', label: 'En attente', valueFormatter },
+                                            { dataKey: 'Repare', label: 'Réparé', valueFormatter },
+                                            { dataKey: 'EnReparation', label: 'En réparation', valueFormatter },
+                                        ]}
+                                        {...chartSetting}
+                                    />
+                                </>
+                            )
+                        )
+                    }
                 </div>
                 <div className="middle-bar-dashboard-card">
                     <h1>Top technician</h1>
@@ -159,53 +366,64 @@ const HomePage = () => {
             </div>
             <div className="bottom-bar-dashboard-container">
                 <div className="bottom-bar-dashboard-card">
-                    <h1>Top pannes</h1>
-                    <div className="dashboard-view-card-item">
-                        <h1>Panne 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Panne 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Panne 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Panne 1</h1>
-                        <VisibilityIcon className='dashboard-view-card-item-icon' />
-                    </div>
+                    {isTop4PannesLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top4Panneserror || Top4PannesData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top pannes</h1>
+                            {Top4PannesData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h1>{`${item.panne}`}</h1>
+                                    <h1>{`${item.count} fois`}</h1>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
                 </div>
                 <div className="bottom-bar-dashboard-card">
-                    <h1>Top action corrective</h1>
-                    <div className="dashboard-view-card-item">
-                        <h1>Action corrective 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Action corrective 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Action corrective 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>Action corrective 1</h1>
-                    </div>
+                    {isTop4ActionLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top4Actionerror || Top4ActionData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top action corrective</h1>
+                            {Top4ActionData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h1>{`${item.actionAssociation?.name}`}</h1>
+                                    <h1>{`${item.count} fois`}</h1>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
                 </div>
                 <div className="bottom-bar-dashboard-card">
-                    <h1>Top PDR consommé</h1>
-                    <div className="dashboard-view-card-item">
-                        <h1>PDR consommé 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>PDR consommé 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>PDR consommé 1</h1>
-                    </div>
-                    <div className="dashboard-view-card-item">
-                        <h1>PDR consommé 1</h1>
-                    </div>
+                    {isTop4ConsommationLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top4Consommationerror || Top4ConsommationData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top PDR consommé</h1>
+                            {Top4ConsommationData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h1>{`${item.pieceAssociation?.name}`}</h1>
+                                    <h1>{`${item.count} fois`}</h1>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
                 </div>
             </div>
         </div>
