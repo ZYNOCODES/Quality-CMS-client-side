@@ -49,16 +49,16 @@ const EnReparationPanne = () => {
         try {
             let response;
             if (import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type) {
-                response = await fetch(
-                    `${import.meta.env.VITE_APP_URL_BASE}/panne/technician/${decodedToken.code}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${user?.token}`,
-                        },
-                    }
-                );
+                // response = await fetch(
+                //     `${import.meta.env.VITE_APP_URL_BASE}/panne/technician/${decodedToken.code}`,
+                //     {
+                //         method: "GET",
+                //         headers: {
+                //             "Content-Type": "application/json",
+                //             Authorization: `Bearer ${user?.token}`,
+                //         },
+                //     }
+                // );
             } else if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
                 response = await fetch(
                     `${import.meta.env.VITE_APP_URL_BASE}/panne/linked/byzone/${decodedToken.zone}`,
@@ -307,7 +307,7 @@ const EnReparationPanne = () => {
                             <button 
                                 style={{backgroundColor: '#1988ff'}} 
                                 onClick={() => {
-                                    if (import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type) 
+                                    if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) 
                                         Redirection(`/panne/reparation/${value}`);
                                     else
                                         Redirection(`/panne/${value}`);

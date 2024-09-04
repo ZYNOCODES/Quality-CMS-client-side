@@ -7,6 +7,7 @@ import HomePage from './Pages/HomePage';
 import ProductPage from './Pages/ProductPage';
 import PannePage from './Pages/PannePage';
 import PanneENReparationPage from './Pages/PanneENReparationPage';
+import PanneNonLivrePage from './Pages/PanneNonLivrePage';
 import PanneArchivePage from './Pages/PanneArchivePage';
 import ReparationPanneDetails from './Pages/ReparationPanneDetails';
 import PanneDetailsPage from './Pages/PanneDetailsPage';
@@ -35,6 +36,7 @@ function App() {
                 <Route path="produits" element={<ProductPage />} />
                 <Route path="pannes" element={<PannePage />} />
                 <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
                 <Route path="archive-pannes" element={<PanneArchivePage />} />
                 <Route path="zones" element={<ZonePage />} />
                 <Route path="inventaire" element={<InventairePage />} />
@@ -47,16 +49,15 @@ function App() {
                 <Route path="profile" element={<ProfilPage />} />    
                 <Route path="pannes" element={<PannePage />} />
                 <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
                 <Route path="archive-pannes" element={<PanneArchivePage />} />
                 <Route path="produits" element={<ProductPage />} />
               </>
             }
             {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
               <>
-                <Route index element={<Navigate to="/pannes"/>} />
-                <Route path="profile" element={<ProfilPage />} />    
-                <Route path="pannes" element={<PannePage />} />
-                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                <Route index element={<Navigate to="/profile"/>} />
+                <Route path="profile" element={<ProfilPage />} />
               </>
             }
             
@@ -68,12 +69,10 @@ function App() {
             </>      
           }
 
-          {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
+          {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
             <>
               <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />
-              <Route path="panne/prendre/:code" element={<TakeInChargePanne />} />
-              <Route path="produit/:code" element={<ProductDetailsPage />} />
-              <Route path="panne/:code" element={<PanneDetailsPage />} />    
+              <Route path="panne/prendre/:code" element={<TakeInChargePanne />} />  
             </>
           }
 

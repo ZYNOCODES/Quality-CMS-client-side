@@ -3,14 +3,11 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
-import CreatePanneDialog from '../components/Dialogs/CreatePanneDialog';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
-import DeletingDialog from '../components/Dialogs/DeletingDialog';
-import axios from 'axios';
+import moment from 'moment';
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -30,36 +27,56 @@ const formatDate = (dateString) => {
   
     return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
 };
+const formatDuration = (mill) => {
+    // Handle case where mill is null or undefined
+    if (mill === null || mill === undefined) {
+        return "Durée non disponible";
+    }
 
-const PannePage = () => {
-    const notifyFailed = (message) => toast.info(message);
-    const notifySuccess = (message) => toast.success(message);
+    // Create duration object
+    const duration = moment.duration(mill);
+    const days = duration.days();
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    const seconds = duration.seconds();
+
+    // Build the formatted duration string
+    let formattedDuration = '';
+
+    if (days > 0) {
+        formattedDuration += `${days} jour${days > 1 ? 's' : ''}, `;
+    }
+    if (hours > 0) {
+        formattedDuration += `${hours} heure${hours > 1 ? 's' : ''}, `;
+    }
+    if (minutes > 0) {
+        formattedDuration += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
+    }
+    if (seconds > 0 || formattedDuration === '') { // Include seconds if no other units are present
+        formattedDuration += `${seconds} seconde${seconds > 1 ? 's' : ''}`;
+    }
+
+    return formattedDuration || "0 secondes";
+};
+const ArchivePanne = () => {
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [openDeletePanneDialog, setOpenDeletePanneDialog] = useState(false);
-    const [currentCode, setCurrentCode] = useState(null);
-    const [submitionLoading, setSubmitionLoading] = useState(false);
     const [workshop, setWorkshop] = useState('');
     const [Zone, setZone] = useState('');
-    const [PanneType, setPanneType] = useState('');
     const handleWorkshopChange = (event) => {
         setWorkshop(event.target.value);
     }
     const handleZoneChange = (event) => {
         setZone(event.target.value);
     }
-    const handlePanneTypeChange = (event) => {
-        setPanneType(event.target.value);
-    }
     // fetching Pannes data
     const fetchPannesData = async () => {
         try{
             let response;
             if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
-                response = await fetch(
-                    `${import.meta.env.VITE_APP_URL_BASE}/panne`,
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/nonedelivred`,
                     {
                         method: "GET",
                         headers: {
@@ -68,8 +85,8 @@ const PannePage = () => {
                         },
                     }
                 );
-            } else {
-                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
+            } else if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type){
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/nonedelivred/${decodedToken.zone}`,
                     {
                         method: "GET",
                         headers: {
@@ -102,37 +119,6 @@ const PannePage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-    // fetching type de panne data
-    const fetchTypePanneData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/pannetype`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
-            }
-        );
-
-        // Handle the error state
-        if (!response.ok) {
-            const errorData = await response.json();
-            if(errorData.error.statusCode == 404)
-                return [];
-            else
-                throw new Error("Error receiving type de panne data");
-        }
-        // Return the data
-        return await response.json();
-    };
-    // useQuery hook to fetch data
-    const { data: TypePanneData, error: TypePanneerror, Loading: isTypePanneLoading, refetch: TypePannerefetch } = useQuery({
-        queryKey: ['TypePanneData', user?.token],
-        queryFn: fetchTypePanneData,
-        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
-        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
-    });
-
     // fetching Workshops data
     const fetchWorkshopsData = async () => {
         try{
@@ -220,8 +206,7 @@ const PannePage = () => {
     );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
-        (workshop == '' || panne.workshop == workshop) &&
-        (PanneType == '' || panne.panne == PanneType) 
+        workshop == '' || panne.workshop == workshop
     );
     // Function to refetch data
     const handleRefetchDataChange = () => {
@@ -231,73 +216,13 @@ const PannePage = () => {
         setOpen(true);
     };
     const handleClose = () => {
-        setCurrentCode(null);
-        setOpenDeletePanneDialog(false);
         setOpen(false);
-    };
-    const handleClickOpenDeletePanneDialog = (code) => {
-        setCurrentCode(code);
-        setOpenDeletePanneDialog(true);
-    };
-    const handleDeletePanne = async () => {
-        try {
-            setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/panne/${currentCode}`, 
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${user?.token}`,
-                    }
-                }
-            );
-            if (response.status === 200) {
-                notifySuccess(response.data.message);
-                handleRefetchDataChange();
-                setSubmitionLoading(false);
-                handleClose();
-            } else {
-                notifyFailed(response.data.message);
-                setSubmitionLoading(false);
-            }
-        } catch (error) {
-            if (error.response) {
-                notifyFailed(error.response.data.message);
-                setSubmitionLoading(false);
-            } else if (error.request) {
-                // Request was made but no response was received
-                console.error("Error deleting product: No response received");
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("Error deleting product");
-            }
-        }
     };
     const Redirection = (path) => {
         navigate(`${path}`)
     }
 
     const columns = [
-        {
-            name: "technician",
-            label: "Technician",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value || 'Non assosier'}</p>; // Show 'N/A' if technician is null
-                },
-            },
-        },
-        {
-            name: "fournisseur",
-            label: "Fournisseur",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value}</p>;
-                },
-            },
-        },
         {
             name: "workshopAssociation",
             label: "Workshop",
@@ -310,33 +235,46 @@ const PannePage = () => {
             },
         },
         {
-            name: "ligne",
-            label: "Ligne",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value}</p>;
-                },
-            },
-        },
-        {
-            name: "typepanneAssociation",
-            label: "Panne",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value.name}</p>;
-                },
-            },
-        },
-        {
-            name: "dateDeclaration",
-            label: "Date de declaration",
+            name: "dateReparation",
+            label: "Date de reparation",
             options: {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{formatDate(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "tempInitial",
+            label: "Temp initial",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDate(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "tempFinal",
+            label: "Temp finale",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDate(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "dureeDintervention",
+            label: "Duree d'intervention",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDuration(value)}</p>;
                 },
             },
         },
@@ -352,22 +290,11 @@ const PannePage = () => {
                             <button 
                                 style={{backgroundColor: '#1988ff'}} 
                                 onClick={() => {
-                                    if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) 
-                                        Redirection(`/panne/prendre/${value}`);
-                                    else
-                                        Redirection(`/panne/${value}`);
-                                    
+                                    Redirection(`/panne/${value}`);
                                 }}
                             >
                                 Voir
                             </button>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
-                                <>
-                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeletePanneDialog(value) }>
-                                        Supprimer
-                                    </button>
-                                </>
-                            }
                         </div>
                     )
                 }
@@ -395,16 +322,10 @@ const PannePage = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handlePanneTypeChange={handlePanneTypeChange} PanneTypeList={TypePanneData}/>
-            <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
-            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
-                <>
-                    <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    
-                    <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeletePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanne}/>
-                </>
-            }
+            <TableHeader name={'L\'archive des pannes'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <DataTable data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );
 }
-export default PannePage;
+export default ArchivePanne;

@@ -6,9 +6,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useQuery } from '@tanstack/react-query';
 import { CircularProgress } from '@mui/material';
 import './css/TakeInChargePannePageStyle.css';
-import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog'
-import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import ConfirmTakeInChargeDialog from '../components/Dialogs/ConfirmTakeInChargeDialog'
+import { useState } from 'react';
 import axios from 'axios';
 import { TokenDecoder } from "../util/DecodeToken";
 
@@ -74,16 +74,52 @@ const TakeInChargePanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Technician data
+    const fetchTechnicianData = async () => {
+        const response = await fetch(
+            `${import.meta.env.VITE_APP_URL_BASE}/users/technician/${decodedToken.zone}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (errorData.error.statusCode === 404) {
+                throw new Error(errorData.message);
+            } else {
+                throw new Error("Erreur lors de la réception des données des techniciens");
+            }
+        }
+        return response.json();
+    };
+    // useQuery hook to fetch data
+    const {
+        data: technicianList,
+        error: technicianError,
+        isLoading: isTechnicianLoading,
+        refetch: technicianRefetch,
+    } = useQuery({
+        queryKey: ['TechnicianList', user?.token],
+        queryFn: fetchTechnicianData,
+        enabled: !!user?.token,
+        refetchOnWindowFocus: true,
+    });
+
     // Redirection function
     const Redirection = (path) => {
         navigate(path);
     }
-    const onHandleClicktakeInChargePanne = async () => {
+    const onHandleClicktakeInChargePanne = async (technician) => {
         try {
             setSubmitionLoading(true);
             const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/second/${code}`, 
                 {
-                    codeT: decodedToken.code
+                    codeT: technician
                 },
                 {
                     headers: {
@@ -182,7 +218,7 @@ const TakeInChargePanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
                 </div>
             </div>
-            <ConfirmationDialog open={open} name={'prise en charge'} loading={submitionLoading} handleOnConfirm={onHandleClicktakeInChargePanne} handleClose={handleClose} />
+            <ConfirmTakeInChargeDialog TechnicianList={technicianList} open={open} name={'prise en charge'} loading={submitionLoading} handleOnConfirm={onHandleClicktakeInChargePanne} handleClose={handleClose} />
             <ToastContainer />
         </div>
     );

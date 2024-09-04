@@ -28,7 +28,7 @@ const HomePage = () => {
           },
         },
     };
-    const valueFormatter = (value) => `${value}mm`;
+    const valueFormatter = (value) => `${value}`;
     
     //count all pannes API
     const CountAllPannes = async () => {

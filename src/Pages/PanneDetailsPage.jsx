@@ -9,6 +9,11 @@ import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { TokenDecoder } from '../util/DecodeToken';
 import moment from 'moment';
+import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog';
+import './css/TakeInChargePannePageStyle.css';
+import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
+import { useState } from 'react';
 
 const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -75,10 +80,22 @@ const formatDuration = (mill) => {
     return formattedDuration || "0 secondes";
 };
 const PanneDetails = () => {
+    const notifyFailed = (message) => toast.info(message);
+    const notifySuccess = (message) => toast.success(message);
     const { code } = useParams();
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
     const navigate = useNavigate();
+    const [submitionLoading, setSubmitionLoading] = useState(false);
+    const [ open, setOpen ] = useState(false);
+
+    const handleOpenConfirmationDialog = () => {
+        setOpen(true);
+    }
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     // fetching Panne data
     const fetchPanneData = async () => {
         try {
@@ -183,6 +200,41 @@ const PanneDetails = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    const onHandleClickDelivredPanne = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/delivred/${code}`, 
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                setSubmitionLoading(false);
+                handleClose();
+                //rediraction
+                Redirection(`/archive-pannes`);
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error updating product: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error updating product", error);
+            }
+        }
+    }
     // Redirection function
     const Redirection = (path) => {
         navigate(path);
@@ -272,6 +324,9 @@ const PanneDetails = () => {
                     <ArrowBackIcon className='panne-backIcon-icon-container'/>
                 </div>
                 <h1>Détails du Panne</h1>
+                {!PanneData?.livraison &&
+                    <button className="take-in-charge-button" onClick={handleOpenConfirmationDialog}>Livre</button>
+                }
             </div>
             <div className="panne-page-details-content">
                 {/*Product */}
@@ -357,7 +412,7 @@ const PanneDetails = () => {
                     </>
                 }
             </div>
-            
+            <ConfirmationDialog open={open} name={'livraison'} loading={submitionLoading} handleOnConfirm={onHandleClickDelivredPanne} handleClose={handleClose} />
         </div>
     );
 }

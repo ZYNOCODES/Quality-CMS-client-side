@@ -1,17 +1,14 @@
 import './style.css';
 import LOGO_IMG from '../../assets/LogoBomareCompany.png';
 import { IoMenu } from "react-icons/io5";
-import { AiFillProduct } from "react-icons/ai";
 import { GiExitDoor } from "react-icons/gi";
-import { FaSitemap } from "react-icons/fa";
-import { IoTimer } from "react-icons/io5";
 import { useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import { TokenDecoder } from "../../util/DecodeToken";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
-import FiberNewIcon from '@mui/icons-material/FiberNew';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -64,39 +61,45 @@ const AsideBar = () => {
                         </NavLink>
                     </li>
                 }
-                <li>
-                    <NavLink to='/pannes' className={`AsideBar-item ${
-                    location.pathname === "/pannes" ? "aside-item-active" : ""}`}>
-                        <DnsIcon className='AsideBar-icon'/>
-                        <span className='side-item'>Panne</span>
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink to='/pannes-en-reparation' className={`AsideBar-item ${
-                    location.pathname === "/pannes-en-reparation" ? "aside-item-active" : ""}`}>
-                        <AutoModeIcon className='AsideBar-icon'/>
-                        <span className='side-item'>Reparation</span>
-                    </NavLink>
-                </li>
                 {(import.meta.env.VITE_MANAGER_TYPE == decodedToken.type || 
                 import.meta.env.VITE_AGENT_TYPE == decodedToken.type) &&
-                    <li>
-                        <NavLink to='/archive-pannes' className={`AsideBar-item ${
-                        location.pathname === "/archive-pannes" ? "aside-item-active" : ""}`}>
-                            <Inventory2Icon className='AsideBar-icon'/>
-                            <span className='side-item'>Archive</span>
-                        </NavLink>
-                    </li>
-                }
-                {(import.meta.env.VITE_MANAGER_TYPE === decodedToken.type || 
-                import.meta.env.VITE_AGENT_TYPE === decodedToken.type) &&
-                    <li>
-                        <NavLink to='/produits' className={`AsideBar-item ${
-                        location.pathname === "/produits" ? "aside-item-active" : ""}`}>
-                            <CategoryIcon className='AsideBar-icon'/>
-                            <span className='side-item'>Produit</span>
-                        </NavLink>
-                    </li>
+                    <>
+                        <li>
+                            <NavLink to='/pannes' className={`AsideBar-item ${
+                            location.pathname === "/pannes" ? "aside-item-active" : ""}`}>
+                                <DnsIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Panne</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/pannes-en-reparation' className={`AsideBar-item ${
+                            location.pathname === "/pannes-en-reparation" ? "aside-item-active" : ""}`}>
+                                <AutoModeIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Reparation</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/non-livre-pannes' className={`AsideBar-item ${
+                            location.pathname === "/non-livre-pannes" ? "aside-item-active" : ""}`}>
+                                <LocalShippingIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Non livré</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/archive-pannes' className={`AsideBar-item ${
+                            location.pathname === "/archive-pannes" ? "aside-item-active" : ""}`}>
+                                <Inventory2Icon className='AsideBar-icon'/>
+                                <span className='side-item'>Archive</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to='/produits' className={`AsideBar-item ${
+                            location.pathname === "/produits" ? "aside-item-active" : ""}`}>
+                                <CategoryIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Produit</span>
+                            </NavLink>
+                        </li>
+                    </>
                 }
                 {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                     <>
