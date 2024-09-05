@@ -325,8 +325,27 @@ const HomePage = () => {
                             </>
                         :
                             <>
-                                <h1>Réparé</h1>
-                                <p>{CountAllPannesData?.Repare}</p>
+                                <h1>Réparé non livré</h1>
+                                <p>{CountAllPannesData?.NoneDelivredrepare}</p>
+                            </>
+                        )
+                    }
+                </div>
+                <div className="top-bar-dashboard-card">
+                    {isCountAllPannesLoading ? 
+                        <>
+                            <div className="CircularProgress-container">
+                                <CircularProgress className='CircularProgress' />
+                            </div>
+                        </>
+                    :   (CountAllPanneserror ? 
+                            <>
+                                <h1>Aucune donnée disponible</h1>
+                            </>
+                        :
+                            <>
+                                <h1>Réparé  livré</h1>
+                                <p>{CountAllPannesData?.Delivredrepare}</p>
                             </>
                         )
                     }
@@ -414,6 +433,7 @@ const HomePage = () => {
                             {Top4PannesData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <h1>{`${item.typepanneAssociation.name}`}</h1>
+                                    <h1>{`${item.typepanneAssociation.duree}`}</h1>
                                     <h1>{`${item.count} fois`}</h1>
                                 </div>
                             ))}

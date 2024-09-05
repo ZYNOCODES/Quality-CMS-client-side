@@ -22,13 +22,17 @@ export default function UpdatePanneTypeDialog(props) {
     const handleNameChange = (event) => {
         setName(event.target.value);
     };
+    const [Duree, setDuree] = useState('');
+    const handleDureeChange = (event) => {
+        setDuree(event.target.value);
+    };
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
         setconfirmation(event.target.checked);
     };
 
     const handleOnUpdate = async (event) => {
-        if(!Name){
+        if(!Name && !Duree){
             setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
@@ -39,6 +43,7 @@ export default function UpdatePanneTypeDialog(props) {
                 const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/pannetype/${props.code}`, 
                     {
                         name: Name,
+                        duree: Duree,
                     },
                     {
                         headers: {
@@ -69,8 +74,6 @@ export default function UpdatePanneTypeDialog(props) {
                 }
             }
             setconfirmation(false);
-            setName('');
-            setDisplay(null);
         }else{
             notifyWarning("Veuillez confirmer la modification");
         }
@@ -78,6 +81,8 @@ export default function UpdatePanneTypeDialog(props) {
 
     const handleClose = () => {
         setconfirmation(false);
+        setName('');
+        setDuree('');
         props.handleClose();
     };
 
@@ -101,11 +106,22 @@ export default function UpdatePanneTypeDialog(props) {
                             margin="dense"
                             id="name"
                             name="Nom"
-                            label="Entrez le nom du action"
+                            label="Entrez le nom du type de panne"
                             type="text"
                             fullWidth
                             variant="standard"
                             onChange={handleNameChange}
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="duree"
+                            name="Duree"
+                            label="Entrez la durée de la panne"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                            onChange={handleDureeChange}
                         />
                         <FormControlLabel
                             sx={{ mt: 1 }}

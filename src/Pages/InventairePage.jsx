@@ -397,6 +397,17 @@ const ActionPage = () => {
             },
         },
         {
+            name: "duree",
+            label: "Durée",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
             name: "code",
             label: " ",
             options: {

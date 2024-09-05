@@ -35,15 +35,21 @@ export default function ActionDialog(props) {
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
+  const [Duree, setDuree] = useState('');
+  const handleDureeChange = (event) => {
+    setDuree(event.target.value);
+  };
   // empty all fields
   const clearFields = () => {
       setName('');
+      setDuree('');
   }
   const handleSave = async () => {
     try {
       const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/pannetype`, 
         { 
           name: Name,
+          duree: Duree,
         }, 
         {
           headers: {
@@ -115,9 +121,17 @@ export default function ActionDialog(props) {
             <TextFieldComponent 
                 type="text" 
                 label="Nom" 
-                initialHelperText="Entrer le nom du action" 
+                initialHelperText="Entrer le nom du type de panne" 
                 onChange={handleNameChange}
                 obligatory={true}
+                color='#fff'
+            />
+            <TextFieldComponent 
+                type="text" 
+                label="Durée" 
+                initialHelperText="Entrer la durée de la panne" 
+                onChange={handleDureeChange}
+                obligatory={false}
                 color='#fff'
             />
           </Box>

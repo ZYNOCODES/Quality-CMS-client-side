@@ -426,9 +426,9 @@ const ReparationPanne = () => {
         );
     }
     // TimeCounter component
-    const TimeCounter = ({ startTime }) => {
+    const TimeCounter = ({ startTime, limiteTime }) => {
         const [elapsedTime, setElapsedTime] = useState('');
-
+        console.log(limiteTime);
         useEffect(() => {
             if (!startTime) return;
             const calculateTimeDifference = () => {
@@ -588,7 +588,7 @@ const ReparationPanne = () => {
                 {/*Temps */}
                 <div className={`taken-panne-page-form-container ${red ? 'red' : 'green'}`}>
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
-                    <TimeCounter startTime={PanneData?.tempInitial} />
+                    <TimeCounter startTime={PanneData?.tempInitial} limiteTime={PanneData?.typepanneAssociation.duree}/>
                 </div>
                 {/*Product */}
                 <div className="taken-panne-page-header-container">

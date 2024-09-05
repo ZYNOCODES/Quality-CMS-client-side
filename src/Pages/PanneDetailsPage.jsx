@@ -319,12 +319,14 @@ const PanneDetails = () => {
     ]; 
     return (
         <div className="panne-page-container">
-            <div className="panne-navbar-page-container">
-                <div className='panne-icon-container-navbar-page-container' onClick={() => Redirection(-1)}>
-                    <ArrowBackIcon className='panne-backIcon-icon-container'/>
+            <div className="panne-navbar-page-content">
+                <div className="panne-navbar-page-container">
+                    <div className='panne-icon-container-navbar-page-container' onClick={() => Redirection(-1)}>
+                        <ArrowBackIcon className='panne-backIcon-icon-container'/>
+                    </div>
+                    <h1>Détails du Panne</h1>
                 </div>
-                <h1>Détails du Panne</h1>
-                {!PanneData?.livraison &&
+                {!PanneData?.livraison && PanneData?.dateReparation && import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                     <button className="take-in-charge-button" onClick={handleOpenConfirmationDialog}>Livre</button>
                 }
             </div>
@@ -413,6 +415,7 @@ const PanneDetails = () => {
                 }
             </div>
             <ConfirmationDialog open={open} name={'livraison'} loading={submitionLoading} handleOnConfirm={onHandleClickDelivredPanne} handleClose={handleClose} />
+            <ToastContainer/>
         </div>
     );
 }
