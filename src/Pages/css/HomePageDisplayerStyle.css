@@ -1,4 +1,4 @@
-.dashboar-container{
+.dashboard-displayer-container{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -13,16 +13,7 @@
     padding-bottom: 15px;
     padding-inline-end: 15px;
 }
-.nav-bar-dashboard-conainer{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    height: fit-content;
-}
-.dashboar-container-card-content{
+.dashboard-displayer-container-card-content{
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -32,7 +23,7 @@
     height: fit-content;
     width: 100%;
 }
-.dashboar-container-card-content h1 {
+.dashboard-displayer-container-card-content h1 {
     color: #DA171B;
     font-size: 1.8rem;
     font-weight: 600;
@@ -40,7 +31,7 @@
     text-transform: uppercase;
 }
 
-.top-bar-dashboard-container{
+.top-bar-dashboard-displayer-container{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -49,7 +40,7 @@
     width: 100%;
     height: fit-content;
 }
-.top-bar-dashboard-card{
+.top-bar-dashboard-displayer-card{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,13 +52,13 @@
     padding: 10px;
     gap: 10px;
 }
-.top-bar-dashboard-card h1{
+.top-bar-dashboard-displayer-card h1{
     color: #000;
     font-size: 1.3rem;
     font-weight: 600;
     letter-spacing: 1px;
 }
-.top-bar-dashboard-card p{
+.top-bar-dashboard-displayer-card p{
     color: #DA171B;
     font-size: 1.8rem;
     font-weight: 600;
@@ -77,27 +68,27 @@
 
 /*medea screen*/
 @media screen and (max-width: 768px){
-    .dashboar-container{
+    .dashboard-displayer-container{
         padding-inline-start: 50px;
         padding-inline-end: 10px;
         height: fit-content;
     }
-    .nav-bar-dashboard-conainer{
+    .nav-bar-dashboard-displayer-conainer{
         flex-direction: column;
     }
-    .nav-bar-dashboard-card{
+    .nav-bar-dashboard-displayer-card{
         width: 100%;
     }
-    .nav-bar-dashboard-card h1{
+    .nav-bar-dashboard-displayer-card h1{
         font-size: 0.8rem;
     }
-    .top-bar-dashboard-container{
+    .top-bar-dashboard-displayer-container{
         flex-direction: column;
     }
-    .top-bar-dashboard-card h1{
+    .top-bar-dashboard-displayer-card h1{
         font-size: 0.8rem;
     }
-    .top-bar-dashboard-card p{
+    .top-bar-dashboard-displayer-card p{
         font-size: 1.3rem;
     }
 }

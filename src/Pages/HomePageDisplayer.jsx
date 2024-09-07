@@ -84,11 +84,11 @@ const HomePage = () => {
     });
 
     return (
-        <div className="dashboar-container">
-            <div className="dashboar-container-card-content">
+        <div className="dashboard-displayer-container">
+            <div className="dashboard-displayer-container-card-content">
                 <h1>journalier</h1>
-                <div className="top-bar-dashboard-container">
-                    <div className="top-bar-dashboard-card">
+                <div className="top-bar-dashboard-displayer-container">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesByDayLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -108,7 +108,7 @@ const HomePage = () => {
                         }
                         
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesByDayLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -127,7 +127,7 @@ const HomePage = () => {
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesByDayLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -146,7 +146,7 @@ const HomePage = () => {
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesByDayLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -167,10 +167,10 @@ const HomePage = () => {
                     </div>
                 </div>
             </div>
-            <div className="dashboar-container-card-content">
+            <div className="dashboard-displayer-container-card-content">
                 <h1>Totale</h1>
-                <div className="top-bar-dashboard-container">
-                    <div className="top-bar-dashboard-card">
+                <div className="top-bar-dashboard-displayer-container">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -190,7 +190,7 @@ const HomePage = () => {
                         }
                         
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -209,7 +209,7 @@ const HomePage = () => {
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
@@ -228,7 +228,7 @@ const HomePage = () => {
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-card">
+                    <div className="top-bar-dashboard-displayer-card">
                         {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
