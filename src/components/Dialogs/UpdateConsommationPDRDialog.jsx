@@ -44,7 +44,8 @@ export default function UpdateConsommationPDRDialog(props) {
                 const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/consommation/${props.code}`, 
                     {
                         quantity: Quantity,
-                        piece: Piece
+                        piece: Piece,
+                        agent: props.agent
                     },
                     {
                         headers: {

@@ -4,7 +4,7 @@
     top: 0;
     width: 80px;
     min-height: 100vh;
-    height: 100%;
+    height: fit-content;
     background-color: #0056ac;
     transition: all 0.5s ease;
     border-top-right-radius: 0.8rem;
@@ -80,7 +80,12 @@
     cursor: pointer;
 }
 .user-name{
+    font-size: large;
     font-weight: 600;
+}
+.user-subname{
+    font-size: small;
+    font-weight: 400;
 }
 .AsideBar-container p{
     opacity: 0;
@@ -101,15 +106,6 @@
     line-height: 50px;
 }
 
-.AsideBar-container ul li:last-child{
-    position: absolute;
-    bottom: 0;
-    list-style: none;
-    height: 50px;
-    width: 65%;
-    margin: 0.8rem auto;
-    line-height: 50px;
-}
 .AsideBar-container.active ul li:last-child{
     width: 90%;
 }

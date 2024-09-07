@@ -49,7 +49,8 @@ export default function UpdateActionCorrectiveDialog(props) {
                     {
                         mesure: Mesure,
                         resultat: Resultat,
-                        action: Action
+                        action: Action,
+                        agent: props.agent
                     },
                     {
                         headers: {

@@ -20,7 +20,7 @@ const SelectFieldComponent = ({
   return (
     <div className='input-select-field-container'>
       <label className='input-select-field-label'>
-        {label} {obligatory ? '*' : ''}:
+        {label} {obligatory ? '*' : ''}
       </label>
       <select
         className='input-select-field-form'

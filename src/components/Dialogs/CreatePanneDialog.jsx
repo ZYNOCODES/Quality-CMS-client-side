@@ -31,7 +31,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function ProductDialog(props) {
+export default function PanneDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const [Modele, setModele] = useState('');
@@ -174,7 +174,7 @@ export default function ProductDialog(props) {
     }
     const handleSave = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/panne/first`, 
+            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/panne/first/${props.agent}`, 
                 { 
                     model: Modele,
                     marque: Marque,

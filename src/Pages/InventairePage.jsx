@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import axios from 'axios';
+import { convertSecondsToTimeString } from '../util/UseFullFunctions';
 
 const ActionPage = () => {
     const notifyFailed = (message) => toast.info(message);
@@ -403,7 +404,7 @@ const ActionPage = () => {
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return <p>{convertSecondsToTimeString(Number(value))}</p>;
                 },
             },
         },
@@ -479,4 +480,5 @@ const ActionPage = () => {
         </div>
     );
 }
+
 export default ActionPage;

@@ -52,6 +52,7 @@ export default function UpdateStepTwoPanneDialog(props) {
             notifyFailed("Un des champs doivent être remplis");
             return;
         }
+        
         if (confirmation) {
             try {
                 setLoading(true);
@@ -60,7 +61,8 @@ export default function UpdateStepTwoPanneDialog(props) {
                         source: Source,
                         etat: Etat,
                         liberation: Liberation,
-                        DateLiberation: DateLibiration
+                        DateLiberation: DateLibiration,
+                        agent: props.agent,
                     },
                     {
                         headers: {

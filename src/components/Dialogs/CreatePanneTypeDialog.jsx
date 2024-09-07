@@ -12,6 +12,8 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import QuantityPickerComponent from '../forms/QuantityPicker';
+
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -35,21 +37,55 @@ export default function ActionDialog(props) {
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
-  const [Duree, setDuree] = useState('');
+  const [Duree, setDuree] = useState(0);
   const handleDureeChange = (event) => {
     setDuree(event.target.value);
+  };
+
+  const [DureeType, setDureeType] = useState('');
+  const handleDureeTypeChange = (event) => {
+    setDureeType(event.target.value);
+  };
+
+  const handleDureeConvertorToMillSecondes = () => {
+    if(Duree > 0){
+      const duration = parseFloat(Duree);
+      if (isNaN(duration)) {
+        notifyFailed('La durée doit être un nombre valide');
+        return 400;
+      }
+  
+      let milliseconds;
+      if (DureeType == 'min') {
+        milliseconds = duration * 60; // Convert minutes to milliseconds
+      } else if (DureeType == 'h') {
+        milliseconds = duration * 60 * 60; // Convert hours to milliseconds
+      } else {
+        notifyFailed('Type de durée non pris en charge (min ou h)');
+        return 400;
+      }
+  
+      if(milliseconds && milliseconds > 0)
+        return milliseconds;
+    }else
+      return 0;
   };
   // empty all fields
   const clearFields = () => {
       setName('');
       setDuree('');
+      setDureeType('');
   }
   const handleSave = async () => {
+    let duree = handleDureeConvertorToMillSecondes();
+    if(duree == 400){
+      return;
+    }
     try {
       const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/pannetype`, 
         { 
           name: Name,
-          duree: Duree,
+          duree: duree.toString(),
         }, 
         {
           headers: {
@@ -126,13 +162,14 @@ export default function ActionDialog(props) {
                 obligatory={true}
                 color='#fff'
             />
-            <TextFieldComponent 
-                type="text" 
-                label="Durée" 
-                initialHelperText="Entrer la durée de la panne" 
-                onChange={handleDureeChange}
-                obligatory={false}
-                color='#fff'
+            <QuantityPickerComponent
+              label="Durée"
+              onChange={handleDureeChange}
+              duree={Duree}
+              typeChange={handleDureeTypeChange}
+              type={DureeType}
+              color='#fff'
+              min={0}
             />
           </Box>
         </DialogContent>

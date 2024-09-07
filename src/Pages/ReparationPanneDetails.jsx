@@ -301,7 +301,7 @@ const ReparationPanne = () => {
     const handleDeleteActionCorrective = async () => {
         try {
             setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${currentCode}`, 
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/actioncorrective/${currentCode}/${decodedToken?.code}`, 
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -334,7 +334,7 @@ const ReparationPanne = () => {
     const handleDeleteConsommationPDR = async () => {
         try {
             setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/consommation/${currentCode}`, 
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/consommation/${currentCode}/${decodedToken?.code}`, 
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -369,7 +369,7 @@ const ReparationPanne = () => {
             setSubmitionLoading(true);
             const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/fourth/${code}`, 
                 {
-
+                    agent: decodedToken?.code
                 },
                 {
                     headers: {
@@ -428,7 +428,6 @@ const ReparationPanne = () => {
     // TimeCounter component
     const TimeCounter = ({ startTime, limiteTime }) => {
         const [elapsedTime, setElapsedTime] = useState('');
-        console.log(limiteTime);
         useEffect(() => {
             if (!startTime) return;
             const calculateTimeDifference = () => {
@@ -447,7 +446,7 @@ const ReparationPanne = () => {
                 setElapsedTime(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
 
                 // Check if time exceeds one hour and update `red` state
-                if (hours >= 1) {
+                if (limiteTime > 0 && diffInSeconds >= limiteTime) {
                     setRed(true);
                 }else{
                     setRed(false);
@@ -508,7 +507,7 @@ const ReparationPanne = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            {import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type &&
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                                 <>
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingActionCorectiveDialog(value)}>
                                         Edit
@@ -555,7 +554,7 @@ const ReparationPanne = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            {import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type &&
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                                 <>
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingConsommationPDRDialog(value)}>
                                         Edit
@@ -644,12 +643,12 @@ const ReparationPanne = () => {
                     </div>
                 </div>
             </div>
-            <UpdateStepTwoPanneDialog code={code} user={user} open={openConfirmationStepTwoDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
-            <CreateActionCorrectiveDialog code={code} user={user} open={openCreateActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
-            <UpdateActionCorrectiveDialog code={currentCode} user={user} open={openUpdatingActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
+            <UpdateStepTwoPanneDialog agent={decodedToken.code} code={code} user={user} open={openConfirmationStepTwoDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+            <CreateActionCorrectiveDialog agent={decodedToken.code} code={code} user={user} open={openCreateActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
+            <UpdateActionCorrectiveDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatingActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
             <DeletingDialog name={'d\'une action corrective'} loading={submitionLoading} open={openDeleteActionCorrectiveDialog} handleClose={handleClose} handleOnDelete={handleDeleteActionCorrective}/>
-            <CreateConsommationPDRDialog code={code} user={user} open={openCreateConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
-            <UpdateConsommationPDRDialog code={currentCode} user={user} open={openUpdatingConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
+            <CreateConsommationPDRDialog agent={decodedToken.code} code={code} user={user} open={openCreateConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
+            <UpdateConsommationPDRDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatingConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
             <DeletingDialog name={'d\'une consommation PDR'} loading={submitionLoading} open={openDeleteConsommationPDRDialog} handleClose={handleClose} handleOnDelete={handleDeleteConsommationPDR}/>
             <ConfirmationDialog open={openConfirmationDialog} name={'clôture'} loading={submitionLoading} handleOnConfirm={handleClickCloturePanne} handleClose={handleClose} />
             <ToastContainer />

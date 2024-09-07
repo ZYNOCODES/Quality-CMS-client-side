@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import DashboardCalendar from '../components/DashboardCalendar';
 import { CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { convertSecondsToTimeString } from '../util/UseFullFunctions';
 
 const HomePage = () => {
     const { user } = useAuthContext();
@@ -433,7 +434,7 @@ const HomePage = () => {
                             {Top4PannesData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <h1>{`${item.typepanneAssociation.name}`}</h1>
-                                    <h1>{`${item.typepanneAssociation.duree}`}</h1>
+                                    <h1>{`${convertSecondsToTimeString(item.typepanneAssociation.duree) || ''}`}</h1>
                                     <h1>{`${item.count} fois`}</h1>
                                 </div>
                             ))}

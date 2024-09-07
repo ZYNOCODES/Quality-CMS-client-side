@@ -69,7 +69,7 @@ const PannePage = () => {
                     }
                 );
             } else {
-                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byzone/${decodedToken.zone}`,
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/byagent/${decodedToken.code}`,
                     {
                         method: "GET",
                         headers: {
@@ -399,7 +399,7 @@ const PannePage = () => {
             <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
             {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                 <>
-                    <CreatePanneDialog open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    
+                    <CreatePanneDialog agent={decodedToken.code} open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    
                     <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeletePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanne}/>
                 </>
             }

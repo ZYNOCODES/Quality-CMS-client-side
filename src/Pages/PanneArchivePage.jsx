@@ -86,7 +86,7 @@ const ArchivePanne = () => {
                     }
                 );
             } else if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type){
-                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/archive/${decodedToken.zone}`,
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/panne/archive/${decodedToken.code}`,
                     {
                         method: "GET",
                         headers: {

@@ -119,7 +119,8 @@ const TakeInChargePanne = () => {
             setSubmitionLoading(true);
             const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/second/${code}`, 
                 {
-                    codeT: technician
+                    codeT: technician,
+                    agent: decodedToken.code,
                 },
                 {
                     headers: {

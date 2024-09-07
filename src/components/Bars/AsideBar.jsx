@@ -46,8 +46,8 @@ const AsideBar = () => {
                             <FaUserCircle className='user-img'/>
                         </div>
                     <div className="user-infos">
-                        <p className='user-name'>Utilisateur</p>
-                        <p>Role</p>
+                        <p className='user-name'>Profile</p>
+                        <p className='user-subname'>{decodedToken.type}</p>
                     </div>
                 </div>
             </NavLink>

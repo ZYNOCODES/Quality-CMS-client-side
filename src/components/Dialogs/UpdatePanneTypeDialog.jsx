@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
+import QuantityPickerComponent from '../forms/QuantityPicker';
 
 export default function UpdatePanneTypeDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
@@ -31,10 +32,42 @@ export default function UpdatePanneTypeDialog(props) {
         setconfirmation(event.target.checked);
     };
 
+    const [DureeType, setDureeType] = useState('');
+    const handleDureeTypeChange = (event) => {
+        setDureeType(event.target.value);
+    };
+
+    const handleDureeConvertorToMillSecondes = () => {
+        const duration = parseFloat(Duree);
+        if(!isNaN(duration) && Number(duration) >= 0){
+            let milliseconds;
+            if (DureeType == 'min') {
+                milliseconds = duration * 60; // Convert minutes to milliseconds
+            } else if (DureeType == 'h') {
+                milliseconds = duration * 60 * 60; // Convert hours to milliseconds
+            } else {
+                notifyFailed('Type de durée non pris en charge (min ou h)');
+                return 400;
+            }
+            return milliseconds;
+        }else{
+            return null;
+        }
+    };
+    // empty all fields
+    const clearFields = () => {
+        setName('');
+        setDuree('');
+        setDureeType('');
+    }
     const handleOnUpdate = async (event) => {
-        if(!Name && !Duree){
+        let duree = handleDureeConvertorToMillSecondes();
+        if(!Name && duree == null){
             setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
+            return;
+        }
+        if(duree == 400){
             return;
         }
         if (confirmation) {
@@ -43,7 +76,7 @@ export default function UpdatePanneTypeDialog(props) {
                 const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/pannetype/${props.code}`, 
                     {
                         name: Name,
-                        duree: Duree,
+                        duree: duree != null ? duree.toString() : '',
                     },
                     {
                         headers: {
@@ -74,6 +107,7 @@ export default function UpdatePanneTypeDialog(props) {
                 }
             }
             setconfirmation(false);
+            clearFields();
         }else{
             notifyWarning("Veuillez confirmer la modification");
         }
@@ -112,16 +146,14 @@ export default function UpdatePanneTypeDialog(props) {
                             variant="standard"
                             onChange={handleNameChange}
                         />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="duree"
-                            name="Duree"
-                            label="Entrez la durée de la panne"
-                            type="text"
-                            fullWidth
-                            variant="standard"
+                        <QuantityPickerComponent
+                            label="Durée"
                             onChange={handleDureeChange}
+                            duree={Duree}
+                            typeChange={handleDureeTypeChange}
+                            type={DureeType}
+                            color='#fff'
+                            min={0}
                         />
                         <FormControlLabel
                             sx={{ mt: 1 }}

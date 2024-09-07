@@ -22,7 +22,50 @@ const DataTable = (props) => {
         download: props.download,
         viewColumns: props.viewColumns,
         filter: props.filter,
-        search: props.search
+        search: props.search,
+        onDownload: (buildHead, buildBody, columns, data) => {
+            // Customize the headers
+            buildHead = () => {
+                return columns.map(column => column.label).join(',') + '\n'; // Dynamic column headers
+            };
+            //console.log("Data passed to onDownload:", data);
+            // Customize the body (handle nested objects and undefined values)
+            buildBody = () => {
+                return data
+                    .map((item) => {
+                        //console.log("Current dataIndex:", item.index); // Log the dataIndex to ensure it exists
+                        const row = props.data[item.index]; // Access the original data
+                        // Safely map over columns and extract values
+                        return columns
+                            .map((column) => {
+                                const cellValue = row[column.name];
+        
+                                // Handle nested object for workshopAssociation
+                                if (column.name === 'workshopAssociation') {
+                                    return cellValue?.name || ''; 
+                                }
+                                // Handle nested object for typepanneAssociation
+                                if (column.name === 'typepanneAssociation') {
+                                    return cellValue?.name || ''; 
+                                }
+                                // Handle nested object for zoneAssociation
+                                if (column.name === 'zoneAssociation') {
+                                    return cellValue?.name || ''; 
+                                }
+                                // Handle nested object for familyAssociation
+                                if (column.name === 'familyAssociation') {
+                                    return cellValue?.name || ''; 
+                                }
+
+                                return cellValue ?? ''; // Return value or empty string for other columns
+                            })
+                            .join(','); // Join row data with commas
+                    })
+                    .join('\n'); // Join all rows with newlines
+            };
+        
+            return "\uFEFF" + buildHead() + buildBody(); // Return the formatted CSV string
+        }
     };
     const getMUITheme = () => createTheme({
         typography: {

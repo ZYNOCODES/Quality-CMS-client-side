@@ -4,6 +4,7 @@ import { useAuthContext } from './hooks/useAuthContext';
 import LoginPage from './Pages/LoginPage';
 import NavAsideBar from './components/NavAsideBar';
 import HomePage from './Pages/HomePage';
+import HomePageDisplayer from './Pages/HomePageDisplayer';
 import ProductPage from './Pages/ProductPage';
 import PannePage from './Pages/PannePage';
 import PanneENReparationPage from './Pages/PanneENReparationPage';
@@ -57,7 +58,7 @@ function App() {
             {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
               <>
                 <Route index element={<Navigate to="/profile"/>} />
-                <Route path="profile" element={<ProfilPage />} />
+                <Route path="profile" element={<HomePageDisplayer />} />
               </>
             }
             

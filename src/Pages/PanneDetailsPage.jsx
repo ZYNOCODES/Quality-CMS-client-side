@@ -204,7 +204,9 @@ const PanneDetails = () => {
         try {
             setSubmitionLoading(true);
             const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/delivred/${code}`, 
-                {},
+                {
+                    agent: decodedToken.code
+                },
                 {
                     headers: {
                         "Content-Type": "application/json",

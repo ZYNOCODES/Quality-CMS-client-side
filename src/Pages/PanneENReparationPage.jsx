@@ -48,20 +48,9 @@ const EnReparationPanne = () => {
     const fetchPannesData = async () => {
         try {
             let response;
-            if (import.meta.env.VITE_TECHNICIAN_TYPE == decodedToken.type) {
-                // response = await fetch(
-                //     `${import.meta.env.VITE_APP_URL_BASE}/panne/technician/${decodedToken.code}`,
-                //     {
-                //         method: "GET",
-                //         headers: {
-                //             "Content-Type": "application/json",
-                //             Authorization: `Bearer ${user?.token}`,
-                //         },
-                //     }
-                // );
-            } else if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
+            if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
                 response = await fetch(
-                    `${import.meta.env.VITE_APP_URL_BASE}/panne/linked/byzone/${decodedToken.zone}`,
+                    `${import.meta.env.VITE_APP_URL_BASE}/panne/linked/byagent/${decodedToken.code}`,
                     {
                         method: "GET",
                         headers: {
@@ -236,7 +225,7 @@ const EnReparationPanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDate(value) || 'g'}</p>;
                 },
             },
         },
@@ -260,6 +249,9 @@ const EnReparationPanne = () => {
                 customBodyRender: (value) => {
                     return <p>{value?.name}</p>;
                 },
+                customExport: (value) => {
+                    return value?.name || ''; // Ensure only the name is exported or empty if undefined
+                }
             },
         },
         {
@@ -271,6 +263,7 @@ const EnReparationPanne = () => {
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
                 },
+                
             },
         },
         {
@@ -282,6 +275,9 @@ const EnReparationPanne = () => {
                 customBodyRender: (value) => {
                     return <p>{value.name}</p>;
                 },
+                customExport: (value) => {
+                    return value?.name || ''; // ensure only the name is exported
+                }
             },
         },
         {

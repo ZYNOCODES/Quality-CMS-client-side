@@ -65,6 +65,7 @@ const TextFieldComponent = ({
             <input
                 className={`input-text-field-form ${error ? 'error' : ''}`}
                 type={type}
+                min={minLength}
                 value={readOnly ? DefaultValue : value}
                 onChange={handleChange}
                 placeholder={initialHelperText}
