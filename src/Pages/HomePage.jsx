@@ -409,7 +409,7 @@ const HomePage = () => {
                             {Top5TechnicianData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <div className="dashboard-view-card-item-title">
-                                        <h1>{`${item.technicianAssociation.fullname ? item.technicianAssociation.fullname : item.technicianAssociation.username}`}</h1>
+                                        <h2>{`${item.technicianAssociation.fullname ? item.technicianAssociation.fullname : item.technicianAssociation.username}`}</h2>
                                         <p>{`${item.averageRepairTime}`}</p>
                                     </div>
                                     <VisibilityIcon className='dashboard-view-card-item-icon' onClick={() => navigate(`/utilisateur/${item.technicianAssociation.code}`)}/>
@@ -433,9 +433,9 @@ const HomePage = () => {
                             <h1>Top pannes</h1>
                             {Top4PannesData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
-                                    <h1>{`${item.typepanneAssociation.name}`}</h1>
-                                    <h1>{`${convertSecondsToTimeString(item.typepanneAssociation.duree) || ''}`}</h1>
-                                    <h1>{`${item.count} fois`}</h1>
+                                    <h2>{`${item.typepanneAssociation.name}`}</h2>
+                                    <h2>{`${convertSecondsToTimeString(item.typepanneAssociation.duree) || ''}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
                         </>
@@ -454,8 +454,8 @@ const HomePage = () => {
                             <h1>Top action corrective</h1>
                             {Top4ActionData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
-                                    <h1>{`${item.actionAssociation?.name}`}</h1>
-                                    <h1>{`${item.count} fois`}</h1>
+                                    <h2>{`${item.actionAssociation?.name}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
                         </>
@@ -474,8 +474,8 @@ const HomePage = () => {
                             <h1>Top PDR consommé</h1>
                             {Top4ConsommationData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
-                                    <h1>{`${item.pieceAssociation?.name}`}</h1>
-                                    <h1>{`${item.count} fois`}</h1>
+                                    <h2>{`${item.pieceAssociation?.name}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
                         </>

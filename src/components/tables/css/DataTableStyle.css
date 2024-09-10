@@ -3,7 +3,7 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    border: 2px solid #4a54d4;
+    border: 2px solid #ff0000;
     border-radius: 20px;
     margin-top: 10px;
   }
@@ -15,7 +15,7 @@
   }
   
   .search-input {
-    border: 1px solid #6c7ae0;
+    border: 1px solid #ff0000;
     border-radius: 15px;
     padding: 6px 12px;
     font-size: 14px;
@@ -61,7 +61,7 @@
   .table th {
     padding-top: 12px;
     padding-bottom: 12px;
-    background-color: #6c7ae0;
+    background-color: #ff0000;
     color: white;
     cursor: pointer;
   }
@@ -84,7 +84,7 @@
   }
   
   .pagination button {
-    background-color: #6c7ae0;
+    background-color: #ff0000;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -95,7 +95,7 @@
   
   td button{
    
-      background-color: #6c7ae0;
+      background-color: #ff0000;
       color: white;
       border: none;
       padding: 6px 12px;
@@ -148,7 +148,7 @@
   }
   
   .modal-content button {
-    background-color: #6c7ae0;
+    background-color: #ff0000;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -157,5 +157,5 @@
   }
   
   .modal-content button:hover {
-    background-color: #4a54d4;
+    background-color: #ff0000;
   }

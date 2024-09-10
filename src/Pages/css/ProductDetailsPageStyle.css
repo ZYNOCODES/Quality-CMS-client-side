@@ -5,6 +5,8 @@
     align-items: center;
     background-color: #fff;
     width: 100%;
+    height: 100%;
+    min-height: 100vh;
 }
 .navbar-page-container{
     display: flex;
@@ -12,7 +14,7 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #ff0000;
     color: #fff;
     gap: 15px;
 }
@@ -27,7 +29,7 @@
 }
 .backIcon-icon-container{
     font-size: 2rem;
-    color: #0056ac;
+    color: #ff0000;
 }
 .navbar-page-container h1{
     font-size: 1.5rem;
@@ -39,7 +41,6 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #fff;
     gap: 15px;
 }
 .product-form-container{
@@ -49,7 +50,7 @@
     gap: 15px;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #ededed;
     border-radius: 10px;
 }
 .Duree-reparation-container{
@@ -59,19 +60,19 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #ededed;
     border-radius: 10px;
     gap: 15px;
 }
 .Duree-reparation-container span{
     font-size: 1.3rem;
     font-weight: 600;
-    color: #fff;
+    color: #ff0000;
 }
 .product-details-container h1{
     align-self: flex-start;
     font-size: 1.5rem;
-    color: #0056ac;
+    color: #ff0000;
 }
 .panne-details-container{
     display: flex;
@@ -79,7 +80,7 @@
     justify-content: flex-start;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #ededed;
     border-radius: 10px;
     gap: 15px;
 }

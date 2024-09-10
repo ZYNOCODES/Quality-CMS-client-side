@@ -20,7 +20,7 @@ function convertSecondsToTimeString(seconds) {
         parts.push(`${minutes} min`);
     }
 
-    return parts.join(', ');
+    return parts.join(' ');
 }
 
 export {

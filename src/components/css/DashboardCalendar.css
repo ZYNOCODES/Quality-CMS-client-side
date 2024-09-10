@@ -4,9 +4,9 @@
     justify-content: center;
     align-items: center;
     width: 25%;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 10px;
+    height: 5vh;
+    background-color: #ededed;
+    border-radius: 5px;
     gap: 10px;
 }
 .nav-bar-dashboard-card h1{
@@ -17,18 +17,24 @@
 }
 .nav-bar-dashboard-card-calendar{
     width: 100%;
-    height: 100%;
+    outline: "none";
+    height: "100%";
+    background-color: transparent;
 }
 .nav-bar-dashboard-conainer-clean-btn{
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: #0080ff;
+    background-color: #191919;
     color: #fff;
     border-radius: 100%;
     font-size: 1rem;
     cursor: pointer;
+}
+.calendar-container-icon{
+    color: #191919;
+    margin-inline-end: 10px;
 }
 /*medea screen*/
 @media screen and (max-width: 768px){

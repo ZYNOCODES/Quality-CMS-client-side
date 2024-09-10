@@ -342,8 +342,8 @@ const PanneDetails = () => {
                     </div>
                 </div>
                 <div className="panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#191919'} type='text' readOnly />
                 </div>
                 {/*Technician */}
                 {(PanneData?.technician != null && PanneData?.technicianAssociation) &&
@@ -358,8 +358,8 @@ const PanneDetails = () => {
                             }
                         </div>
                         <div className="panne-page-form-container">
-                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.fullname} label='Nom complet' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.phoneNumber} label='Numero de telephone' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.fullname} label='Nom complet' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.phoneNumber} label='Numero de telephone' color={'#191919'} type='text' readOnly />
                         </div>
                     </>
                 }
@@ -368,20 +368,20 @@ const PanneDetails = () => {
                     <h1>Détails :</h1>
                 </div>
                 <div className="panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#191919'} type='text' readOnly />
                     {PanneData?.dateReparation != null &&
                         <>
-                            <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'NON DÉFINI'} label='Source' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'NON DÉFINI'} label='Etat' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.liberation ? 'libérer' : 'Non libérer'} label='Liberation' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'NON DÉFINI'} label='Source' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'NON DÉFINI'} label='Etat' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.liberation ? 'libérer' : 'Non libérer'} label='Liberation' color={'#191919'} type='text' readOnly />
                             {PanneData?.liberation &&
-                                <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#fff'} type='text' readOnly />
+                                <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#191919'} type='text' readOnly />
                             }
                         </>    
                     }
@@ -390,9 +390,9 @@ const PanneDetails = () => {
                     <>
                         {/*Temps */}
                         <div className={`taken-panne-page-form-container`}>
-                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempFinal)} label='Temps finale' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={formatDuration(PanneData?.dureeDintervention)} label="Durée d'intervention" color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempFinal)} label='Temps finale' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={formatDuration(PanneData?.dureeDintervention)} label="Durée d'intervention" color={'#191919'} type='text' readOnly />
                         </div>
                         {/*Action corrective et consommation PDR */}
                         <div className="Action-PDR-panne-page-header-container">

@@ -1,5 +1,5 @@
 import './style.css';
-import LOGO_IMG from '../../assets/LogoBomareCompany.png';
+import LOGO_IMG from '../../assets/Logo.png';
 import { IoMenu } from "react-icons/io5";
 import { GiExitDoor } from "react-icons/gi";
 import { useState } from 'react';

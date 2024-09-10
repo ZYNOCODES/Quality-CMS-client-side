@@ -29,63 +29,62 @@ function App() {
     <BrowserRouter>
       <main>
         <Routes>
-          <Route path="/" element={user ? <NavAsideBar /> : <LoginPage />} >
-            {user && import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
-              <>
-                <Route index element={<HomePage />} />
-                <Route path="profile" element={<ProfilPage />} />    
-                <Route path="produits" element={<ProductPage />} />
-                <Route path="pannes" element={<PannePage />} />
-                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
-                <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
-                <Route path="archive-pannes" element={<PanneArchivePage />} />
-                <Route path="zones" element={<ZonePage />} />
-                <Route path="inventaire" element={<InventairePage />} />
-                <Route path="utilisateurs" element={<UsersPage />} />
-              </>
-            }
-            {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
-              <>
-                <Route index element={<Navigate to="/pannes"/>} />
-                <Route path="profile" element={<ProfilPage />} />    
-                <Route path="pannes" element={<PannePage />} />
-                <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
-                <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
-                <Route path="archive-pannes" element={<PanneArchivePage />} />
-                <Route path="produits" element={<ProductPage />} />
-              </>
-            }
-            {user && import.meta.env.VITE_TECHNICIAN_TYPE === decodedToken.type &&
-              <>
-                <Route index element={<Navigate to="/profile"/>} />
-                <Route path="profile" element={<HomePageDisplayer />} />
-              </>
-            }
-            
-          </Route>
-
-          {user && import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
-            <>
-              <Route path="utilisateur/:code" element={<UserDetailsPage />} />
-            </>      
-          }
-
-          {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
-            <>
-              <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />
-              <Route path="panne/prendre/:code" element={<TakeInChargePanne />} />  
-            </>
-          }
-
           {user && (
             import.meta.env.VITE_AGENT_TYPE === decodedToken.type ||
             import.meta.env.VITE_MANAGER_TYPE === decodedToken.type 
           )&&
             <>
+              <Route path="/" element={user ? <NavAsideBar /> : <LoginPage />} >
+                {user && import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
+                  <>
+                    <Route index element={<HomePage />} />
+                    <Route path="profile" element={<ProfilPage />} />    
+                    <Route path="produits" element={<ProductPage />} />
+                    <Route path="pannes" element={<PannePage />} />
+                    <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                    <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
+                    <Route path="archive-pannes" element={<PanneArchivePage />} />
+                    <Route path="zones" element={<ZonePage />} />
+                    <Route path="inventaire" element={<InventairePage />} />
+                    <Route path="utilisateurs" element={<UsersPage />} />
+                  </>
+                }
+                {user && import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
+                  <>
+                    <Route index element={<Navigate to="/pannes"/>} />
+                    <Route path="profile" element={<ProfilPage />} />    
+                    <Route path="pannes" element={<PannePage />} />
+                    <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
+                    <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
+                    <Route path="archive-pannes" element={<PanneArchivePage />} />
+                    <Route path="produits" element={<ProductPage />} />
+                  </>
+                }
+              </Route>    
+              {import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
+                <>
+                  <Route path="utilisateur/:code" element={<UserDetailsPage />} />
+                </>      
+              }
+    
+              {import.meta.env.VITE_AGENT_TYPE === decodedToken.type &&
+                <>
+                  <Route path="panne/reparation/:code" element={<ReparationPanneDetails />} />
+                  <Route path="panne/prendre/:code" element={<TakeInChargePanne />} />  
+                </>
+              }
+    
               <Route path="panne/:code" element={<PanneDetailsPage />} />    
               <Route path="produit/:code" element={<ProductDetailsPage />} />
-            </>      
+            </>
           }
+
+          {user && import.meta.env.VITE_DISPLAYER_TYPE === decodedToken.type &&
+            <>
+              <Route path="/" element={<HomePageDisplayer />} />
+            </>
+          }
+          <Route path="/" element={<LoginPage />} />
         </Routes>
       </main>
     </BrowserRouter>

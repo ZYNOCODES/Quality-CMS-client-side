@@ -5,7 +5,7 @@
     width: 80px;
     min-height: 100vh;
     height: fit-content;
-    background-color: #0056ac;
+    background-color: #191919;
     transition: all 0.5s ease;
     border-top-right-radius: 0.8rem;
     border-bottom-right-radius: 0.8rem;
@@ -23,7 +23,7 @@
     width: 100%;
     margin-bottom: 1rem;
     padding: 3.2rem 0;
-    background-color: #FFFBEB;
+    background-color: #fff;
 }
 .AsideBar-logo img{
     width: 50%;
@@ -41,7 +41,7 @@
 .AsideBar-container.active #menu-btn{
     left: 90%;
     top: 4.5%;
-    color: #0056ac;
+    color: #191919;
 }
 .AsideBar-container .AsideBar-top .AsideBar-logo{
     color: #fff;
@@ -133,12 +133,12 @@
     padding: 5px;
 }
 .AsideBar-container ul li .AsideBar-item.aside-item-active{
-    background-color: #eee;
-    color: #0056ac;
+    background-color: #fff;
+    color: #ff0000;
 }
 .AsideBar-container ul li .AsideBar-item:hover{
-    background-color: #eee;
-    color: #0056ac;
+    background-color: #fff;
+    color: #ff0000;
 }
 .AsideBar-container ul li .AsideBar-item .AsideBar-icon{
     min-width: 25px;

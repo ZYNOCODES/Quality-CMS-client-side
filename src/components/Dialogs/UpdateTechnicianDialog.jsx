@@ -40,23 +40,17 @@ export default function UpdateTechnicianDialog(props) {
     const handlezoneChange = (event) => {
         setZone(event.target.value);
     };
-    const [Phone, setPhone] = useState('');
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-    };
 
     // empty all fields
     const clearFields = () => {
         setFullName('');
         setZone('');
-        setPhone('');
     }
     const handleSave = async () => {
         try {
             const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/technician/${props.code}`, 
             { 
                 fullname: FullName,
-                phone: Phone,
                 zone: zone,
             }, 
             {
@@ -95,16 +89,14 @@ export default function UpdateTechnicianDialog(props) {
             onClose={props.handleClose}
             PaperProps={{
             sx: {
-                backgroundColor: '#0080ff',
+                backgroundColor: '#ff0000',
             },
             }}
         >
             <AppBar 
-            PaperProps={{
-                sx: {
-                backgroundColor: '#0080ff',
-                },
-            }}
+                sx={{
+                    backgroundColor: '#191919',
+                }}
             >
             <Toolbar>
                 <IconButton
@@ -116,7 +108,7 @@ export default function UpdateTechnicianDialog(props) {
                 <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Modifier un agent
+                    Modifier un technicien
                 </Typography>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
                 sauvgarder
@@ -133,16 +125,6 @@ export default function UpdateTechnicianDialog(props) {
                         minLength={0} 
                         maxLength={100} 
                         onChange={handleFullNameChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="Numero de telephone" 
-                        initialHelperText="Entrez le numero de telephone d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handlePhoneChange}
                         obligatory={true}
                         color='#fff'
                     />

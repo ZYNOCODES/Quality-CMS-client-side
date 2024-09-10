@@ -81,15 +81,13 @@ export default function ActionDialog(props) {
         onClose={props.handleClose}
         PaperProps={{
           sx: {
-            backgroundColor: '#0080ff',
+            backgroundColor: '#ff0000',
           },
         }}
       >
         <AppBar 
-          PaperProps={{
-            sx: {
-              backgroundColor: '#0080ff',
-            },
+          sx={{ 
+            backgroundColor: '#191919' 
           }}
         >
           <Toolbar>

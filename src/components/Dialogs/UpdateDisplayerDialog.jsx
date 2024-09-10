@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -6,15 +6,13 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, DialogContent, List } from '@mui/material';
+import { Box, DialogContent, FormControlLabel, List, Switch } from '@mui/material';
 import TextFieldComponent from '../forms/TextField';
 import SelectFieldComponent from '../forms/SelectField';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -31,56 +29,64 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function WorkshopDialog(props) {
+export default function UpdateTechnicianDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
-    const [Name, setName] = useState('');
-    const handleNameChange = (event) => {
-        setName(event.target.value);
+    const [Username, setUsername] = useState('');
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
     };
-    const [Zone, setZone] = useState('');
-    const handleZoneChange = (event) => {
+    const [Password, setPassword] = useState('');
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+    const [zone, setZone] = useState('');
+    const handlezoneChange = (event) => {
         setZone(event.target.value);
     };
+
     // empty all fields
     const clearFields = () => {
-        setName('');
+        setUsername('');
+        setPassword('');
         setZone('');
     }
     const handleSave = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/workshop`, 
-                { 
-                    name: Name,
-                    zone: Zone,
-                }, 
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${props.user?.token}`,
-                    }
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/displayer/${props.code}`, 
+            { 
+                username: Username,
+                password: Password,
+                zone: zone,
+            }, 
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${props.user?.token}`,
                 }
+            }
             );
             if (response.status === 200) {
+                props.refetchData();
+                props.handleClose();
                 notifySuccess(response.data.message);
                 clearFields();
-                props.handleClose();
-                props.refetchData();
             } else {
                 notifyFailed(response.data.message);
             }
         } catch (error) {
             if (error.response) {
-                notifyFailed(error.response.data.message);
+            notifyFailed(error.response.data.message);
             } else if (error.request) {
-                // Request was made but no response was received
-                console.error("Error creating workshop: No response received");
+            // Request was made but no response was received
+            console.error("Error updating displayer: No response received");
             } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("Error creating workshop");
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error updating displayer");
             }
         }
     };
+
     return (
         <React.Fragment>
         <Dialog
@@ -96,7 +102,7 @@ export default function WorkshopDialog(props) {
             <AppBar 
                 sx={{
                     backgroundColor: '#191919',
-                  }}
+                }}
             >
             <Toolbar>
                 <IconButton
@@ -108,7 +114,7 @@ export default function WorkshopDialog(props) {
                 <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Ajouter un atelier
+                Modifier un displayer
                 </Typography>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
                 sauvgarder
@@ -117,28 +123,41 @@ export default function WorkshopDialog(props) {
             </AppBar>
             <List>
             <DialogContent sx={{ marginTop: '40px' }}> 
-                <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
+            <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
                     <TextFieldComponent 
                         type="text" 
-                        label="Name" 
-                        initialHelperText="Entrer le nom du atelier" 
-                        onChange={handleNameChange}
-                        obligatory={true}
+                        label="Nom d'utilisateur" 
+                        initialHelperText="Entrez le nom d'utilisateur" 
+                        minLength={0} 
+                        maxLength={100} 
+                        onChange={handleUsernameChange}
+                        obligatory={false}
+                        color='#fff'
+                    />
+                    <TextFieldComponent 
+                        type="password" 
+                        label="Mot de passe" 
+                        initialHelperText="Entrez le mot de passe" 
+                        minLength={0} 
+                        maxLength={100} 
+                        onChange={handlePasswordChange}
+                        obligatory={false}
                         color='#fff'
                     />
                     <SelectFieldComponent 
                         label="Zone" 
                         initialHelperText="Selectionner une zone" 
-                        onChange={handleZoneChange}
-                        obligatory={true}
+                        onChange={handlezoneChange}
+                        obligatory={false}
                         options={props.ZoneList}
                         optionName='name'
-                        optionIdentifier='code'
+                        optionIdentifier= 'code'
                     />
+
                 </Box>
             </DialogContent>
             </List>
         </Dialog>
         </React.Fragment>
     );
-    }
+}

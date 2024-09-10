@@ -5,6 +5,7 @@
     align-items: center;
     background-color: #fff;
     width: 100%;
+    min-height: 100vh;
 }
 .taken-panne-navbar-page-container{
     display: flex;
@@ -19,7 +20,7 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #fe0000;
     color: #fff;
     gap: 15px;
 }
@@ -28,8 +29,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffffff;
-    color: #0056ac;
+    background-color: #191919;
+    color: #fff;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;
@@ -47,7 +48,7 @@
 }
 .taken-panne-backIcon-icon-container{
     font-size: 2rem;
-    color: #0056ac;
+    color: #fe0000;
 }
 .taken-panne-navbar-page-container h1{
     font-size: 1.5rem;
@@ -59,7 +60,6 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #fff;
     gap: 15px;
 }
 .taken-panne-page-form-container{
@@ -69,7 +69,7 @@
     gap: 15px;
     width: 100%;
     padding: 20px;
-    background-color: #0056ac;
+    background-color: #ededed;
     border-radius: 10px;
 }
 .taken-panne-page-header-container{
@@ -82,7 +82,7 @@
 }
 .taken-panne-page-header-container h1{
     font-size: 1.3rem;
-    color: #0056ac;
+    color: #ff0000;
 }
 .icon-taken-panne-page-header-container{
     display: flex;
@@ -94,18 +94,18 @@
 }
 .icon-taken-panne-page-header-container p{
     font-size: 1rem;
-    color: #0056ac;
+    color: #ff0000;
     font-weight: 600;
 }
 .view-icon-taken-panne-page-header-container{
     font-size: 1rem;
-    color: #0056ac;
+    color: #ff0000;
 }
 .taken-panne-page-form-container.green{
     background-color: #20a200;
 }
 .taken-panne-page-form-container.red{
-    background-color: #d00000;
+    background-color: #fe0000;
 }
 .time-counter-container{
     display: flex;
@@ -138,13 +138,13 @@
     justify-content: flex-start;
     gap: 15px;
     flex-direction: column;
-    background-color: #0056ac;
+    background-color: #ededed;
     padding: 20px;
     border-radius: 10px;
 }
 .Action-PDR-panne-page-header-content h1{
     font-size: 1.5rem;
-    color: #fff;
+    color: #fe0000;
     align-self: center;
 }
 .Action-PDR-panne-navbar-page-container{
@@ -161,7 +161,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    color: #fff;
+    color: #191919;
     gap: 15px;
 }
 .Action-PDR-panne-navbar-page-content-button{
@@ -169,8 +169,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffffff;
-    color: #0056ac;
+    background-color: #191919;
+    color: #fff;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;

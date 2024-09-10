@@ -299,10 +299,12 @@ const UserDetails = () => {
             <div className="product-details-container">
                 <h1>Détails :</h1>
                 <div className="product-form-container">
-                    <TextFieldComponent DefaultValue={UserData?.code} label='Code' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={UserData?.fullname} label='Nom complet' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={UserData?.phoneNumber} label='Numero de telephone' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={UserData?.zoneAssociation?.name} label='Zone' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={UserData?.code} label='Code' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={UserData?.fullname} label='Nom complet' color={'#191919'} type='text' readOnly />
+                    {UserData?.phoneNumber &&
+                        <TextFieldComponent DefaultValue={UserData?.phoneNumber} label='Numero de telephone' color={'#191919'} type='text' readOnly />
+                    }                    
+                    <TextFieldComponent DefaultValue={UserData?.zoneAssociation?.name} label='Zone' color={'#191919'} type='text' readOnly />
                 </div>
                 {PannesData && PannesData.length > 0 && (
                     <>

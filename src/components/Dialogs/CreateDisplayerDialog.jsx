@@ -13,8 +13,6 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -31,56 +29,65 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function WorkshopDialog(props) {
+export default function DisplayerDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
-    const [Name, setName] = useState('');
-    const handleNameChange = (event) => {
-        setName(event.target.value);
+    const [Username, setUsername] = useState('');
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
     };
-    const [Zone, setZone] = useState('');
-    const handleZoneChange = (event) => {
+    const [Password, setPassword] = useState('');
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+    const [zone, setZone] = useState('');
+    const handlezoneChange = (event) => {
         setZone(event.target.value);
     };
+
     // empty all fields
     const clearFields = () => {
-        setName('');
+        setUsername('');
+        setPassword('');
         setZone('');
     }
+
     const handleSave = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/workshop`, 
-                { 
-                    name: Name,
-                    zone: Zone,
-                }, 
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${props.user?.token}`,
-                    }
+            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/displayer/create`, 
+            { 
+                username: Username,
+                password: Password,
+                zone: zone,
+            }, 
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${props.user?.token}`,
                 }
+            }
             );
             if (response.status === 200) {
+                props.refetchData();
+                props.handleClose();
                 notifySuccess(response.data.message);
                 clearFields();
-                props.handleClose();
-                props.refetchData();
             } else {
                 notifyFailed(response.data.message);
             }
         } catch (error) {
             if (error.response) {
-                notifyFailed(error.response.data.message);
+            notifyFailed(error.response.data.message);
             } else if (error.request) {
-                // Request was made but no response was received
-                console.error("Error creating workshop: No response received");
+            // Request was made but no response was received
+            console.error("Error creating user: No response received");
             } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("Error creating workshop");
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error creating user");
             }
         }
     };
+
     return (
         <React.Fragment>
         <Dialog
@@ -96,7 +103,7 @@ export default function WorkshopDialog(props) {
             <AppBar 
                 sx={{
                     backgroundColor: '#191919',
-                  }}
+                }}
             >
             <Toolbar>
                 <IconButton
@@ -108,7 +115,7 @@ export default function WorkshopDialog(props) {
                 <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Ajouter un atelier
+                Ajouter un displayer
                 </Typography>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
                 sauvgarder
@@ -117,23 +124,35 @@ export default function WorkshopDialog(props) {
             </AppBar>
             <List>
             <DialogContent sx={{ marginTop: '40px' }}> 
-                <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
+            <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
                     <TextFieldComponent 
                         type="text" 
-                        label="Name" 
-                        initialHelperText="Entrer le nom du atelier" 
-                        onChange={handleNameChange}
+                        label="Nom d'utilisateur" 
+                        initialHelperText="Entrez le nom d'utilisateur" 
+                        minLength={0} 
+                        maxLength={100} 
+                        onChange={handleUsernameChange}
+                        obligatory={true}
+                        color='#fff'
+                    />
+                    <TextFieldComponent 
+                        type="password" 
+                        label="Mot de passe" 
+                        initialHelperText="Entrez le mot de passe" 
+                        minLength={0} 
+                        maxLength={100} 
+                        onChange={handlePasswordChange}
                         obligatory={true}
                         color='#fff'
                     />
                     <SelectFieldComponent 
                         label="Zone" 
                         initialHelperText="Selectionner une zone" 
-                        onChange={handleZoneChange}
+                        onChange={handlezoneChange}
                         obligatory={true}
                         options={props.ZoneList}
                         optionName='name'
-                        optionIdentifier='code'
+                        optionIdentifier= 'code'
                     />
                 </Box>
             </DialogContent>
@@ -141,4 +160,4 @@ export default function WorkshopDialog(props) {
         </Dialog>
         </React.Fragment>
     );
-    }
+}

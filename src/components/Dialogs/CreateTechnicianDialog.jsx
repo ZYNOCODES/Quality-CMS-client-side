@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, DialogContent, FormControlLabel, List, Switch } from '@mui/material';
+import { Box, DialogContent, List } from '@mui/material';
 import TextFieldComponent from '../forms/TextField';
 import SelectFieldComponent from '../forms/SelectField';
 import { styled } from '@mui/material/styles';
@@ -40,15 +40,10 @@ export default function TechnicianDialog(props) {
     const handlezoneChange = (event) => {
         setZone(event.target.value);
     };
-    const [Phone, setPhone] = useState('');
-    const handlePhoneChange = (event) => {
-        setPhone(event.target.value);
-    };
 
     // empty all fields
     const clearFields = () => {
         setFullName('');
-        setFamily('');
         setZone('');
     }
 
@@ -57,7 +52,6 @@ export default function TechnicianDialog(props) {
             const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/technician/create`, 
             { 
                 fullname: FullName,
-                phoneNumber: Phone,
                 zone: zone,
             }, 
             {
@@ -96,16 +90,14 @@ export default function TechnicianDialog(props) {
             onClose={props.handleClose}
             PaperProps={{
             sx: {
-                backgroundColor: '#0080ff',
+                backgroundColor: '#ff0000',
             },
             }}
         >
             <AppBar 
-            PaperProps={{
-                sx: {
-                backgroundColor: '#0080ff',
-                },
-            }}
+                sx={{
+                    backgroundColor: '#191919',
+                  }}
             >
             <Toolbar>
                 <IconButton
@@ -134,16 +126,6 @@ export default function TechnicianDialog(props) {
                         minLength={0} 
                         maxLength={100} 
                         onChange={handleFullNameChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="Numero de telephone" 
-                        initialHelperText="Entrez le numero de telephone d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handlePhoneChange}
                         obligatory={true}
                         color='#fff'
                     />

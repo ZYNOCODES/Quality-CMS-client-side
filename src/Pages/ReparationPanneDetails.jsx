@@ -598,27 +598,27 @@ const ReparationPanne = () => {
                     </div>
                 </div>
                 <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#191919'} type='text' readOnly />
                 </div>
                 {/*Panne */}
                 <div className="taken-panne-page-header-container">
                     <h1>Détails :</h1>
                 </div>
                 <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#191919'} type='text' readOnly />
                 </div>
                 <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? 'libérer' : 'Non libérer'} label='Liberation' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? 'libérer' : 'Non libérer'} label='Liberation' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#191919'} type='text' readOnly />
                     <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
                 </div>
                 {/*Action corrective et consommation PDR */}
