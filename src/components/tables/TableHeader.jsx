@@ -113,10 +113,16 @@ const TableHeader = (props) => {
                 }  
                 {
                 (
-                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des utilisateurs'
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des agents'
                  ) &&
-                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un utilisateur</button>
-                }  
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un agent</button>
+                } 
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des techniciens'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un technicien</button>
+                }   
                 {
                 (
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des familles'

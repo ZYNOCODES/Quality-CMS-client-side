@@ -29,90 +29,60 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function UserDialog(props) {
-    const notifyWarning = (message) => toast.warning(message);
+export default function UpdateTechnicianDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const [FullName, setFullName] = useState('');
     const handleFullNameChange = (event) => {
         setFullName(event.target.value);
     };
-    const [UserName, setUserName] = useState('');
-    const handleUserNameChange = (event) => {
-        setUserName(event.target.value);
-    };
     const [zone, setZone] = useState('');
     const handlezoneChange = (event) => {
         setZone(event.target.value);
-    };
-    const [Password, setPassword] = useState('');
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
     };
     const [Phone, setPhone] = useState('');
     const handlePhoneChange = (event) => {
         setPhone(event.target.value);
     };
-    const [Agent, setAgent] = useState(false);
-    const handleAgentChange = (event) => {
-        setAgent(event.target.checked);
-        setTechnician(!event.target.checked);
-    };
-    const [Technician, setTechnician] = useState(false);
-    const handleTechnicianChange = (event) => {
-        setTechnician(event.target.checked);
-        setAgent(!event.target.checked);
-    };
 
     // empty all fields
     const clearFields = () => {
         setFullName('');
-        setUserName('');
-        setFamily('');
         setZone('');
-        setPassword('');
-        setAgent(false);
-        setTechnician(false);
+        setPhone('');
     }
     const handleSave = async () => {
-        if((!Agent && !Technician) || (Agent && Technician)){
-            notifyWarning("Veuillez checker un role");
-        }else {
-            try {
-                const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/auth/signup`, 
-                { 
-                    fullname: FullName,
-                    username: UserName,
-                    password: Password,
-                    phoneNumber: Phone,
-                    zone: zone,
-                    role: Agent ? 'agent' : 'technician'
-                }, 
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${props.user?.token}`,
-                    }
+        try {
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/technician/${props.code}`, 
+            { 
+                fullname: FullName,
+                phone: Phone,
+                zone: zone,
+            }, 
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${props.user?.token}`,
                 }
-                );
-                if (response.status === 200) {
-                    props.refetchData();
-                    props.handleClose();
-                    notifySuccess(response.data.message);
-                    clearFields();
-                } else {
-                    notifyFailed(response.data.message);
-                }
-            } catch (error) {
-                if (error.response) {
-                notifyFailed(error.response.data.message);
-                } else if (error.request) {
-                // Request was made but no response was received
-                console.error("Error creating user: No response received");
-                } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("Error creating user");
-                }
+            }
+            );
+            if (response.status === 200) {
+                props.refetchData();
+                props.handleClose();
+                notifySuccess(response.data.message);
+                clearFields();
+            } else {
+                notifyFailed(response.data.message);
+            }
+        } catch (error) {
+            if (error.response) {
+            notifyFailed(error.response.data.message);
+            } else if (error.request) {
+            // Request was made but no response was received
+            console.error("Error updating user: No response received");
+            } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error updating user");
             }
         }
     };
@@ -146,7 +116,7 @@ export default function UserDialog(props) {
                 <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Ajouter un utilisateur
+                Modifier un agent
                 </Typography>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
                 sauvgarder
@@ -168,31 +138,11 @@ export default function UserDialog(props) {
                     />
                     <TextFieldComponent 
                         type="text" 
-                        label="Nom d'utilisateur" 
-                        initialHelperText="Entrez le nom d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handleUserNameChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
                         label="Numero de telephone" 
                         initialHelperText="Entrez le numero de telephone d'utilisateur" 
                         minLength={0} 
                         maxLength={100}
                         onChange={handlePhoneChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="password" 
-                        label="Mot de passe" 
-                        initialHelperText="Entrez le mot de passe de votre d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handlePasswordChange}
                         obligatory={true}
                         color='#fff'
                     />
@@ -204,20 +154,6 @@ export default function UserDialog(props) {
                         options={props.ZoneList}
                         optionName='name'
                         optionIdentifier= 'code'
-                    />
-                    <FormControlLabel
-                        sx={{ mt: 1 }}
-                        control={
-                            <Switch checked={Agent} onChange={handleAgentChange} />
-                        }
-                        label="Agent d'access"
-                    />
-                    <FormControlLabel
-                        sx={{ mt: 1 }}
-                        control={
-                            <Switch checked={Technician} onChange={handleTechnicianChange} />
-                        }
-                        label="Technician"
                     />
 
                 </Box>

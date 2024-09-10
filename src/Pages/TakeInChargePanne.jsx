@@ -77,7 +77,7 @@ const TakeInChargePanne = () => {
     // fetching Technician data
     const fetchTechnicianData = async () => {
         const response = await fetch(
-            `${import.meta.env.VITE_APP_URL_BASE}/users/technician/${decodedToken.zone}`,
+            `${import.meta.env.VITE_APP_URL_BASE}/technician/zone/${decodedToken.zone}`,
             {
                 method: 'GET',
                 headers: {

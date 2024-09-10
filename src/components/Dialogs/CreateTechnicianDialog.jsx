@@ -29,24 +29,16 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function UpdateUserDialog(props) {
+export default function TechnicianDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
     const [FullName, setFullName] = useState('');
     const handleFullNameChange = (event) => {
         setFullName(event.target.value);
     };
-    const [UserName, setUserName] = useState('');
-    const handleUserNameChange = (event) => {
-        setUserName(event.target.value);
-    };
     const [zone, setZone] = useState('');
     const handlezoneChange = (event) => {
         setZone(event.target.value);
-    };
-    const [Password, setPassword] = useState('');
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
     };
     const [Phone, setPhone] = useState('');
     const handlePhoneChange = (event) => {
@@ -56,20 +48,16 @@ export default function UpdateUserDialog(props) {
     // empty all fields
     const clearFields = () => {
         setFullName('');
-        setUserName('');
         setFamily('');
         setZone('');
-        setPassword('');
-        setPhone('');
     }
+
     const handleSave = async () => {
         try {
-            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/users/${props.code}`, 
+            const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/technician/create`, 
             { 
                 fullname: FullName,
-                username: UserName,
-                password: Password,
-                phone: Phone,
+                phoneNumber: Phone,
                 zone: zone,
             }, 
             {
@@ -92,10 +80,10 @@ export default function UpdateUserDialog(props) {
             notifyFailed(error.response.data.message);
             } else if (error.request) {
             // Request was made but no response was received
-            console.error("Error updating user: No response received");
+            console.error("Error creating user: No response received");
             } else {
             // Something happened in setting up the request that triggered an Error
-            console.error("Error updating user");
+            console.error("Error creating user");
             }
         }
     };
@@ -129,7 +117,7 @@ export default function UpdateUserDialog(props) {
                 <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Modifier un utilisateur
+                Ajouter un technicien
                 </Typography>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
                 sauvgarder
@@ -151,31 +139,11 @@ export default function UpdateUserDialog(props) {
                     />
                     <TextFieldComponent 
                         type="text" 
-                        label="Nom d'utilisateur" 
-                        initialHelperText="Entrez le nom d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handleUserNameChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
                         label="Numero de telephone" 
                         initialHelperText="Entrez le numero de telephone d'utilisateur" 
                         minLength={0} 
                         maxLength={100}
                         onChange={handlePhoneChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <TextFieldComponent 
-                        type="password" 
-                        label="Mot de passe" 
-                        initialHelperText="Entrez le mot de passe de votre d'utilisateur" 
-                        minLength={0} 
-                        maxLength={100}
-                        onChange={handlePasswordChange}
                         obligatory={true}
                         color='#fff'
                     />

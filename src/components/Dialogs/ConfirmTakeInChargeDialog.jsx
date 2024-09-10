@@ -49,7 +49,6 @@ export default function ConfirmaTakeInChargeDialog(props) {
     };
 
     
-
     return (
         <Dialog
             open={props.open}
