@@ -54,6 +54,22 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
+                {props.LotList && props.handleLotChange &&
+                    <div className='pages-input-select-field-container'>
+                    <select
+                        className='pages-input-select-field'
+                        onChange={props.handleLotChange}
+                        placeholder="Sélectionnez un lot"
+                    >
+                        <option value={''}>Sélectionnez un lot</option>
+                        {props.LotList?.map((option, index) => (
+                            <option key={index} value={option.id}>
+                                {option.name}
+                            </option>
+                        ))}
+                    </select>
+                    </div>
+                }
                 {props.ZoneList && props.handleZoneChange && import.meta.env.VITE_MANAGER_TYPE == props.type &&
                     <div className='pages-input-select-field-container'>
                     <select
@@ -134,7 +150,13 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des familles'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter une famille</button>
-                }                            
+                }     
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des lots'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un lot</button>
+                }                         
             </div>
         </div>
     );

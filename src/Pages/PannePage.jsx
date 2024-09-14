@@ -11,25 +11,8 @@ import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import DeletingDialog from '../components/Dialogs/DeletingDialog';
 import axios from 'axios';
+import { formatDateTime } from '../util/UseFullFunctions';
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
 
 const PannePage = () => {
     const notifyFailed = (message) => toast.info(message);
@@ -242,7 +225,7 @@ const PannePage = () => {
     const handleDeletePanne = async () => {
         try {
             setSubmitionLoading(true);
-            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/panne/${currentCode}`, 
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/panne/${currentCode}/${decodedToken.code}`, 
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -336,7 +319,7 @@ const PannePage = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },
@@ -396,11 +379,11 @@ const PannePage = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'Liste des pannes'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handlePanneTypeChange={handlePanneTypeChange} PanneTypeList={TypePanneData}/>
-            <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
+            <DataTable title={'Liste des pannes'} data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true} />
             {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                 <>
                     <CreatePanneDialog agent={decodedToken.code} open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>    
-                    <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeletePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanne}/>
+                    <DeletingDialog name={'d\'une panne'} loading={submitionLoading} open={openDeletePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanne}/>
                 </>
             }
             <ToastContainer/>

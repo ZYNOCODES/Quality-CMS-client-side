@@ -7,25 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CircularProgress } from '@mui/material';
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
+import { formatDateTime } from '../util/UseFullFunctions';
 
 const ProductDetails = () => {
     const { code } = useParams();
@@ -195,7 +177,7 @@ const ProductDetails = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },
@@ -255,7 +237,7 @@ const ProductDetails = () => {
                 <h1>Détails :</h1>
                 <div className="product-form-container">
                     <TextFieldComponent DefaultValue={ProductData?.code} label='Code' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.lot} label='Lot' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.lotAssociation?.name} label='Lot' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#191919'} type='text' readOnly />
@@ -279,7 +261,7 @@ const ProductDetails = () => {
                                     ))}
                                 </select>
                             </div>      
-                            <DataTable data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+                            <DataTable data={filteredPannesData} columns={columns}  download={false} viewColumns={true} filter={true} search={true}/>
                         </div>
                     </>
                 )}

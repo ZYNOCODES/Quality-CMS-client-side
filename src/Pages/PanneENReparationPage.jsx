@@ -3,30 +3,11 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
-import CreatePanneDialog from '../components/Dialogs/CreatePanneDialog';
 import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
+import { formatDateTime } from '../util/UseFullFunctions';
 
 const EnReparationPanne = () => {
     const { user } = useAuthContext();
@@ -225,7 +206,7 @@ const EnReparationPanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value) || 'g'}</p>;
+                    return <p>{formatDateTime(value) || 'g'}</p>;
                 },
             },
         },
@@ -287,7 +268,7 @@ const EnReparationPanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },
@@ -342,7 +323,7 @@ const EnReparationPanne = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'Liste des pannes en reparation'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handlePanneTypeChange={handlePanneTypeChange} PanneTypeList={TypePanneData}/>
-            <DataTable data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des pannes en reparation'} data={filteredPannesData} columns={columns} download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );

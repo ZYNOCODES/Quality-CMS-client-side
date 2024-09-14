@@ -18,43 +18,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { TokenDecoder } from "../util/DecodeToken";
 import DataTable from '../components/tables/DataTable';
+import { formatDateTime, formatDate } from '../util/UseFullFunctions';
+import moment from 'moment';
 
-const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const seconds = date.getSeconds();
-  
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}:${formattedSeconds}`;
-};
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-  
-    return `${month} ${day}, ${year}`;
-};
 const ReparationPanne = () => {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
@@ -430,39 +396,38 @@ const ReparationPanne = () => {
         const [elapsedTime, setElapsedTime] = useState('');
         useEffect(() => {
             if (!startTime) return;
+    
             const calculateTimeDifference = () => {
-                const now = new Date();
-                const start = new Date(startTime);
-                const diffInSeconds = Math.floor((now - start) / 1000);
-
-                const hours = Math.floor(diffInSeconds / 3600);
-                const minutes = Math.floor((diffInSeconds % 3600) / 60);
-                const seconds = diffInSeconds % 60;
-
-                const formattedHours = hours < 10 ? `0${hours}` : hours;
-                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-                const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
-
+                const now = moment().utc(1);
+                const start = moment.utc(startTime);
+                const diffInSeconds = now.diff(start, 'seconds');
+                const duration = moment.duration(diffInSeconds, 'seconds');
+                const formattedHours = String(duration.hours()).padStart(2, '0');
+                const formattedMinutes = String(duration.minutes()).padStart(2, '0');
+                const formattedSeconds = String(duration.seconds()).padStart(2, '0');
+                
                 setElapsedTime(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
-
-                // Check if time exceeds one hour and update `red` state
-                if (limiteTime > 0 && diffInSeconds >= limiteTime) {
+                
+                // Check if time exceeds limiteTime and update `red` state
+                if (Number(limiteTime) > 0 && diffInSeconds >= Number(limiteTime)) {
                     setRed(true);
-                }else{
+                } else {
                     setRed(false);
-                }   
+                }
             };
-
+    
             calculateTimeDifference();
             const intervalId = setInterval(calculateTimeDifference, 1000);
-
+    
             return () => clearInterval(intervalId);
-        }, [startTime, red]);
-
-        return <div className='time-counter-container'>
-            <h1>Durée de réparation</h1>
-            <span>{elapsedTime}</span>
-        </div>;
+        }, [startTime, limiteTime, red]); // Add limiteTime to dependencies
+    
+        return (
+            <div className='time-counter-container'>
+                <h1>Durée de réparation</h1>
+                <span>{elapsedTime}</span>
+            </div>
+        );
     };
     const columnsAction = [
         {

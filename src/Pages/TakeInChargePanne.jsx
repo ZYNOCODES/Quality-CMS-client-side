@@ -11,25 +11,8 @@ import ConfirmTakeInChargeDialog from '../components/Dialogs/ConfirmTakeInCharge
 import { useState } from 'react';
 import axios from 'axios';
 import { TokenDecoder } from "../util/DecodeToken";
+import { formatDateTime } from '../util/UseFullFunctions';
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
 
 const TakeInChargePanne = () => {
     const notifyFailed = (message) => toast.info(message);
@@ -203,7 +186,7 @@ const TakeInChargePanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={formatDate(PanneData?.dateDeclaration)} label='Date de declaration' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#191919'} type='text' readOnly />
                 </div>
                 {/*Product */}

@@ -14,25 +14,6 @@ import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import axios from 'axios';
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
-
 const ZonePage = () => {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
@@ -353,13 +334,13 @@ const ZonePage = () => {
         <div className="pages-container">
             {/* zonnes */}
             <TableHeader name={'Liste des zonnes'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateZoneDialog} />
-            <DataTable data={ZonesData} columns={columnsZone} rows={3} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des zonnes'} data={ZonesData} columns={columnsZone} rows={3} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateZoneDialog open={openCreateZoneDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <UpdateZoneDialog  name={'d\'une zone'} code={currentCode} user={user} open={openUpdateZoneDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'une zone'} loading={submitionLoading} open={openDeleteZoneDialog} handleClose={handleClose} handleOnDelete={handleDeleteZone}/>
             {/* workshops */}
             <TableHeader name={'Liste des ateliers'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateWorkshopDialog} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredWorkshopsData} columns={columnsWorkshop} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des ateliers'} data={filteredWorkshopsData} columns={columnsWorkshop} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateWorkshopDialog open={openCreateWorkshopDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone} ZoneList={ZonesData}/>
             <UpdateWorkshopDialog  name={'d\'un atelier'} code={currentCode} user={user} open={openUpdateWorkshopDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ZoneList={ZonesData}/>
             <DeletingDialog name={'d\'un atelier'} loading={submitionLoading} open={openDeleteWorkshopDialog} handleClose={handleClose} handleOnDelete={handleDeleteWorkshop}/>

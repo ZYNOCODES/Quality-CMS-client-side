@@ -13,8 +13,6 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CircularProgress } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -31,7 +29,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: 'bold',
 }));
 
-export default function ProductDialog(props) {
+export default function UpdateProductDialog(props) {
   const notifyFailed = (message) => toast.info(message);
   const notifySuccess = (message) => toast.success(message);
   const [Modele, setModele] = useState('');
@@ -64,7 +62,7 @@ export default function ProductDialog(props) {
   }
   const handleSave = async () => {
     try {
-      const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/product`, 
+      const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/product/update/${props.code}`, 
         { 
           model: Modele,
           marque: Marque,
@@ -92,10 +90,10 @@ export default function ProductDialog(props) {
         notifyFailed(error.response.data.message);
       } else if (error.request) {
         // Request was made but no response was received
-        console.error("Error creating Product: No response received");
+        console.error("Error updating Product: No response received");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.error("Error creating Product");
+        console.error("Error updating Product");
       }
     }
   };
@@ -127,7 +125,7 @@ export default function ProductDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-              Ajouter un produit
+              Modifier un produit
             </Typography>
             <StyledButton autoFocus color="inherit" onClick={handleSave}>
               sauvgarder

@@ -8,77 +8,13 @@ import { useQuery } from '@tanstack/react-query';
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { TokenDecoder } from '../util/DecodeToken';
-import moment from 'moment';
 import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog';
 import './css/TakeInChargePannePageStyle.css';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { useState } from 'react';
+import { formatDateTime, formatDate, formatDuration } from '../util/UseFullFunctions';
 
-const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-  
-    return `${month} ${day}, ${year}`;
-};
-const formatDuration = (mill) => {
-    // Handle case where mill is null or undefined
-    if (mill === null || mill === undefined) {
-        return "Durée non disponible";
-    }
-
-    // Create duration object
-    const duration = moment.duration(mill);
-    const days = duration.days();
-    const hours = duration.hours();
-    const minutes = duration.minutes();
-    const seconds = duration.seconds();
-
-    // Build the formatted duration string
-    let formattedDuration = '';
-
-    if (days > 0) {
-        formattedDuration += `${days} jour${days > 1 ? 's' : ''}, `;
-    }
-    if (hours > 0) {
-        formattedDuration += `${hours} heure${hours > 1 ? 's' : ''}, `;
-    }
-    if (minutes > 0) {
-        formattedDuration += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
-    }
-    if (seconds > 0 || formattedDuration === '') { // Include seconds if no other units are present
-        formattedDuration += `${seconds} seconde${seconds > 1 ? 's' : ''}`;
-    }
-
-    return formattedDuration || "0 secondes";
-};
 const PanneDetails = () => {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
@@ -359,7 +295,6 @@ const PanneDetails = () => {
                         </div>
                         <div className="panne-page-form-container">
                             <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.fullname} label='Nom complet' color={'#191919'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.phoneNumber} label='Numero de telephone' color={'#191919'} type='text' readOnly />
                         </div>
                     </>
                 }
@@ -402,7 +337,7 @@ const PanneDetails = () => {
                                         <h1>Action corrective</h1>
                                     </div>
                                 </div>
-                                <DataTable rows={5} data={ActionCorrectiveData} columns={columnsAction} download={true} viewColumns={true} filter={true} search={true} />
+                                <DataTable rows={5} data={ActionCorrectiveData} columns={columnsAction} download={false} viewColumns={true} filter={true} search={true} />
                             </div>
                             <div className="Action-PDR-panne-page-header-content">
                                 <div className='Action-PDR-panne-navbar-page-content'>
@@ -410,7 +345,7 @@ const PanneDetails = () => {
                                         <h1>Consommation PDR</h1>
                                     </div>
                                 </div>
-                                <DataTable rows={5} data={ConsommationPDRData} columns={columnsPDR} download={true} viewColumns={true} filter={true} search={true} />
+                                <DataTable rows={5} data={ConsommationPDRData} columns={columnsPDR} download={false} viewColumns={true} filter={true} search={true} />
                             </div>
                         </div>
                     </>

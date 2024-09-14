@@ -7,57 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
-import moment from 'moment';
+import { formatDateTime, formatDuration } from '../util/UseFullFunctions';
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    
-    const monthNames = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-  
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-  
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  
-    return `${month} ${day}, ${year} at ${hours}:${formattedMinutes}`;
-};
-const formatDuration = (mill) => {
-    // Handle case where mill is null or undefined
-    if (mill === null || mill === undefined) {
-        return "Durée non disponible";
-    }
-
-    // Create duration object
-    const duration = moment.duration(mill);
-    const days = duration.days();
-    const hours = duration.hours();
-    const minutes = duration.minutes();
-    const seconds = duration.seconds();
-
-    // Build the formatted duration string
-    let formattedDuration = '';
-
-    if (days > 0) {
-        formattedDuration += `${days} jour${days > 1 ? 's' : ''}, `;
-    }
-    if (hours > 0) {
-        formattedDuration += `${hours} heure${hours > 1 ? 's' : ''}, `;
-    }
-    if (minutes > 0) {
-        formattedDuration += `${minutes} minute${minutes > 1 ? 's' : ''}, `;
-    }
-    if (seconds > 0 || formattedDuration === '') { // Include seconds if no other units are present
-        formattedDuration += `${seconds} seconde${seconds > 1 ? 's' : ''}`;
-    }
-
-    return formattedDuration || "0 secondes";
-};
 const ArchivePanne = () => {
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
@@ -235,24 +186,24 @@ const ArchivePanne = () => {
             },
         },
         {
+            name: "DateLivraison",
+            label: "Date de livraison",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDateTime(value)}</p>;
+                },
+            },
+        },
+        {
             name: "dateReparation",
             label: "Date de reparation",
             options: {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
-                },
-            },
-        },
-        {
-            name: "tempInitial",
-            label: "Temp initial",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },
@@ -263,7 +214,7 @@ const ArchivePanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDate(value)}</p>;
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },
@@ -323,7 +274,7 @@ const ArchivePanne = () => {
     return (
         <div className="pages-container">
             <TableHeader name={'L\'archive des pannes'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'L\'archive des pannes'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );

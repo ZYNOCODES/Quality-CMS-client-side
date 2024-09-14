@@ -349,8 +349,22 @@ const UsersPage = () => {
             }
         },
         {
+            label: "Nom complet",
             name: "fullname",
-            label: "fullname",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            label: "Nom d\'utilisateur",
+            name: "username",
             options: {
                 sort: false,
                 customBodyRender: (value) => {
@@ -436,7 +450,7 @@ const UsersPage = () => {
         },
         {
             name: "fullname",
-            label: "fullname",
+            label: "Nom complet",
             options: {
                 sort: false,
                 customBodyRender: (value) => {
@@ -585,21 +599,21 @@ const UsersPage = () => {
                 <>  
                     {/* Agent */}
                     <TableHeader name={'Liste des agents'} type={decodedToken.type} handleClickOpen={handleClickOpen} handleZoneChange={handleZoneChange} ZoneList={ZoneList}/>
-                    <DataTable rows={5} data={filteredAgentData} columns={AAcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
+                    <DataTable title={'Liste des agents'} rows={5} data={filteredAgentData} columns={AAcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
                     <CreateAgentDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <UpdateAgentDialog code={currentCode}  open={openUpdateAgentDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <DeletingDialog name={'d\'un agent'} loading={submitionLoading} open={openDeleteAgentDialog} handleClose={handleClose} handleOnDelete={handleDeleteAgent}/>
                     
                     {/* Agent */}
                     <TableHeader name={'Liste des techniciens'} type={decodedToken.type} handleClickOpen={handleClickOpenTechnician}/>
-                    <DataTable rows={5} data={filteredTechnicienData} columns={Tcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
+                    <DataTable title={'Liste des techniciens'} rows={5} data={filteredTechnicienData} columns={Tcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
                     <CreateTechnicianDialog  open={openTechnician} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <UpdateTechnicianDialog code={currentCode}  open={openUpdateTechnicianDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <DeletingDialog name={'d\'un technicien'} loading={submitionLoading} open={openDeleteTechnicianDialog} handleClose={handleClose} handleOnDelete={handleDeleteTechnician}/>
                     
                     {/* Displayer */}
                     <TableHeader name={'Liste des displayers'} type={decodedToken.type} handleClickOpen={handleClickOpenDisplayer}/>
-                    <DataTable rows={5} data={filteredDisplayerData} columns={Dcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
+                    <DataTable title={'Liste des displayers'} rows={5} data={filteredDisplayerData} columns={Dcolumns}  download={true} viewColumns={true} filter={true} search={true}/>
                     <CreateDisplayerDialog  open={openDisplayer} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <UpdateDisplayerDialog code={currentCode}  open={openUpdateDisplayerDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} ZoneList={ZoneList}/>
                     <DeletingDialog name={'d\'un displayer'} loading={submitionLoading} open={openDeleteDisplayerDialog} handleClose={handleClose} handleOnDelete={handleDeleteDisplayer}/>

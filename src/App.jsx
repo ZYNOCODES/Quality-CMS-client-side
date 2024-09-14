@@ -90,7 +90,9 @@ function App() {
           <Route path="/" element={<LoginPage />} />
 
           {/* Fallback route for unauthorized access */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {!decodedToken &&
+            <Route path="*" element={<Navigate to="/" />} />
+          }
         </Routes>
       </main>
     </BrowserRouter>

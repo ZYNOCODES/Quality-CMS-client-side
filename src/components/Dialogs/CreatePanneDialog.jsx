@@ -160,6 +160,36 @@ export default function PanneDialog(props) {
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+     // fetching Lot data
+     const fetchLotData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/lot`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${props.user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving lot data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: LotList, error: Loterror, Loading: isLotLoading, refetch: Lotrefetch } = useQuery({
+        queryKey: ['LotList', props.user?.token],
+        queryFn: fetchLotData,
+        enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     // empty all fields
     const clearFields = () => {
         setMarque('');
@@ -288,13 +318,14 @@ export default function PanneDialog(props) {
                         obligatory={true}
                         color='#fff'
                     />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="lot" 
-                        initialHelperText="Entrer le lot de votre produit" 
+                    <SelectFieldComponent 
+                        label="Lot" 
+                        initialHelperText="Selectionner un lot" 
                         onChange={handlelotChange}
                         obligatory={true}
-                        color='#fff'
+                        options={LotList}
+                        optionName='name'
+                        optionIdentifier='code'
                     />
                     <SelectFieldComponent 
                         label="Famille" 

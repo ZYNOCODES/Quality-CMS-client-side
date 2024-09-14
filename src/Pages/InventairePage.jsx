@@ -460,19 +460,19 @@ const ActionPage = () => {
         <div className="pages-container">
             {/* Type panne */}
             <TableHeader name={'Liste des types de panne'} type={decodedToken.type} handleClickOpen={handleClickOpenCreatePanneTypeDialog} />
-            <DataTable data={PanneTypeData} columns={columnsPanneType} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des types de panne'} data={PanneTypeData} columns={columnsPanneType} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
             <CreatePanneTypeDialog open={openCreatePanneTypeDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
             <UpdatePanneTypeDialog  name={'d\'un type de panne'} code={currentCode} user={user} open={openUpdatePanneTypeDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'un type de panne'} loading={submitionLoading} open={openDeletePanneTypeDialog} handleClose={handleClose} handleOnDelete={handleDeletePanneType}/>
             {/* Action */}
             <TableHeader name={'Liste des actions'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateActionDialog} />
-            <DataTable data={ActionsData} columns={columnsAction} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des actions'} data={ActionsData} columns={columnsAction} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateActionDialog open={openCreateActionDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
             <UpdateActionDialog  name={'d\'une action'} code={currentCode} user={user} open={openUpdateActionDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'une action'} loading={submitionLoading} open={openDeleteActionDialog} handleClose={handleClose} handleOnDelete={handleDeleteAction}/>
             {/* Piece */}
             <TableHeader name={'Liste des pieces'} type={decodedToken.type} handleClickOpen={handleClickOpenCreatePieceDialog} />
-            <DataTable data={PieceList} columns={columnsPiece} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des pieces'} data={PieceList} columns={columnsPiece} rows={5} download={true} viewColumns={true} filter={true} search={true}/>
             <CreatePieceDialog open={openCreatePieceDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
             <UpdatePieceDialog  name={'d\'un piece'} code={currentCode} user={user} open={openUpdatePieceDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'un piece'} loading={submitionLoading} open={openDeletePieceDialog} handleClose={handleClose} handleOnDelete={handleDeletePiece}/>

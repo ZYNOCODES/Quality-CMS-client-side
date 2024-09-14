@@ -3,7 +3,9 @@ import './css/DataTableStyle.css';
 import MUIDataTable from "mui-datatables";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { IconButton, Tooltip } from '@mui/material';
-
+import { utils, write } from 'xlsx';
+import { saveAs } from 'file-saver';
+import { formatDuration } from '../../util/UseFullFunctions';
 
 const DataTable = (props) => {
     const options = {
@@ -25,46 +27,60 @@ const DataTable = (props) => {
         search: props.search,
         onDownload: (buildHead, buildBody, columns, data) => {
             // Customize the headers
-            buildHead = () => {
-                return columns.map(column => column.label).join(',') + '\n'; // Dynamic column headers
-            };
-            //console.log("Data passed to onDownload:", data);
-            // Customize the body (handle nested objects and undefined values)
-            buildBody = () => {
-                return data
-                    .map((item) => {
-                        //console.log("Current dataIndex:", item.index); // Log the dataIndex to ensure it exists
-                        const row = props.data[item.index]; // Access the original data
-                        // Safely map over columns and extract values
-                        return columns
-                            .map((column) => {
-                                const cellValue = row[column.name];
-        
-                                // Handle nested object for workshopAssociation
-                                if (column.name === 'workshopAssociation') {
-                                    return cellValue?.name || ''; 
-                                }
-                                // Handle nested object for typepanneAssociation
-                                if (column.name === 'typepanneAssociation') {
-                                    return cellValue?.name || ''; 
-                                }
-                                // Handle nested object for zoneAssociation
-                                if (column.name === 'zoneAssociation') {
-                                    return cellValue?.name || ''; 
-                                }
-                                // Handle nested object for familyAssociation
-                                if (column.name === 'familyAssociation') {
-                                    return cellValue?.name || ''; 
-                                }
+            const header = columns.map(column => column.label);
+            const worksheet = utils.aoa_to_sheet([header]);
 
-                                return cellValue ?? ''; // Return value or empty string for other columns
-                            })
-                            .join(','); // Join row data with commas
-                    })
-                    .join('\n'); // Join all rows with newlines
+             // Convert data to array of arrays
+             const rows = data.map((item) => {
+                const row = props.data[item.index]; // Access the original data
+                return columns.map((column) => {
+                    const cellValue = row[column.name];
+
+                    // Handle nested objects
+                    if (column.name === 'workshopAssociation') {
+                        return cellValue?.name || ''; 
+                    }
+                    if (column.name === 'typepanneAssociation') {
+                        return cellValue?.name || ''; 
+                    }
+                    if (column.name === 'zoneAssociation') {
+                        return cellValue?.name || ''; 
+                    }
+                    if (column.name === 'familyAssociation') {
+                        return cellValue?.name || ''; 
+                    }
+                    if (column.name === 'lotAssociation') {
+                        return cellValue?.name || ''; 
+                    }
+                    if (column.name === 'dureeDintervention') {
+                        return formatDuration(cellValue) || ''; 
+                    }
+
+                    return cellValue ?? ''; // Return value or empty string for other columns
+                });
+            });
+
+            // Add rows to the worksheet
+            utils.sheet_add_aoa(worksheet, rows, { origin: 'A2' });
+
+            // Create a new workbook
+            const workbook = {
+                Sheets: { 'Sheet1': worksheet },
+                SheetNames: ['Sheet1']
             };
-        
-            return "\uFEFF" + buildHead() + buildBody(); // Return the formatted CSV string
+
+            // Convert workbook to binary array
+            const excelBuffer = write(workbook, { bookType: "xlsx", type: "array" });
+            const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+            const fileExtension = ".xlsx";
+            const fileName = props.title;
+
+            // Create a Blob and save the file
+            const dataBlob = new Blob([excelBuffer], { type: fileType });
+            saveAs(dataBlob, fileName + fileExtension);
+
+            // Cancel the default CSV download from the table
+            return false;
         }
     };
     const getMUITheme = () => createTheme({
