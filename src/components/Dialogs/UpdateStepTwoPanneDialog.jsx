@@ -25,21 +25,11 @@ export default function UpdateStepTwoPanneDialog(props) {
     const [ loading, setLoading ] = useState(false);
     const [ Source, setSource ] = useState('');
     const [ Etat, setEtat ] = useState('');
-    const [ Liberation, setLiberation ] = useState(false);
-    const [ DateLibiration, setDateLibiration ] = useState('');
     const handleSourceChange = (event) => {
         setSource(event.target.value);
     }
     const handleEtatChange = (event) => {
         setEtat(event.target.value);
-    }
-    const handleLiberationChange = (event) => {
-        setLiberation(event.target.checked);
-        if(Liberation == false)
-            setDateLibiration('')
-    }
-    const handleDateLibirationChange = (newValue) => {
-        setDateLibiration(newValue.format('YYYY-MM-DD'));
     }
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
@@ -47,7 +37,7 @@ export default function UpdateStepTwoPanneDialog(props) {
     };
 
     const handleOnUpdate = async (event) => {
-        if(!Source && !Etat && !Liberation){
+        if(!Source && !Etat){
             setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
@@ -60,8 +50,6 @@ export default function UpdateStepTwoPanneDialog(props) {
                     {
                         source: Source,
                         etat: Etat,
-                        liberation: Liberation,
-                        DateLiberation: DateLibiration,
                         agent: props.agent,
                     },
                     {
@@ -141,22 +129,6 @@ export default function UpdateStepTwoPanneDialog(props) {
                             variant="standard"
                             onChange={handleEtatChange}
                         />
-                        <FormControlLabel
-                            sx={{ mt: 1 }}
-                            control={
-                                <Switch checked={Liberation} onChange={handleLiberationChange} />
-                            }
-                            label="Liberation"
-                        />
-                        {Liberation &&
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <MobileDatePicker
-                                    label="Date de liberation"
-                                    onChange={handleDateLibirationChange}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </LocalizationProvider>
-                        }
                         <FormControlLabel
                             sx={{ mt: 1 }}
                             control={

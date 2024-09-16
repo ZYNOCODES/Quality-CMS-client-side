@@ -205,7 +205,7 @@ const PannePage = () => {
     const filteredPannesData = PannesData?.filter(panne => 
         (workshop == '' || panne.workshop == workshop) &&
         (PanneType == '' || panne.panne == PanneType) 
-    );
+    ) || [];
     // Function to refetch data
     const handleRefetchDataChange = () => {
         refetch();

@@ -105,80 +105,81 @@ const HomePage = () => {
                 </div>
                 <h2 className='title'>Qualité système de réparation</h2>
                 <div className="dashboard-displayer-container-card-content">
+                    <h1>journalier</h1>
                     <div className="top-bar-dashboard-displayer-container">
-                        <div className="top-bar-dashboard-displayer-card-total">
-                            {isCountAllPannesLoading ? 
+                        <div className="top-bar-dashboard-displayer-card">
+                            {isCountAllPannesByDayLoading ? 
                                 <>
                                     <div className="CircularProgress-container">
                                         <CircularProgress className='CircularProgress' />
                                     </div>
                                 </>
-                            :   (CountAllPanneserror ? 
+                            :   (CountAllPannesByDayerror ? 
                                     <>
                                         <h1>Aucune donnée disponible</h1>
                                     </>
                                 :
                                 <>
                                     <h1>En attente</h1>
-                                    <p>{CountAllPannesData?.EnAttente}</p>
+                                    <p>{CountAllPannesByDayByDay?.EnAttente}</p>
                                 </>
                                 )
                             }
                             
                         </div>
-                        <div className="top-bar-dashboard-displayer-card-total">
-                            {isCountAllPannesLoading ? 
+                        <div className="top-bar-dashboard-displayer-card">
+                            {isCountAllPannesByDayLoading ? 
                                 <>
                                     <div className="CircularProgress-container">
                                         <CircularProgress className='CircularProgress' />
                                     </div>
                                 </>
-                            :   (CountAllPanneserror ? 
+                            :   (CountAllPannesByDayerror ? 
                                     <>
                                         <h1>Aucune donnée disponible</h1>
                                     </>
                                 :
                                     <>
                                         <h1>En réparation</h1>
-                                        <p>{CountAllPannesData?.EnReparation}</p>
+                                        <p>{CountAllPannesByDayByDay?.EnReparation}</p>
                                     </>
                                 )
                             }
                         </div>
-                        <div className="top-bar-dashboard-displayer-card-total">
-                            {isCountAllPannesLoading ? 
+                        <div className="top-bar-dashboard-displayer-card">
+                            {isCountAllPannesByDayLoading ? 
                                 <>
                                     <div className="CircularProgress-container">
                                         <CircularProgress className='CircularProgress' />
                                     </div>
                                 </>
-                            :   (CountAllPanneserror ? 
+                            :   (CountAllPannesByDayerror ? 
                                     <>
                                         <h1>Aucune donnée disponible</h1>
                                     </>
                                 :
                                     <>
                                         <h1>Réparé non livré</h1>
-                                        <p>{CountAllPannesData?.NoneDelivredrepare}</p>
+                                        <p>{CountAllPannesByDayByDay?.NoneDelivredrepare}</p>
                                     </>
                                 )
                             }
                         </div>
-                        <div className="top-bar-dashboard-displayer-card-total">
-                            {isCountAllPannesLoading ? 
+                        <div className="top-bar-dashboard-displayer-card">
+                            {isCountAllPannesByDayLoading ? 
                                 <>
                                     <div className="CircularProgress-container">
                                         <CircularProgress className='CircularProgress' />
                                     </div>
                                 </>
-                            :   (CountAllPanneserror ? 
+                            :   (CountAllPannesByDayerror ? 
                                     <>
                                         <h1>Aucune donnée disponible</h1>
                                     </>
                                 :
                                     <>
                                         <h1>Réparé  livré</h1>
-                                        <p>{CountAllPannesData?.Delivredrepare}</p>
+                                        <p>{CountAllPannesByDayByDay?.Delivredrepare}</p>
                                     </>
                                 )
                             }
@@ -187,87 +188,87 @@ const HomePage = () => {
                 </div>
             </div>
             <div className="dashboard-displayer-container-card-content">
-                <h1>journalier</h1>
                 <div className="top-bar-dashboard-displayer-container">
-                    <div className="top-bar-dashboard-displayer-card">
-                        {isCountAllPannesByDayLoading ? 
+                    <div className="top-bar-dashboard-displayer-card-total">
+                        {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
                                     <CircularProgress className='CircularProgress' />
                                 </div>
                             </>
-                        :   (CountAllPannesByDayerror ? 
+                        :   (CountAllPanneserror ? 
                                 <>
                                     <h1>Aucune donnée disponible</h1>
                                 </>
                             :
                             <>
                                 <h1>En attente</h1>
-                                <p>{CountAllPannesByDayByDay?.EnAttente}</p>
+                                <p>{CountAllPannesData?.EnAttente}</p>
                             </>
                             )
                         }
                         
                     </div>
-                    <div className="top-bar-dashboard-displayer-card">
-                        {isCountAllPannesByDayLoading ? 
+                    <div className="top-bar-dashboard-displayer-card-total">
+                        {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
                                     <CircularProgress className='CircularProgress' />
                                 </div>
                             </>
-                        :   (CountAllPannesByDayerror ? 
+                        :   (CountAllPanneserror ? 
                                 <>
                                     <h1>Aucune donnée disponible</h1>
                                 </>
                             :
                                 <>
                                     <h1>En réparation</h1>
-                                    <p>{CountAllPannesByDayByDay?.EnReparation}</p>
+                                    <p>{CountAllPannesData?.EnReparation}</p>
                                 </>
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-displayer-card">
-                        {isCountAllPannesByDayLoading ? 
+                    <div className="top-bar-dashboard-displayer-card-total">
+                        {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
                                     <CircularProgress className='CircularProgress' />
                                 </div>
                             </>
-                        :   (CountAllPannesByDayerror ? 
+                        :   (CountAllPanneserror ? 
                                 <>
                                     <h1>Aucune donnée disponible</h1>
                                 </>
                             :
                                 <>
                                     <h1>Réparé non livré</h1>
-                                    <p>{CountAllPannesByDayByDay?.NoneDelivredrepare}</p>
+                                    <p>{CountAllPannesData?.NoneDelivredrepare}</p>
                                 </>
                             )
                         }
                     </div>
-                    <div className="top-bar-dashboard-displayer-card">
-                        {isCountAllPannesByDayLoading ? 
+                    <div className="top-bar-dashboard-displayer-card-total">
+                        {isCountAllPannesLoading ? 
                             <>
                                 <div className="CircularProgress-container">
                                     <CircularProgress className='CircularProgress' />
                                 </div>
                             </>
-                        :   (CountAllPannesByDayerror ? 
+                        :   (CountAllPanneserror ? 
                                 <>
                                     <h1>Aucune donnée disponible</h1>
                                 </>
                             :
                                 <>
                                     <h1>Réparé  livré</h1>
-                                    <p>{CountAllPannesByDayByDay?.Delivredrepare}</p>
+                                    <p>{CountAllPannesData?.Delivredrepare}</p>
                                 </>
                             )
                         }
                     </div>
                 </div>
             </div>
+            
         </div>
     );
 }

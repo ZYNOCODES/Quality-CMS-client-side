@@ -302,6 +302,17 @@ const ActionPage = () => {
             },
         },
         {
+            name: "duree",
+            label: "Durée",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{convertSecondsToTimeString(Number(value))}</p>;
+                },
+            },
+        },
+        {
             name: "code",
             label: " ",
             options: {
@@ -394,17 +405,6 @@ const ActionPage = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
-                },
-            },
-        },
-        {
-            name: "duree",
-            label: "Durée",
-            options: {
-                filter: true,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{convertSecondsToTimeString(Number(value))}</p>;
                 },
             },
         },

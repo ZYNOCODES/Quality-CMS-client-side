@@ -392,7 +392,7 @@ const ReparationPanne = () => {
         );
     }
     // TimeCounter component
-    const TimeCounter = ({ startTime, limiteTime }) => {
+    const TimeCounter = ({ startTime }) => {
         const [elapsedTime, setElapsedTime] = useState('');
         useEffect(() => {
             if (!startTime) return;
@@ -409,18 +409,18 @@ const ReparationPanne = () => {
                 setElapsedTime(`${formattedHours}:${formattedMinutes}:${formattedSeconds}`);
                 
                 // Check if time exceeds limiteTime and update `red` state
-                if (Number(limiteTime) > 0 && diffInSeconds >= Number(limiteTime)) {
-                    setRed(true);
-                } else {
-                    setRed(false);
-                }
+                // if (Number(limiteTime) > 0 && diffInSeconds >= Number(limiteTime)) {
+                //     setRed(true);
+                // } else {
+                //     setRed(false);
+                // }
             };
     
             calculateTimeDifference();
             const intervalId = setInterval(calculateTimeDifference, 1000);
     
             return () => clearInterval(intervalId);
-        }, [startTime, limiteTime, red]); // Add limiteTime to dependencies
+        }, [startTime]);
     
         return (
             <div className='time-counter-container'>
@@ -550,9 +550,9 @@ const ReparationPanne = () => {
 
             <div className="taken-panne-page-details-content">
                 {/*Temps */}
-                <div className={`taken-panne-page-form-container ${red ? 'red' : 'green'}`}>
+                <div className={`taken-panne-page-form-container green`}>
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
-                    <TimeCounter startTime={PanneData?.tempInitial} limiteTime={PanneData?.typepanneAssociation.duree}/>
+                    <TimeCounter startTime={PanneData?.tempInitial}/>
                 </div>
                 {/*Product */}
                 <div className="taken-panne-page-header-container">
@@ -582,8 +582,6 @@ const ReparationPanne = () => {
                 <div className="taken-panne-page-form-container">
                     <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#191919'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? 'libérer' : 'Non libérer'} label='Liberation' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#191919'} type='text' readOnly />
                     <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
                 </div>
                 {/*Action corrective et consommation PDR */}

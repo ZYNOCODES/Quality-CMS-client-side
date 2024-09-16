@@ -298,6 +298,23 @@ const PanneDetails = () => {
                         </div>
                     </>
                 }
+                {/*Technician */}
+                {(PanneData?.agent != null && PanneData?.agentAssociation) &&
+                    <>
+                        <div className="panne-page-header-container">
+                            <h1>Agent de saisie :</h1>
+                            {import.meta.env.VITE_MANAGER_TYPE === decodedToken.type &&
+                                <div className="icon-panne-page-header-container" onClick={() => Redirection(`/utilisateur/${PanneData?.agentAssociation?.code}`)}>
+                                    <VisibilityIcon className='view-icon-panne-page-header-container' />
+                                    <p>voir</p>
+                                </div>
+                            }
+                        </div>
+                        <div className="panne-page-form-container">
+                            <TextFieldComponent DefaultValue={PanneData?.agentAssociation?.fullname} label='Nom complet' color={'#191919'} type='text' readOnly />
+                        </div>
+                    </>
+                }
                 {/*Panne */}
                 <div className="panne-page-header-container">
                     <h1>Détails :</h1>
@@ -314,9 +331,9 @@ const PanneDetails = () => {
                         <>
                             <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'NON DÉFINI'} label='Source' color={'#191919'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'NON DÉFINI'} label='Etat' color={'#191919'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.liberation ? 'libérer' : 'Non libérer'} label='Liberation' color={'#191919'} type='text' readOnly />
-                            {PanneData?.liberation &&
-                                <TextFieldComponent DefaultValue={PanneData?.liberation == true ? formatDate(PanneData?.dateLibiration) : 'Non libérer'} label='Date de libiration' color={'#191919'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.livraison ? 'libérer' : 'Non libérer'} label='Liberation' color={'#191919'} type='text' readOnly />
+                            {PanneData?.livraison &&
+                                <TextFieldComponent DefaultValue={PanneData?.livraison == true ? formatDateTime(PanneData?.DateLivraison) : 'Non libérer'} label='Date de libiration' color={'#191919'} type='text' readOnly />
                             }
                         </>    
                     }

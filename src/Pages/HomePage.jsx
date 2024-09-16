@@ -434,7 +434,6 @@ const HomePage = () => {
                             {Top4PannesData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <h2>{`${item.typepanneAssociation.name}`}</h2>
-                                    <h2>{`${convertSecondsToTimeString(item.typepanneAssociation.duree) || ''}`}</h2>
                                     <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
@@ -455,6 +454,7 @@ const HomePage = () => {
                             {Top4ActionData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <h2>{`${item.actionAssociation?.name}`}</h2>
+                                    <h2>{`${convertSecondsToTimeString(item.actionAssociation.duree) || ''}`}</h2>
                                     <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}

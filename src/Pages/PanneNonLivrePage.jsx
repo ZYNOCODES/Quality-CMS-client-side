@@ -175,13 +175,122 @@ const ArchivePanne = () => {
 
     const columns = [
         {
-            name: "workshopAssociation",
-            label: "Workshop",
+            name: "productAssociation",
+            label: "Marque",
             options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.marque}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Famille",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.familyAssociation?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "fournisseur",
+            label: "Fournisseur",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Modele",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.model}</p>;
+                },
+            },
+        },
+        {
+            name: "sn",
+            label: "SN",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Lot",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.lotAssociation?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "technicianAssociation",
+            label: "Technician",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.fullname}</p>;
+                },
+            },
+        },
+        {
+            name: "typepanneAssociation",
+            label: "Panne",
+            options: {
+                display: false,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "dateDeclaration",
+            label: "Date de declaration",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDateTime(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "ligne",
+            label: "Ligne",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
                 },
             },
         },
@@ -197,9 +306,82 @@ const ArchivePanne = () => {
             },
         },
         {
-            name: "tempInitial",
-            label: "Temp initial",
+            name: "correctiveActionNames",
+            label: "Action",
             options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <div>
+                        {
+                            value?.map((action, index) => {
+                                return <p key={index}>{action}</p>
+                            })
+                        }
+                    </div>;
+                },
+            },
+        },
+        {
+            name: "consommationNames",
+            label: "PDR Consome",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <div>
+                        {
+                            value?.map((pdr, index) => {
+                                return <p key={index}>{pdr}</p>
+                            })
+                        }
+                    </div>;
+                },
+            },
+        },
+        {
+            name: "source",
+            label: "Source",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value || ''}</p>;
+                },
+            },
+        },
+        {
+            name: "etat",
+            label: "Etat",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value || ''}</p>;
+                },
+            },
+        },
+        {
+            name: "livraison",
+            label: "Liberation",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value ? 'Oui' : 'Non'}</p>;
+                },
+            },
+        },
+        {
+            name: "DateLivraison",
+            label: "Date de livraison",
+            options: {
+                display: false,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -208,9 +390,22 @@ const ArchivePanne = () => {
             },
         },
         {
+            name: "tempInitial",
+            label: "Temp initial",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDateTime(value) || 'g'}</p>;
+                },
+            },
+        },
+        {
             name: "tempFinal",
             label: "Temp finale",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -222,6 +417,7 @@ const ArchivePanne = () => {
             name: "dureeDintervention",
             label: "Duree d'intervention",
             options: {
+                display: true,
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
@@ -233,6 +429,7 @@ const ArchivePanne = () => {
             name: "code",
             label: " ",
             options: {
+                display: true,
                 sort: false,
                 filter: false,
                 customBodyRender: (value) => {

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress, TextField } from '@mui/material';
 import axios from 'axios';
+import QuantityPickerComponent from '../forms/QuantityPicker';
 
 export default function UpdateActionDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
@@ -26,11 +27,48 @@ export default function UpdateActionDialog(props) {
     const handleConfirmation = (event) => {
         setconfirmation(event.target.checked);
     };
+    const [Duree, setDuree] = useState('');
+    const handleDureeChange = (event) => {
+        setDuree(event.target.value);
+    };
+    const [DureeType, setDureeType] = useState('');
+    const handleDureeTypeChange = (event) => {
+        setDureeType(event.target.value);
+    };
+
+    const handleDureeConvertorToMillSecondes = () => {
+        const duration = parseFloat(Duree);
+        if(!isNaN(duration) && Number(duration) >= 0){
+            let milliseconds;
+            if (DureeType == 'min') {
+                milliseconds = duration * 60; // Convert minutes to milliseconds
+            } else if (DureeType == 'h') {
+                milliseconds = duration * 60 * 60; // Convert hours to milliseconds
+            } else {
+                notifyFailed('Type de durée non pris en charge (min ou h)');
+                return 400;
+            }
+            return milliseconds;
+        }else{
+            return null;
+        }
+    };
+    // empty all fields
+    const clearFields = () => {
+        setconfirmation(false);
+        setName('');
+        setDuree('');
+        setDureeType('');
+    }
 
     const handleOnUpdate = async (event) => {
-        if(!Name){
+        let duree = handleDureeConvertorToMillSecondes();
+        if(!Name && duree == null){
             setconfirmation(false);
-            notifyFailed("Tous les champs doivent être remplis");
+            notifyFailed("Un des champs doivent être remplis");
+            return;
+        }
+        if(duree == 400){
             return;
         }
         if (confirmation) {
@@ -38,7 +76,8 @@ export default function UpdateActionDialog(props) {
                 setLoading(true);
                 const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/action/${props.code}`, 
                     {
-                        name: Name
+                        name: Name,
+                        duree: duree != null ? duree.toString() : '',
                     },
                     {
                         headers: {
@@ -68,15 +107,14 @@ export default function UpdateActionDialog(props) {
                     console.error("Error updating action", error);
                 }
             }
-            setconfirmation(false);
-            setName('');
+            clearFields();
         }else{
             notifyWarning("Veuillez confirmer la modification");
         }
     };
 
     const handleClose = () => {
-        setconfirmation(false);
+        clearFields();
         props.handleClose();
     };
 
@@ -105,6 +143,15 @@ export default function UpdateActionDialog(props) {
                             fullWidth
                             variant="standard"
                             onChange={handleNameChange}
+                        />
+                        <QuantityPickerComponent
+                            label="Durée"
+                            onChange={handleDureeChange}
+                            duree={Duree}
+                            typeChange={handleDureeTypeChange}
+                            type={DureeType}
+                            color='#fff'
+                            min={0}
                         />
                         <FormControlLabel
                             sx={{ mt: 1 }}

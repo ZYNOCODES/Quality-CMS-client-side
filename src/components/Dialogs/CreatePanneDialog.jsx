@@ -15,6 +15,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -70,6 +72,42 @@ export default function PanneDialog(props) {
     const handleSNChange = (event) => {
         setSN(event.target.value);
     }
+    const [CopiedText, setCopiedText] = useState('');
+    const handleCopiedTextChange = (event) => {
+        setCopiedText(event.target.value);
+    }
+    const extractAndSetValues = () => {
+        //check if the copied text is empty
+        if(!CopiedText || CopiedText == '' ) {
+            notifyFailed('Veuillez scanner le texte avant de cliquer sur le bouton');
+            return;
+        }
+        // Extract the Modele
+        const modeleMatch = CopiedText.substring(5).match(/(.+?)DZ/);
+        const Copiedmodele = modeleMatch ? modeleMatch[1] : '';
+    
+        // Extract the Lot
+        const lotMatch = CopiedText.match(/DZ([a-zA-Z0-9]+?L)/);
+        const Copiedlot = lotMatch ? lotMatch[1] : '';
+    
+        // Set the extracted values in the form
+        setModele(Copiedmodele);
+        setLot(Copiedlot);
+    };
+    console.log(lot);
+    // empty all fields
+    const clearFields = () => {
+        setMarque('');
+        setModele('');
+        setFamily('');
+        setAtelier('');
+        setLot('');
+        setFournisseur('');
+        setLigne('');
+        setPanne('');
+        setSN('');
+        setCopiedText('');
+    };
     // Fetch family data
     const fetchfamilyData = async () => {
         const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/family`,
@@ -190,18 +228,7 @@ export default function PanneDialog(props) {
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-    // empty all fields
-    const clearFields = () => {
-        setMarque('');
-        setModele('');
-        setFamily('');
-        setAtelier('');
-        setLot('');
-        setFournisseur('');
-        setLigne('');
-        setPanne('');
-        setSN('');
-    }
+    //save the panne
     const handleSave = async () => {
         try {
             const response = await axios.post(import.meta.env.VITE_APP_URL_BASE+`/panne/first/${props.agent}`, 
@@ -267,13 +294,36 @@ export default function PanneDialog(props) {
                 onClick={props.handleClose}
                 aria-label="close"
                 >
-                <CloseIcon />
+                    <CloseIcon />
                 </IconButton>
                 <Typography sx={{ ml: 2, flex: 1,  }} variant="h6" component="div" >
-                Ajouter une panne
+                    Ajouter une panne
                 </Typography>
+                <div 
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row', 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10px',
+                        marginInlineEnd: '10px'
+                    }}
+                >
+                    <DocumentScannerIcon onClick={extractAndSetValues}/>   
+                    <input
+                        className={`input-text-field-form`}
+                        type="text"
+                        value={CopiedText}
+                        onChange={handleCopiedTextChange}
+                        placeholder='Copier le texte ici'
+                    />   
+                    {CopiedText && CopiedText != '' &&
+                            <HighlightOffIcon onClick={clearFields}/>
+                    }
+
+                </div>
                 <StyledButton autoFocus color="inherit" onClick={handleSave}>
-                sauvgarder
+                    sauvgarder
                 </StyledButton>
             </Toolbar>
             </AppBar>
@@ -301,7 +351,7 @@ export default function PanneDialog(props) {
                     </h1>
                 </Box>
                 : 
-                <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%' }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%', gap: '10px' }}>
                     <TextFieldComponent 
                         type="text" 
                         label="Marque" 
@@ -309,24 +359,47 @@ export default function PanneDialog(props) {
                         onChange={handleMarqueChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={Marque}
                     />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="Modele" 
-                        initialHelperText="Entrer le modele de votre produit" 
-                        onChange={handleModeleChange}
-                        obligatory={true}
-                        color='#fff'
-                    />
-                    <SelectFieldComponent 
-                        label="Lot" 
-                        initialHelperText="Selectionner un lot" 
-                        onChange={handlelotChange}
-                        obligatory={true}
-                        options={LotList}
-                        optionName='name'
-                        optionIdentifier='code'
-                    />
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            Modele *:
+                        </label>
+                        <input
+                            className={`input-text-field-form`}
+                            type='text'
+                            value={Modele}
+                            onChange={handleModeleChange}
+                            placeholder='Entrer le modele de votre produit'
+                        />
+                    </div>
+                    <div className='input-select-field-container'>
+                        <label className='input-select-field-label'>
+                            Lot *:
+                        </label>
+                        {!CopiedText && CopiedText == '' ?
+                            <select
+                                className='input-select-field-form'
+                                value={lot}
+                                onChange={handlelotChange}
+                            >
+                                <option value="" disabled>{LotList.length === 0 ? 'Aucune option disponible' : 'Selectionner un lot'}</option>
+                                {LotList.map((option, index) => (
+                                <option key={index} value={option.name}>
+                                    {option.name}
+                                </option>
+                                ))}
+                            </select>
+                            :
+                            <input
+                                className={`input-text-field-form`}
+                                type='text'
+                                value={lot}
+                                onChange={handlelotChange}
+                                placeholder='Entrer le lot de votre produit'
+                            />
+                        }
+                    </div>
                     <SelectFieldComponent 
                         label="Famille" 
                         initialHelperText="Selectionner une famille" 
@@ -343,6 +416,7 @@ export default function PanneDialog(props) {
                         onChange={handleFournisseurChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={fournisseur}
                     />
                     <TextFieldComponent 
                         type="text" 
@@ -351,6 +425,7 @@ export default function PanneDialog(props) {
                         onChange={handleLigneChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={ligne}
                     />
                     <SelectFieldComponent 
                         label="Type de panne" 
@@ -368,6 +443,7 @@ export default function PanneDialog(props) {
                         onChange={handleSNChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={sn}
                     />
                     <SelectFieldComponent 
                         label="Atelier" 

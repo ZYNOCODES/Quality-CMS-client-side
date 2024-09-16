@@ -55,6 +55,33 @@ const DataTable = (props) => {
                     if (column.name === 'dureeDintervention') {
                         return formatDuration(cellValue) || ''; 
                     }
+                    if (column.name === 'technicianAssociation') {
+                        return cellValue?.fullname || ''; 
+                    }
+                    if (column.name === 'productAssociation') {
+                        // Handle productAssociation fields
+                        switch (column.label) {
+                            case 'Marque':
+                                return cellValue?.marque || '';
+                            case 'Famille':
+                                return cellValue?.familyAssociation?.name || '';
+                            case 'Modele':
+                                return cellValue?.model || '';
+                            case 'Lot':
+                                return cellValue?.lotAssociation?.name || '';
+                            default:
+                                return '';
+                        }
+                    }
+                    if(column.name === 'correctiveActionNames') {
+                        return cellValue.join(', ') || '';
+                    }
+                    if(column.name === 'consommationNames') {
+                        return cellValue.join(', ') || '';
+                    }
+                    if (column.name === 'livraison') {
+                        return cellValue ? 'Oui' : 'Non'; 
+                    }
 
                     return cellValue ?? ''; // Return value or empty string for other columns
                 });
