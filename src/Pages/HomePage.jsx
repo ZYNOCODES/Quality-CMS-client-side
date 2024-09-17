@@ -326,7 +326,7 @@ const HomePage = () => {
                             </>
                         :
                             <>
-                                <h1>Réparé non livré</h1>
+                                <h1>Réparé non restitué</h1>
                                 <p>{CountAllPannesData?.NoneDelivredrepare}</p>
                             </>
                         )
@@ -345,7 +345,7 @@ const HomePage = () => {
                             </>
                         :
                             <>
-                                <h1>Réparé  livré</h1>
+                                <h1>Réparé  restitué</h1>
                                 <p>{CountAllPannesData?.Delivredrepare}</p>
                             </>
                         )
