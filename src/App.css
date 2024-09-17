@@ -40,6 +40,14 @@ body {
 .pages-container{
   margin-inline-start: 100px;
 }
+.dialog-buttons-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-inline-end: 10px;
+}
 /*medea screen*/
 @media screen and (max-width: 768px){
   .pages-container{
@@ -50,6 +58,11 @@ body {
     text-align: center;
     font-size: 0.6rem;
     font-weight: 500;
+  }
+  .dialog-buttons-container{
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 10px;
   }
 
 }

@@ -307,15 +307,28 @@ const ProductPage = () => {
 
     // fetching products data
     const fetchProductsData = async () => {
-        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/product/${decodedToken.zone}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.token}`,
-                },
-            }
-        );
+        let response;
+        if (import.meta.env.VITE_MANAGER_TYPE == decodedToken.type) {
+            response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/product`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+        } else {
+            response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/product/${decodedToken.zone}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+        }
 
         // Handle the error state
         if (!response.ok) {

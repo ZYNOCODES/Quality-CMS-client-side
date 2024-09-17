@@ -3,16 +3,17 @@ input[type= "file"] {
 }
 .upload-label{
     display: inline-block;
-    color: #fff;
-    background-color: #DA171B;
+    color: #DA171B;
+    background-color: #fff;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 5px;
     user-select: none;
     cursor: pointer;
     border-radius: 50%;
     z-index: 99;
 }
 .upload-icon{
-    font-size: 30px;
+    font-size: 20px;
+    color: #DA171B;
 }

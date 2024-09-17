@@ -1,8 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './css/DataTableStyle.css';
 import MUIDataTable from "mui-datatables";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { IconButton, Tooltip } from '@mui/material';
 import { utils, write } from 'xlsx';
 import { saveAs } from 'file-saver';
 import { formatDuration } from '../../util/UseFullFunctions';
@@ -81,6 +79,17 @@ const DataTable = (props) => {
                     }
                     if (column.name === 'livraison') {
                         return cellValue ? 'Oui' : 'Non'; 
+                    }
+                    if (column.name === 'item') {
+                        // Handle productAssociation fields
+                        switch (column.label) {
+                            case 'Produit':
+                                return cellValue?.Modele || '';
+                            case 'Nom':
+                                return cellValue?.Nom || '';
+                            default:
+                                return '';
+                        }
                     }
 
                     return cellValue ?? ''; // Return value or empty string for other columns

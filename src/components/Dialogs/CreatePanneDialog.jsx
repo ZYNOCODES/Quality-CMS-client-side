@@ -94,7 +94,7 @@ export default function PanneDialog(props) {
         setModele(Copiedmodele);
         setLot(Copiedlot);
     };
-    console.log(lot);
+    
     // empty all fields
     const clearFields = () => {
         setMarque('');
@@ -383,7 +383,7 @@ export default function PanneDialog(props) {
                                 value={lot}
                                 onChange={handlelotChange}
                             >
-                                <option value="" disabled>{LotList?.length <= 0 ? 'Aucune option disponible' : 'Selectionner un lot'}</option>
+                                <option value="" disabled>{'Selectionner un lot'}</option>
                                 {LotList.map((option, index) => (
                                 <option key={index} value={option.name}>
                                     {option.name}
