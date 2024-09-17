@@ -181,13 +181,13 @@ const TakeInChargePanne = () => {
                     <h1>Détails :</h1>
                 </div>
                 <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                 </div>
                 {/*Product */}
                 <div className="taken-panne-page-header-container">
@@ -198,8 +198,8 @@ const TakeInChargePanne = () => {
                     </div>
                 </div>
                 <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
                 </div>
             </div>
             <ConfirmTakeInChargeDialog TechnicianList={technicianList} open={open} name={'prise en charge'} loading={submitionLoading} handleOnConfirm={onHandleClicktakeInChargePanne} handleClose={handleClose} />

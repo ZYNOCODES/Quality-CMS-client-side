@@ -44,7 +44,7 @@ function App() {
                     <Route path="produits" element={<ProductPage />} />
                     <Route path="pannes" element={<PannePage />} />
                     <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
-                    <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
+                    <Route path="non-restitue-pannes" element={<PanneNonLivrePage />} />
                     <Route path="archive-pannes" element={<PanneArchivePage />} />
                     <Route path="zones" element={<ZonePage />} />
                     <Route path="inventaire" element={<InventairePage />} />
@@ -58,7 +58,7 @@ function App() {
                     <Route path="profile" element={<ProfilPage />} />
                     <Route path="pannes" element={<PannePage />} />
                     <Route path="pannes-en-reparation" element={<PanneENReparationPage />} />
-                    <Route path="non-livre-pannes" element={<PanneNonLivrePage />} />
+                    <Route path="non-restitue-pannes" element={<PanneNonLivrePage />} />
                     <Route path="archive-pannes" element={<PanneArchivePage />} />
                     <Route path="produits" element={<ProductPage />} />
                   </>

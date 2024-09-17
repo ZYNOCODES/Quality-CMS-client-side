@@ -20,7 +20,7 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #fe0000;
+    background-color: #0056ac;
     color: #fff;
     gap: 15px;
 }
@@ -29,8 +29,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #191919;
-    color: #fff;
+    background-color: #fff;
+    color: #0056ac;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;
@@ -48,7 +48,7 @@
 }
 .taken-panne-backIcon-icon-container{
     font-size: 2rem;
-    color: #fe0000;
+    color: #0056ac;
 }
 .taken-panne-navbar-page-container h1{
     font-size: 1.5rem;
@@ -69,7 +69,7 @@
     gap: 15px;
     width: 100%;
     padding: 20px;
-    background-color: #ededed;
+    background-color: #0056ac;
     border-radius: 10px;
 }
 .taken-panne-page-header-container{
@@ -82,7 +82,7 @@
 }
 .taken-panne-page-header-container h1{
     font-size: 1.3rem;
-    color: #ff0000;
+    color: #0056ac;
 }
 .icon-taken-panne-page-header-container{
     display: flex;
@@ -94,12 +94,12 @@
 }
 .icon-taken-panne-page-header-container p{
     font-size: 1rem;
-    color: #ff0000;
+    color: #0056ac;
     font-weight: 600;
 }
 .view-icon-taken-panne-page-header-container{
     font-size: 1rem;
-    color: #ff0000;
+    color: #0056ac;
 }
 .taken-panne-page-form-container.green{
     background-color: #20a200;
@@ -138,13 +138,13 @@
     justify-content: flex-start;
     gap: 15px;
     flex-direction: column;
-    background-color: #ededed;
+    background-color: #0056ac;
     padding: 20px;
     border-radius: 10px;
 }
 .Action-PDR-panne-page-header-content h1{
     font-size: 1.5rem;
-    color: #fe0000;
+    color: #fff;
     align-self: center;
 }
 .Action-PDR-panne-navbar-page-container{
@@ -161,7 +161,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    color: #191919;
+    color: #fff;
     gap: 15px;
 }
 .Action-PDR-panne-navbar-page-content-button{
@@ -169,8 +169,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #191919;
-    color: #fff;
+    background-color: #fff;
+    color: #0056ac;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;

@@ -5,7 +5,7 @@
     align-items: center;
     width: 25%;
     height: 5vh;
-    background-color: #ededed;
+    background-color: #fff;
     border-radius: 5px;
     gap: 10px;
 }
@@ -26,14 +26,14 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: #191919;
+    background-color: #0056ac;
     color: #fff;
     border-radius: 100%;
     font-size: 1rem;
     cursor: pointer;
 }
 .calendar-container-icon{
-    color: #191919;
+    color: #464646;
     margin-inline-end: 10px;
 }
 /*medea screen*/

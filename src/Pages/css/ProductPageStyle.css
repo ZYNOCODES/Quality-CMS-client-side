@@ -12,7 +12,7 @@
 .pages-title{
     font-size: 1.5em;
     font-weight: 600;
-    color: #ff0000;
+    color: #0056ac;
     letter-spacing: 1px;
 }
 
@@ -21,14 +21,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ff0000;
+    background-color: #0056ac;
     color: #ffffff;
     padding: 20px;
     border-radius: 5px;
     cursor: pointer;    
 }
 .pages-buttonfield:hover{
-    background-color: #ff0000;
+    background-color: #0056ac;
 }
 
 .pages-selects-container{

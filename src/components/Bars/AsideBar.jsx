@@ -1,5 +1,5 @@
 import './style.css';
-import LOGO_IMG from '../../assets/Logo.png';
+import LOGO_IMG from '../../assets/LogoBomareCompany.png';
 import { IoMenu } from "react-icons/io5";
 import { GiExitDoor } from "react-icons/gi";
 import { useState } from 'react';
@@ -16,6 +16,7 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import DnsIcon from '@mui/icons-material/Dns';
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 
 const AsideBar = () => {
     const [active, setActive] = useState(false);
@@ -79,17 +80,17 @@ const AsideBar = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to='/non-livre-pannes' className={`AsideBar-item ${
-                            location.pathname === "/non-livre-pannes" ? "aside-item-active" : ""}`}>
-                                <LocalShippingIcon className='AsideBar-icon'/>
-                                <span className='side-item'>Non livré</span>
+                            <NavLink to='/non-restitue-pannes' className={`AsideBar-item ${
+                            location.pathname === "/non-restitue-pannes" ? "aside-item-active" : ""}`}>
+                                <AssignmentReturnIcon className='AsideBar-icon'/>
+                                <span className='side-item'>Non restitué</span>
                             </NavLink>
                         </li>
                         <li>
                             <NavLink to='/archive-pannes' className={`AsideBar-item ${
                             location.pathname === "/archive-pannes" ? "aside-item-active" : ""}`}>
                                 <Inventory2Icon className='AsideBar-icon'/>
-                                <span className='side-item'>Archive</span>
+                                <span className='side-item'>Restitué</span>
                             </NavLink>
                         </li>
                         <li>

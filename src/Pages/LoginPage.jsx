@@ -1,5 +1,5 @@
 import TextFieldComponent from '../components/forms/TextField';
-import COVER_IMG from '../assets/Logo.png';
+import COVER_IMG from '../assets/LogoBomareCompany.png';
 import { useState } from 'react';
 import './css/LoginStyle.css';
 import { useAuthContext } from "../hooks/useAuthContext";

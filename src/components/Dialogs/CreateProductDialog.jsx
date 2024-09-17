@@ -108,15 +108,15 @@ export default function ProductDialog(props) {
         onClose={props.handleClose}
         PaperProps={{
           sx: {
-            backgroundColor: '#ff0000',
+            backgroundColor: '#0080ff',
           },
-        }}
-      >
-        <AppBar 
-          sx={{
-            backgroundColor: '#191919',
+      }}
+  >
+      <AppBar 
+          sx={{ 
+              backgroundColor: '#0056ac' 
           }}
-        >
+      >
           <Toolbar>
             <IconButton
               edge="start"

@@ -13,7 +13,7 @@
     align-items: center;
     width: 100%;
     padding: 20px;
-    background-color: #ff0000;
+    background-color: #004181;
     color: #fff;
     gap: 15px;
 }
@@ -29,8 +29,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #191919;
-    color: #fff;
+    background-color: #fff;
+    color: #0056ac;
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;
@@ -48,7 +48,7 @@
 }
 .panne-backIcon-icon-container{
     font-size: 2rem;
-    color: #ff0000;
+    color: #0056ac;
 }
 .panne-navbar-page-container h1{
     font-size: 1.5rem;
@@ -70,7 +70,7 @@
     gap: 15px;
     width: 100%;
     padding: 20px;
-    background-color: #ededed;
+    background-color: #0056ac;
     border-radius: 10px;
 }
 .panne-page-header-container{
@@ -83,7 +83,7 @@
 }
 .panne-page-header-container h1{
     font-size: 1.3rem;
-    color: #ff0000;
+    color: #0056ac;
 }
 .icon-panne-page-header-container{
     display: flex;
@@ -95,12 +95,12 @@
 }
 .icon-panne-page-header-container p{
     font-size: 1rem;
-    color: #191919;
+    color: #0056ac;
     font-weight: 600;
 }
 .view-icon-panne-page-header-container{
     font-size: 1rem;
-    color: #191919;
+    color: #0056ac;
 }
 
 /*medea screen*/

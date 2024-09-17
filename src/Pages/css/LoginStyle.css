@@ -5,7 +5,7 @@
     align-items: center;
     gap: 20px;
     padding: 20px;
-    background-color: #ff0000;
+    background-color: #0080ff;
     width: 100%;
     min-height: 100vh;
     background-image: url('../../assets/LoginBG.jpeg');
@@ -46,7 +46,7 @@
     width: 100%;
     padding: 10px;
     border: none;
-    background-color: #FE0000;
+    background-color: #0080ff;
     color: #ffffff;
     font-size: 20px;
     font-weight: 500;

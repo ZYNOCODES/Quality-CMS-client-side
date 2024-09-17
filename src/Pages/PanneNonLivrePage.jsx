@@ -470,8 +470,8 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes non livre'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable title={'Liste des pannes non livre'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <TableHeader name={'Liste des pannes non restitué'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <DataTable title={'Liste des pannes non restitué'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );

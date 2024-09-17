@@ -277,14 +277,14 @@ export default function PanneDialog(props) {
             open={props.open}
             onClose={props.handleClose}
             PaperProps={{
-            sx: {
-                backgroundColor: '#ff0000',
-            },
+                sx: {
+                  backgroundColor: '#0080ff',
+                },
             }}
         >
             <AppBar 
-                sx={{
-                    backgroundColor: '#191919',
+                sx={{ 
+                    backgroundColor: '#0056ac' 
                 }}
             >
             <Toolbar>
@@ -383,7 +383,7 @@ export default function PanneDialog(props) {
                                 value={lot}
                                 onChange={handlelotChange}
                             >
-                                <option value="" disabled>{LotList.length === 0 ? 'Aucune option disponible' : 'Selectionner un lot'}</option>
+                                <option value="" disabled>{LotList?.length <= 0 ? 'Aucune option disponible' : 'Selectionner un lot'}</option>
                                 {LotList.map((option, index) => (
                                 <option key={index} value={option.name}>
                                     {option.name}

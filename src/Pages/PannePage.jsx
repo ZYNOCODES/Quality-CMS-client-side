@@ -200,7 +200,7 @@ const PannePage = () => {
     // Filter WorkshopsData by selected workshop
     const filteredWorkshopsData = workshopList?.filter(workshop => 
         Zone == '' || workshop.zone == Zone
-    );
+    ) || [];
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
         (workshop == '' || panne.workshop == workshop) &&

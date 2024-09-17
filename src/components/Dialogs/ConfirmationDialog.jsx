@@ -51,7 +51,7 @@ export default function ConfirmationDialog(props) {
                             control={
                                 <Switch checked={confirmation} onChange={handleConfirmation} />
                             }
-                            label="Oui je confirme que je prendrai en charge cette panne"
+                            label="Oui je confirme"
                         />
                     </DialogContent>
                     <DialogActions>

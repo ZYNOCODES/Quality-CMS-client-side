@@ -74,7 +74,9 @@ const ProfilPage = () => {
                     <TextFieldComponent DefaultValue={UserData?.username} label="Nom d'utilisateur" color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={UserData?.fullname ? UserData?.fullname : 'indéfini'} label='Nom complet' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={UserData?.phoneNumber} label='Numero de telephone' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={UserData?.zoneAssociation?.name} label='Zone' color={'#fff'} type='text' readOnly />
+                    {import.meta.env.VITE_MANAGER_TYPE != decodedToken.type &&
+                        <TextFieldComponent DefaultValue={UserData?.zoneAssociation?.name} label='Zone' color={'#fff'} type='text' readOnly />
+                    }
                 </div>
             </div>
             

@@ -236,12 +236,12 @@ const ProductDetails = () => {
             <div className="product-details-container">
                 <h1>Détails :</h1>
                 <div className="product-form-container">
-                    <TextFieldComponent DefaultValue={ProductData?.code} label='Code' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.lotAssociation?.name} label='Lot' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#191919'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.zoneAssociation?.name} label='Zone' color={'#191919'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.code} label='Code' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.zoneAssociation?.name} label='Zone' color={'#fff'} type='text' readOnly />
                 </div>
                 {PannesData && PannesData.length > 0 && (
                     <>

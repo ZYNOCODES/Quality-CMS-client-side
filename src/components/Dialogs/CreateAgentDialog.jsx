@@ -107,14 +107,14 @@ export default function AgentDialog(props) {
             open={props.open}
             onClose={props.handleClose}
             PaperProps={{
-            sx: {
-                backgroundColor: '#ff0000',
-            },
+                sx: {
+                  backgroundColor: '#0080ff',
+                },
             }}
         >
             <AppBar 
-                sx={{
-                    backgroundColor: '#191919',
+                sx={{ 
+                    backgroundColor: '#0056ac' 
                 }}
             >
             <Toolbar>
