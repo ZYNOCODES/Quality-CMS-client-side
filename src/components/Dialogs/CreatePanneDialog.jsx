@@ -17,6 +17,8 @@ import { CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { TokenDecoder } from '../../util/DecodeToken';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: '#DA171B',
@@ -36,11 +38,15 @@ const StyledButton = styled(Button)(({ theme }) => ({
 export default function PanneDialog(props) {
     const notifyFailed = (message) => toast.info(message);
     const notifySuccess = (message) => toast.success(message);
+
+    const { user } = useAuthContext();
+    const decodedToken = TokenDecoder();
+
     const [Modele, setModele] = useState('');
     const handleModeleChange = (event) => {
         setModele(event.target.value);
     };
-    const [Marque, setMarque] = useState('');
+    const [Marque, setMarque] = useState('STREAM');
     const handleMarqueChange = (event) => {
         setMarque(event.target.value);
     };
@@ -76,33 +82,96 @@ export default function PanneDialog(props) {
     const handleCopiedTextChange = (event) => {
         setCopiedText(event.target.value);
     }
+
+    // fetching products data
+    const fetchProductsData = async () => {
+        let response;
+        if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
+            response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/product/${decodedToken.zone}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+        }
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Products data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: ProductsData, error, isLoading, refetch } = useQuery({
+        queryKey: ['productsData', user?.token],
+        queryFn: fetchProductsData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const handleSelectedProductChange = (event) => {
+        const selectedIndex = event.target.value;
+        const selectedProduct = ProductsData[selectedIndex];
+    
+        setSelectedProduct(selectedProduct);
+        
+        setModele(selectedProduct.model);
+        setMarque(selectedProduct.marque);
+        setFamily(selectedProduct.familyAssociation.code);
+        setLot(selectedProduct.lotAssociation.name);
+
+    }
+
+
     const extractAndSetValues = () => {
         //check if the copied text is empty
         if(!CopiedText || CopiedText == '' ) {
             notifyFailed('Veuillez scanner le texte avant de cliquer sur le bouton');
             return;
         }
-        // Extract the Modele
-        const modeleMatch = CopiedText.substring(5).match(/(.+?)DZ/);
-        const Copiedmodele = modeleMatch ? modeleMatch[1] : '';
-    
-        // Extract the Lot
-        const lotMatch = CopiedText.match(/DZ([a-zA-Z0-9]+?L)/);
-        const Copiedlot = lotMatch ? lotMatch[1] : '';
-    
+        // Extract the Modele from character 6 to 11
+        const Copiedmodele = CopiedText.substring(5, 11);
+
+        // Extract the Lot from character 14 to 17
+        const Copiedlot = CopiedText.substring(13, 17);
+
+        // Extract the SN from character 18 to 22
+        const Copiedsn = CopiedText.substring(17, 22);
+
         // Set the extracted values in the form
-        setModele(Copiedmodele);
-        setLot(Copiedlot);
+        const selectedProduct = ProductsData.filter((item) => item.model === Copiedmodele)[0];
+        
+        if(selectedProduct){
+            setSelectedProduct(selectedProduct);
+            setModele(selectedProduct.model);
+            setMarque(selectedProduct.marque);
+            setFamily(selectedProduct.familyAssociation.code);
+            setLot(selectedProduct.lotAssociation.name);
+            setSN(Copiedsn);
+        }else{
+            setModele(Copiedmodele);
+            setLot(Copiedlot);
+            setSN(Copiedsn);
+        }
     };
     
     // empty all fields
     const clearFields = () => {
-        setMarque('');
+        //setMarque('');
+        setFournisseur('');
         setModele('');
         setFamily('');
         setAtelier('');
         setLot('');
-        setFournisseur('');
         setLigne('');
         setPanne('');
         setSN('');
@@ -352,26 +421,54 @@ export default function PanneDialog(props) {
                 </Box>
                 : 
                 <Box display="flex" flexDirection="column" alignItems="flex-start" mt={2} sx={{ width: '100%', gap: '10px' }}>
-                    <TextFieldComponent 
-                        type="text" 
-                        label="Marque" 
-                        initialHelperText="Entrer la marque de votre produite" 
-                        onChange={handleMarqueChange}
-                        obligatory={true}
-                        color='#fff'
-                        DefaultValue={Marque}
-                    />
                     <div className='input-text-field-container'>
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >
-                            Modele *:
+                            Marque *:
                         </label>
                         <input
                             className={`input-text-field-form`}
                             type='text'
-                            value={Modele}
-                            onChange={handleModeleChange}
-                            placeholder='Entrer le modele de votre produit'
+                            value={Marque}
+                            onChange={handleMarqueChange}
+                            placeholder='Entrer la marque de votre produite'
                         />
+                    </div>
+
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            Modele *:
+                        </label>
+                        {Modele ?
+                            <input
+                                className={`input-text-field-form`}
+                                type='text'
+                                value={Modele}
+                                onChange={handleModeleChange}
+                                placeholder='Entrer le modele de votre produit'
+                            />
+                        :
+                            <>
+                                <input
+                                    className={`input-text-field-form`}
+                                    type='text'
+                                    value={Modele}
+                                    onChange={handleModeleChange}
+                                    placeholder='Entrer le modele de votre produit'
+                                />
+                                <select
+                                    className='input-select-field-form'
+                                    value={Modele}
+                                    onChange={handleSelectedProductChange}
+                                >
+                                    <option value="" disabled>{'Selectionner un modele'}</option>
+                                    {ProductsData?.map((option, index) => (
+                                    <option key={index} value={index}>
+                                        {option.model}
+                                    </option>
+                                    ))}
+                                </select>
+                            </>
+                        }
                     </div>
                     <div className='input-select-field-container'>
                         <label className='input-select-field-label'>
@@ -384,7 +481,7 @@ export default function PanneDialog(props) {
                                 onChange={handlelotChange}
                             >
                                 <option value="" disabled>{'Selectionner un lot'}</option>
-                                {LotList.map((option, index) => (
+                                {LotList?.map((option, index) => (
                                 <option key={index} value={option.name}>
                                     {option.name}
                                 </option>
@@ -400,60 +497,93 @@ export default function PanneDialog(props) {
                             />
                         }
                     </div>
-                    <SelectFieldComponent 
-                        label="Famille" 
-                        initialHelperText="Selectionner une famille" 
-                        onChange={handlefamilyChange}
-                        obligatory={true}
-                        options={familyList}
-                        optionName='name'
-                        optionIdentifier='code'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="fournisseur" 
-                        initialHelperText="Entrer le fournisseur de votre produit" 
-                        onChange={handleFournisseurChange}
-                        obligatory={true}
-                        color='#fff'
-                        DefaultValue={fournisseur}
-                    />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="ligne" 
-                        initialHelperText="Entrer la ligne de votre produit" 
-                        onChange={handleLigneChange}
-                        obligatory={true}
-                        color='#fff'
-                        DefaultValue={ligne}
-                    />
-                    <SelectFieldComponent 
-                        label="Type de panne" 
-                        initialHelperText="Selectionner un type" 
-                        onChange={handlePanneChange}
-                        obligatory={true}
-                        options={PanneTypeList}
-                        optionName='name'
-                        optionIdentifier='code'
-                    />
-                    <TextFieldComponent 
-                        type="text" 
-                        label="sn" 
-                        initialHelperText="Entrer le SN de votre produit" 
-                        onChange={handleSNChange}
-                        obligatory={true}
-                        color='#fff'
-                        DefaultValue={sn}
-                    />
-                    <SelectFieldComponent 
-                        label="Atelier" 
-                        initialHelperText="Selectionner un atelier" 
-                        onChange={handleAtelierChange}
-                        obligatory={true}
-                        options={atelierList}
-                        optionName='name'
-                        optionIdentifier='code'
-                    />
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            SN *:
+                        </label>
+                        <input
+                            className={`input-text-field-form`}
+                            type='text'
+                            value={sn}
+                            onChange={handleSNChange}
+                            placeholder='Entrer le SN de votre produit'
+                        />
+                    </div>
+                    <div className='input-select-field-container'>
+                        <label className='input-select-field-label'>
+                            Famille *:
+                        </label>
+                        <select
+                            className='input-select-field-form'
+                            value={family}
+                            onChange={handlefamilyChange}
+                        >
+                            <option value="" disabled>{'Selectionner une famille'}</option>
+                            {familyList?.map((option, index) => (
+                            <option key={index} value={option.code}>
+                                {option.name}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            Fournisseur *:
+                        </label>
+                        <input
+                            className={`input-text-field-form`}
+                            type='text'
+                            value={fournisseur}
+                            onChange={handleFournisseurChange}
+                            placeholder='Entrer le fournisseur de votre produit'
+                        />
+                    </div>
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            Ligne *:
+                        </label>
+                        <input
+                            className={`input-text-field-form`}
+                            type='text'
+                            value={ligne}
+                            onChange={handleLigneChange}
+                            placeholder='Entrer la ligne de votre produit'
+                        />
+                    </div>
+                    <div className='input-select-field-container'>
+                        <label className='input-select-field-label'>
+                            Type de panne *:
+                        </label>
+                        <select
+                            className='input-select-field-form'
+                            value={panne}
+                            onChange={handlePanneChange}
+                        >
+                            <option value="" disabled>{'Selectionner un type de panne'}</option>
+                            {PanneTypeList?.map((option, index) => (
+                            <option key={index} value={option.code}>
+                                {option.name}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='input-select-field-container'>
+                        <label className='input-select-field-label'>
+                            Atelier *:
+                        </label>
+                        <select
+                            className='input-select-field-form'
+                            value={atelier}
+                            onChange={handleAtelierChange}
+                        >
+                            <option value="" disabled>{'Selectionner un atelier'}</option>
+                            {atelierList?.map((option, index) => (
+                            <option key={index} value={option.code}>
+                                {option.name}
+                            </option>
+                            ))}
+                        </select>
+                    </div>
                 </Box>
                 }
             </DialogContent>
