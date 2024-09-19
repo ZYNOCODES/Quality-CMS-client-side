@@ -4,10 +4,12 @@ import MUIDataTable from "mui-datatables";
 import { utils, write } from 'xlsx';
 import { saveAs } from 'file-saver';
 import { formatDuration } from '../../util/UseFullFunctions';
+import { useState } from 'react';
 
 const DataTable = (props) => {
+    const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
     const options = {
-        selectableRows: false,
+        selectableRows: props.selectable ? "multiple" : false,
         elevation: 0,
         rowsPerPage: props.rows!= null ? props.rows : 11,
         rowsPerPageOptions: [props.rows!= null ? props.rows : 5, 8, 11, 20, 40],
@@ -23,6 +25,15 @@ const DataTable = (props) => {
         viewColumns: props.viewColumns,
         filter: props.filter,
         search: props.search,
+        rowsSelected: selectedRowIndexes,
+        onRowSelectionChange: (currentRowsSelected, allRowsSelected, rowsSelectedIndexes) => {
+            // Update selected row indexes
+            setSelectedRowIndexes(rowsSelectedIndexes);
+
+            // Get selected IDs based on selected rows
+            const selectedIds = allRowsSelected.map(row => props.data[row.index].code);
+            props.getSelectedPanneIDs(selectedIds);
+        },
         onDownload: (buildHead, buildBody, columns, data) => {
             // Customize the headers
             const header = columns.map(column => column.label);
@@ -117,7 +128,8 @@ const DataTable = (props) => {
 
             // Cancel the default CSV download from the table
             return false;
-        }
+        },
+        
     };
     const getMUITheme = () => createTheme({
         typography: {

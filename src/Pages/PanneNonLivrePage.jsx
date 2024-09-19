@@ -449,6 +449,15 @@ const ArchivePanne = () => {
             }
         },
     ]; 
+    const [selectedIDs, setSelectedIDs] = useState([]);
+    const getSelectedPanneIDs = (selectedRows) => {
+        console.log(selectedRows);
+        setSelectedIDs(selectedRows);
+    }
+    const MakeMultiplePannesDelivred = async () => {
+        alert(selectedIDs);
+        setSelectedIDs([]);
+    }
 
     if (isLoading || isWorkshopsLoading || isZonesLoading) {
         return (
@@ -470,8 +479,9 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
+            <button onClick={MakeMultiplePannesDelivred}>Get panne ids</button>
             <TableHeader name={'Liste des pannes non restitué'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable title={'Liste des pannes non restitué'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <DataTable title={'Liste des pannes non restitué'} data={filteredPannesData} selectable={true} getSelectedPanneIDs={getSelectedPanneIDs} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );
