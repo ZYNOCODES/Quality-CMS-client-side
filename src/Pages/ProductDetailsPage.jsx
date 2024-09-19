@@ -238,6 +238,7 @@ const ProductDetails = () => {
                 <div className="product-form-container">
                     <TextFieldComponent DefaultValue={ProductData?.code} label='Code' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.tailleLot} label='Lot' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />

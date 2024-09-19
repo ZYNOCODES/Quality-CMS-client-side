@@ -52,6 +52,11 @@ export default function UpdateProductDialog(props) {
   const handlelotChange = (event) => {
     setLot(event.target.value);
   };
+  const [TailleLot, setTailleLot] = useState('');
+  const handleTailleLotChange = (event) => {
+      setTailleLot(event.target.value);
+  };
+
   // empty all fields
   const clearFields = () => {
     setModele('');
@@ -59,6 +64,7 @@ export default function UpdateProductDialog(props) {
     setFamily('');
     setZone('');
     setLot('');
+    setTailleLot('');
   }
   const handleSave = async () => {
     try {
@@ -69,6 +75,7 @@ export default function UpdateProductDialog(props) {
           family: family,
           zone: zone,
           lot: lot,
+          tailleLot: TailleLot
         }, 
         {
           headers: {
@@ -163,6 +170,16 @@ export default function UpdateProductDialog(props) {
                 options={props.lotList}
                 optionName='name'
                 optionIdentifier='code'
+            />
+            <TextFieldComponent 
+                type="text" 
+                label="Taille du lot" 
+                initialHelperText="Entrer la  taille du lot de votre produit" 
+                minLength={0} 
+                maxLength={100} 
+                onChange={handleTailleLotChange}
+                obligatory={true}
+                color='#fff'
             />
             <SelectFieldComponent 
                 label="Famille" 

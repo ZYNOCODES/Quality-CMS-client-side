@@ -123,6 +123,20 @@ const ProductPage = () => {
             }
         },
         {
+            name: "tailleLot",
+            label: "Taille du lot",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
             name: "familyAssociation",
             label: "Family",
             options: {

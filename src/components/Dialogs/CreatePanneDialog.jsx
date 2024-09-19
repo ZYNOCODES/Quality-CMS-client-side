@@ -62,6 +62,10 @@ export default function PanneDialog(props) {
     const handlelotChange = (event) => {
         setLot(event.target.value);
     };
+    const [TailleLot, setTailleLot] = useState('');
+    const handleTailleLotChange = (event) => {
+        setTailleLot(event.target.value);
+    };
     const [fournisseur, setFournisseur] = useState('');
     const handleFournisseurChange = (event) => {
         setFournisseur(event.target.value);
@@ -128,6 +132,7 @@ export default function PanneDialog(props) {
         setMarque(selectedProduct.marque);
         setFamily(selectedProduct.familyAssociation.code);
         setLot(selectedProduct.lotAssociation.name);
+        setTailleLot(selectedProduct.tailleLot);
 
     }
 
@@ -156,6 +161,7 @@ export default function PanneDialog(props) {
             setMarque(selectedProduct.marque);
             setFamily(selectedProduct.familyAssociation.code);
             setLot(selectedProduct.lotAssociation.name);
+            setTailleLot(selectedProduct.tailleLot);
             setSN(Copiedsn);
         }else{
             setModele(Copiedmodele);
@@ -172,6 +178,7 @@ export default function PanneDialog(props) {
         setFamily('');
         setAtelier('');
         setLot('');
+        setTailleLot('');
         setLigne('');
         setPanne('');
         setSN('');
@@ -310,7 +317,8 @@ export default function PanneDialog(props) {
                     fournisseur: fournisseur,
                     panne: panne,
                     ligne: ligne,
-                    sn: sn
+                    sn: sn,
+                    tailleLot: TailleLot,
                 }, 
                 {
                     headers: {
@@ -525,6 +533,19 @@ export default function PanneDialog(props) {
                             </option>
                             ))}
                         </select>
+                    </div>
+                    <div className='input-text-field-container'>
+                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                            Taille du lot *:
+                        </label>
+                        <input
+                            className={`input-text-field-form`}
+                            type='number'
+                            min={0}
+                            value={TailleLot}
+                            onChange={handleTailleLotChange}
+                            placeholder='Entrer la taille du lot de votre produit'
+                        />
                     </div>
                     <div className='input-text-field-container'>
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >
