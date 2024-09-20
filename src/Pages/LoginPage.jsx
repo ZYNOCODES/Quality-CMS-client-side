@@ -67,6 +67,7 @@ const LoginPage = () => {
                     onChange={handleidentifierChange}
                     obligatory={true}
                     color='#333'
+                    DefaultValue={identifier}
                 />
                 <TextFieldComponent 
                     type="password" 
@@ -77,6 +78,7 @@ const LoginPage = () => {
                     onChange={handlePasswordChange}
                     obligatory={true}
                     color='#333'
+                    DefaultValue={password}
                 />
                 <span className="login-helper-text">{error}</span>
                 <button

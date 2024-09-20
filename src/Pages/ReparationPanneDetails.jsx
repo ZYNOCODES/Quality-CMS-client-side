@@ -366,31 +366,6 @@ const ReparationPanne = () => {
             }
         }
     }
-    
-    if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading || 
-        isActionLoading || isPieceLoading
-    ) {
-        return (
-          <div className="CircularProgress-app">
-            <div className="CircularProgress-container">
-              <CircularProgress className='CircularProgress' />
-            </div>  
-            <h1>Préparation des composants de la page...</h1>
-          </div>
-        );
-    }
-    if (Panneerror || ActionCorrectiveerror || ConsommationPDRerror || 
-        Actionerror || Pieceerror
-    ) {
-        return (
-            <div className="CircularProgress-app">
-                <h1>Une erreur s'est produite</h1>
-                {/* <h1>{Panneerror ? Panneerror.message : ''}</h1>
-                <h1>{Panneerror ? Panneerror.message : ''}</h1>
-                <h1>{Workshopserror ? Workshopserror.message : ''}</h1> */}
-            </div>
-        );
-    }
     // TimeCounter component
     const TimeCounter = ({ startTime }) => {
         const [elapsedTime, setElapsedTime] = useState('');
@@ -535,6 +510,31 @@ const ReparationPanne = () => {
             }
         },
     ]; 
+    
+    if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading || 
+        isActionLoading || isPieceLoading
+    ) {
+        return (
+          <div className="CircularProgress-app">
+            <div className="CircularProgress-container">
+              <CircularProgress className='CircularProgress' />
+            </div>  
+            <h1>Préparation des composants de la page...</h1>
+          </div>
+        );
+    }
+    if (Panneerror || ActionCorrectiveerror || ConsommationPDRerror || 
+        Actionerror || Pieceerror
+    ) {
+        return (
+            <div className="CircularProgress-app">
+                <h1>Une erreur s'est produite</h1>
+                {/* <h1>{Panneerror ? Panneerror.message : ''}</h1>
+                <h1>{Panneerror ? Panneerror.message : ''}</h1>
+                <h1>{Workshopserror ? Workshopserror.message : ''}</h1> */}
+            </div>
+        );
+    }
     return (
         <div className="taken-panne-page-container">
             <div className='taken-panne-navbar-page-content'>
@@ -572,7 +572,6 @@ const ReparationPanne = () => {
                 </div>
                 <div className="taken-panne-page-form-container">
                     <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />

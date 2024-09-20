@@ -156,7 +156,13 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des lots'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un lot</button>
-                }                         
+                }        
+                {
+                (
+                    import.meta.env.VITE_AGENT_TYPE == props.type && props.name == 'Liste des pannes non restituées'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleOpenConfirmationDialog}>Restitution</button>
+                }                     
             </div>
         </div>
     );

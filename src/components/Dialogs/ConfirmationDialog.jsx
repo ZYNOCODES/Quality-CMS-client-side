@@ -24,7 +24,7 @@ export default function ConfirmationDialog(props) {
             props.handleOnConfirm();
             setconfirmation(false);
         }else{
-            notifyWarning("Veuillez confirmer la prise en charge");
+            notifyWarning(`Veuillez confirmer la ${props.name}`);
         }
     };
     const handleClose = () => {

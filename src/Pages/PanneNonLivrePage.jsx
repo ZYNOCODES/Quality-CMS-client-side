@@ -3,17 +3,22 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import { formatDateTime, formatDuration } from '../util/UseFullFunctions';
+import './css/TakeInChargePannePageStyle.css';
+import { toast, ToastContainer } from 'react-toastify';
+import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog';
+import axios from 'axios';
 
 const ArchivePanne = () => {
+    const notifyFailed = (message) => toast.info(message);
+    const notifySuccess = (message) => toast.success(message);
+
     const { user } = useAuthContext();
     const decodedToken = TokenDecoder();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
     const [workshop, setWorkshop] = useState('');
     const [Zone, setZone] = useState('');
     const handleWorkshopChange = (event) => {
@@ -22,6 +27,22 @@ const ArchivePanne = () => {
     const handleZoneChange = (event) => {
         setZone(event.target.value);
     }
+
+    const [submitionLoading, setSubmitionLoading] = useState(false);
+    
+    const [ openConfirmation, setOpenConfirmation ] = useState(false);
+    const handleOpenConfirmationDialog = () => {
+        setOpenConfirmation(true);
+    }
+    const handleClose = () => {
+        setOpenConfirmation(false);
+    };
+
+    const Redirection = (path) => {
+        navigate(`${path}`)
+    }
+
+
     // fetching Pannes data
     const fetchPannesData = async () => {
         try{
@@ -159,19 +180,6 @@ const ArchivePanne = () => {
     const filteredPannesData = PannesData?.filter(panne => 
         workshop == '' || panne.workshop == workshop
     );
-    // Function to refetch data
-    const handleRefetchDataChange = () => {
-        refetch();
-    }
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-    const Redirection = (path) => {
-        navigate(`${path}`)
-    }
 
     const columns = [
         {
@@ -455,7 +463,41 @@ const ArchivePanne = () => {
         setSelectedIDs(selectedRows);
     }
     const MakeMultiplePannesDelivred = async () => {
-        alert(selectedIDs);
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/panne/many/delivred`, 
+                {
+                    agent: decodedToken.code,
+                    panneCODEs: selectedIDs
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                refetch();
+                notifySuccess(response.data.message);
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error updating panne restitution: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error updating panne restitution", error);
+            }
+        }
         setSelectedIDs([]);
     }
 
@@ -479,9 +521,9 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
-            <button onClick={MakeMultiplePannesDelivred}>Get panne ids</button>
-            <TableHeader name={'Liste des pannes non restitué'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable title={'Liste des pannes non restitué'} data={filteredPannesData} selectable={true} getSelectedPanneIDs={getSelectedPanneIDs} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <TableHeader name={'Liste des pannes non restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handleOpenConfirmationDialog={handleOpenConfirmationDialog}/>
+            <DataTable title={'Liste des pannes non restituées'} data={filteredPannesData} selectable={import.meta.env.VITE_AGENT_TYPE == decodedToken.type ? true : false} getSelectedPanneIDs={getSelectedPanneIDs} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <ConfirmationDialog open={openConfirmation} name={'restitution'} loading={submitionLoading} handleOnConfirm={MakeMultiplePannesDelivred} handleClose={handleClose} />
             <ToastContainer/>
         </div>
     );

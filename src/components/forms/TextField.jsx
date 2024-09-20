@@ -50,8 +50,12 @@ const TextFieldComponent = ({
             validateEmail();
         } else if (type === 'password') {
             validatePassword();
+        }else{
+            setError(false);
+            setHelperText("");
+            setValue(DefaultValue);
         }
-    }, [value, type, minLength, maxLength, initialHelperText]);
+    }, [value, type, minLength, maxLength, initialHelperText, DefaultValue]);
     const handleChange = (e) => {
         setValue(e.target.value);
         onChange(e);

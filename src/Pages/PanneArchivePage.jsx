@@ -466,8 +466,8 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes restitué'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
-            <DataTable title={'Liste des pannes restitué'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
+            <TableHeader name={'Liste des pannes restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <DataTable title={'Liste des pannes restituées'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
     );

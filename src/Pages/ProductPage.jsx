@@ -109,6 +109,20 @@ const ProductPage = () => {
             }
         },
         {
+            name: "sn",
+            label: "SN",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
             name: "lotAssociation",
             label: "Lot",
             options: {

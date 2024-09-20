@@ -62,10 +62,6 @@ export default function PanneDialog(props) {
     const handlelotChange = (event) => {
         setLot(event.target.value);
     };
-    const [TailleLot, setTailleLot] = useState('');
-    const handleTailleLotChange = (event) => {
-        setTailleLot(event.target.value);
-    };
     const [fournisseur, setFournisseur] = useState('');
     const handleFournisseurChange = (event) => {
         setFournisseur(event.target.value);
@@ -121,19 +117,14 @@ export default function PanneDialog(props) {
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
 
-    const [selectedProduct, setSelectedProduct] = useState(null);
     const handleSelectedProductChange = (event) => {
         const selectedIndex = event.target.value;
         const selectedProduct = ProductsData[selectedIndex];
-    
-        setSelectedProduct(selectedProduct);
         
         setModele(selectedProduct.model);
         setMarque(selectedProduct.marque);
         setFamily(selectedProduct.familyAssociation.code);
         setLot(selectedProduct.lotAssociation.name);
-        setTailleLot(selectedProduct.tailleLot);
-
     }
 
 
@@ -156,12 +147,10 @@ export default function PanneDialog(props) {
         const selectedProduct = ProductsData.filter((item) => item.model === Copiedmodele)[0];
         
         if(selectedProduct){
-            setSelectedProduct(selectedProduct);
             setModele(selectedProduct.model);
             setMarque(selectedProduct.marque);
             setFamily(selectedProduct.familyAssociation.code);
             setLot(selectedProduct.lotAssociation.name);
-            setTailleLot(selectedProduct.tailleLot);
             setSN(Copiedsn);
         }else{
             setModele(Copiedmodele);
@@ -178,7 +167,6 @@ export default function PanneDialog(props) {
         setFamily('');
         setAtelier('');
         setLot('');
-        setTailleLot('');
         setLigne('');
         setPanne('');
         setSN('');
@@ -318,7 +306,6 @@ export default function PanneDialog(props) {
                     panne: panne,
                     ligne: ligne,
                     sn: sn,
-                    tailleLot: TailleLot,
                 }, 
                 {
                     headers: {
@@ -446,36 +433,26 @@ export default function PanneDialog(props) {
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >
                             Modele *:
                         </label>
-                        {Modele ?
-                            <input
+                        <input
                                 className={`input-text-field-form`}
                                 type='text'
                                 value={Modele}
                                 onChange={handleModeleChange}
                                 placeholder='Entrer le modele de votre produit'
                             />
-                        :
-                            <>
-                                <input
-                                    className={`input-text-field-form`}
-                                    type='text'
-                                    value={Modele}
-                                    onChange={handleModeleChange}
-                                    placeholder='Entrer le modele de votre produit'
-                                />
-                                <select
-                                    className='input-select-field-form'
-                                    value={Modele}
-                                    onChange={handleSelectedProductChange}
-                                >
-                                    <option value="" disabled>{'Selectionner un modele'}</option>
-                                    {ProductsData?.map((option, index) => (
-                                    <option key={index} value={index}>
-                                        {option.model}
-                                    </option>
-                                    ))}
-                                </select>
-                            </>
+                        {!Modele &&
+                            <select
+                                className='input-select-field-form'
+                                value={Modele}
+                                onChange={handleSelectedProductChange}
+                            >
+                                <option value="" disabled>{'Selectionner un modele'}</option>
+                                {ProductsData?.map((option, index) => (
+                                <option key={index} value={index}>
+                                    {option.model}
+                                </option>
+                                ))}
+                            </select>
                         }
                     </div>
                     <div className='input-select-field-container'>
@@ -533,19 +510,6 @@ export default function PanneDialog(props) {
                             </option>
                             ))}
                         </select>
-                    </div>
-                    <div className='input-text-field-container'>
-                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
-                            Taille du lot *:
-                        </label>
-                        <input
-                            className={`input-text-field-form`}
-                            type='number'
-                            min={0}
-                            value={TailleLot}
-                            onChange={handleTailleLotChange}
-                            placeholder='Entrer la taille du lot de votre produit'
-                        />
                     </div>
                     <div className='input-text-field-container'>
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >
