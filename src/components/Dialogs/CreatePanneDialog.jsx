@@ -143,6 +143,7 @@ export default function PanneDialog(props) {
         setMarque(selectedProduct.marque);
         setFamily(selectedProduct.familyAssociation.code);
         setLot(selectedProduct.lotAssociation.name);
+        setSN(selectedProduct.sn);
     }
 
 
