@@ -146,6 +146,7 @@ export default function AgentDialog(props) {
                         onChange={handleFullNameChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={FullName}
                     />
                     <TextFieldComponent 
                         type="text" 
@@ -156,6 +157,7 @@ export default function AgentDialog(props) {
                         onChange={handleUserNameChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={UserName}
                     />
                     <TextFieldComponent 
                         type="text" 
@@ -166,6 +168,7 @@ export default function AgentDialog(props) {
                         onChange={handlePhoneChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={Phone}
                     />
                     <TextFieldComponent 
                         type="password" 
@@ -176,6 +179,7 @@ export default function AgentDialog(props) {
                         onChange={handlePasswordChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={Password}
                     />
                     <SelectFieldComponent 
                         label="Zone" 
@@ -185,6 +189,7 @@ export default function AgentDialog(props) {
                         options={props.ZoneList}
                         optionName='name'
                         optionIdentifier= 'code'
+                        DefaultValue={zone}
                     />
 
                 </Box>

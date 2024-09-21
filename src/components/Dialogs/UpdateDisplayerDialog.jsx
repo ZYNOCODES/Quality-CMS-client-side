@@ -133,6 +133,7 @@ export default function UpdateTechnicianDialog(props) {
                         onChange={handleUsernameChange}
                         obligatory={false}
                         color='#fff'
+                        DefaultValue={Username}
                     />
                     <TextFieldComponent 
                         type="password" 
@@ -143,6 +144,7 @@ export default function UpdateTechnicianDialog(props) {
                         onChange={handlePasswordChange}
                         obligatory={false}
                         color='#fff'
+                        DefaultValue={Password}
                     />
                     <SelectFieldComponent 
                         label="Zone" 

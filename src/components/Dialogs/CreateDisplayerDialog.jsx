@@ -134,6 +134,7 @@ export default function DisplayerDialog(props) {
                         onChange={handleUsernameChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={Username}
                     />
                     <TextFieldComponent 
                         type="password" 
@@ -144,6 +145,7 @@ export default function DisplayerDialog(props) {
                         onChange={handlePasswordChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={Password}
                     />
                     <SelectFieldComponent 
                         label="Zone" 

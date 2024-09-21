@@ -127,6 +127,7 @@ export default function UpdateTechnicianDialog(props) {
                         onChange={handleFullNameChange}
                         obligatory={true}
                         color='#fff'
+                        DefaultValue={FullName}
                     />
                     <SelectFieldComponent 
                         label="Zone" 

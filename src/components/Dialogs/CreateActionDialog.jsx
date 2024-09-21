@@ -260,6 +260,7 @@ export default function ActionDialog(props) {
                 onChange={handleNameChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={Name}
             />
             <QuantityPickerComponent
               label="Durée"

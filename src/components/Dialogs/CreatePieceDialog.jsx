@@ -221,6 +221,7 @@ export default function PieceDialog(props) {
                 onChange={handleNameChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={Name}
             />
           </Box>
         </DialogContent>

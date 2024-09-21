@@ -221,6 +221,7 @@ export default function LotDialog(props) {
                 onChange={handleNameChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={Name}
             />
           </Box>
         </DialogContent>

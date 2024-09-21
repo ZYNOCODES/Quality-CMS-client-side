@@ -157,6 +157,7 @@ export default function UpdateProductDialog(props) {
                 onChange={handleMarqueChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={Marque}
             />
             <TextFieldComponent 
                 type="text" 
@@ -167,6 +168,7 @@ export default function UpdateProductDialog(props) {
                 onChange={handleModeleChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={Modele}
             />
             <TextFieldComponent 
                 type="text" 
@@ -177,6 +179,7 @@ export default function UpdateProductDialog(props) {
                 onChange={handleSNChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={sn}
             />
             <SelectFieldComponent 
                 label="Lot" 
@@ -196,6 +199,7 @@ export default function UpdateProductDialog(props) {
                 onChange={handleTailleLotChange}
                 obligatory={true}
                 color='#fff'
+                DefaultValue={TailleLot}
             />
             <SelectFieldComponent 
                 label="Famille" 
