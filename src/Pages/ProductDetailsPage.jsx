@@ -161,16 +161,6 @@ const ProductDetails = () => {
             },
         },
         {
-            name: "typepanneAssociation",
-            label: "Panne",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value.name}</p>;
-                },
-            },
-        },
-        {
             name: "dateDeclaration",
             label: "Date de declaration",
             options: {

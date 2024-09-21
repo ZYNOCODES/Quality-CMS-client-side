@@ -14,10 +14,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { formatDateTime, formatDate, formatDuration } from '../util/UseFullFunctions';
+import CreateActionCorrectiveDialog from '../components/Dialogs/CreateActionCorrectiveDialog'
 import UpdateActionCorrectiveDialog from '../components/Dialogs/UpdateActionCorrectiveDialog';
 import DeletingDialog from '../components/Dialogs/DeletingDialog';
 import UpdateConsommationPDRDialog from '../components/Dialogs/UpdateConsommationPDRDialog';
-import CreateActionCorrectiveDialog from '../components/Dialogs/CreateActionCorrectiveDialog'
 import CreateConsommationPDRDialog from '../components/Dialogs/CreateConsommationPDRDialog'
 import moment from 'moment';
 
@@ -130,7 +130,19 @@ const PanneDetails = () => {
             </div>
         );
     };
-
+    const columnsTypePanne = [
+        {
+            name: "typepanneAssociation",
+            label: "Type",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.name}</p>;
+                },
+            },
+        },
+    ]; 
     const columnsAction = [
         {
             name: "actionAssociation",
@@ -269,6 +281,41 @@ const PanneDetails = () => {
     const { data: PanneData, error: Panneerror, Loading: isPanneLoading, refetch: Pannerefetch } = useQuery({
         queryKey: ['PanneData', user?.token],
         queryFn: fetchPanneData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+    // fetching PanneTypeAssignment data
+    const fetchPanneTypeAssignmentData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/pannetypeassignment/${code}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des PanneTypeAssignments");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: PanneTypeAssignmentData, error: PanneTypeAssignmenterror, Loading: isPanneTypeAssignmentLoading, refetch: PanneTypeAssignmentrefetch } = useQuery({
+        queryKey: ['PanneTypeAssignmentData', user?.token],
+        queryFn: fetchPanneTypeAssignmentData,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
@@ -416,6 +463,7 @@ const PanneDetails = () => {
     const handleRefetchDataChange = () => {
         ActionCorrectiverefetch();
         ConsommationPDRrefetch();
+        PanneTypeAssignmentrefetch();
     }
     //delivred panne
     const onHandleClickDelivredPanne = async () => {
@@ -611,7 +659,7 @@ const PanneDetails = () => {
     }, [PanneData, PanneData?.reouvertureTempInitial, PanneData?.reouvertureTempFinal]);
 
 
-    if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading) {
+    if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading || isPanneTypeAssignmentLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -621,7 +669,7 @@ const PanneDetails = () => {
           </div>
         );
     }
-    if (Panneerror || ActionCorrectiveerror || ConsommationPDRerror) {
+    if (Panneerror || ActionCorrectiveerror || ConsommationPDRerror || PanneTypeAssignmenterror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
@@ -721,7 +769,6 @@ const PanneDetails = () => {
                     <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                     {PanneData?.dateReparation != null &&
@@ -734,6 +781,15 @@ const PanneDetails = () => {
                             }
                         </>    
                     }
+                </div>
+                {/* Panne types */}
+                <div className="Action-PDR-panne-page-header-content">
+                    <div className='Action-PDR-panne-navbar-page-content'>
+                        <div className="Action-PDR-panne-navbar-page-container">
+                            <h1>Type de pannes</h1>
+                        </div>
+                    </div>
+                    <DataTable rows={5} data={PanneTypeAssignmentData} columns={columnsTypePanne} download={false} viewColumns={true} filter={true} search={false} />
                 </div>
                 {PanneData?.dateReparation != null &&
                     <>

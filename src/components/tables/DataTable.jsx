@@ -88,6 +88,9 @@ const DataTable = (props) => {
                     if(column.name === 'consommationNames') {
                         return cellValue.join(', ') || '';
                     }
+                    if(column.name === 'typePannesNames') {
+                        return cellValue.join(', ') || '';
+                    }
                     if (column.name === 'livraison') {
                         return cellValue ? 'Oui' : 'Non'; 
                     }

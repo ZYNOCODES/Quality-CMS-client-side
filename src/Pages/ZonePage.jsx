@@ -213,7 +213,7 @@ const ZonePage = () => {
         },
         {
             name: "name",
-            label: "Name",
+            label: "Nom",
             options: {
                 filter: true,
                 sort: false,
@@ -261,7 +261,7 @@ const ZonePage = () => {
         },
         {
             name: "name",
-            label: "Name",
+            label: "Nom",
             options: {
                 filter: true,
                 sort: false,

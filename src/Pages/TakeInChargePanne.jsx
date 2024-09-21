@@ -14,7 +14,11 @@ import { TokenDecoder } from "../util/DecodeToken";
 import { formatDateTime } from '../util/UseFullFunctions';
 import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog';
 import SelectFieldComponent from '../components/forms/SelectField';
-
+import DataTable from '../components/tables/DataTable';
+import CreateTypePanneDialog from '../components/Dialogs/CreateTypePanneDialog'
+import UpdateTypePanneDialog from '../components/Dialogs/UpdateTypePanneDialog';
+import DeletingDialog from '../components/Dialogs/DeletingDialog';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const TakeInChargePanne = () => {
     const notifyFailed = (message) => toast.info(message);
@@ -35,11 +39,6 @@ const TakeInChargePanne = () => {
         setOpenUpdate(true);
     }
 
-    const handleClose = () => {
-        setOpen(false);
-        setOpenUpdate(false);
-    }
-
     const [isUpdate, setIsUpdate] = useState(false);
     const handleISUpdate = () => {
         setIsUpdate(true);
@@ -52,11 +51,75 @@ const TakeInChargePanne = () => {
     const Redirection = (path) => {
         navigate(path);
     }
+    const [currentCode, setCurrentCode] = useState(null);
+    const [ openCreateTypePanneDialog, setopenCreateTypePanneDialog ] = useState(false);
+    const handleopenCreateActionCorectiveDialog = () => {
+        setopenCreateTypePanneDialog(true);
+    }
+
+    const [ openDeleteTypePanneDialog, setopenDeleteTypePanneDialog ] = useState(false);
+    const handleopenDeletePanneTypeDialog = (code) => {
+        setCurrentCode(code);
+        setopenDeleteTypePanneDialog(true);
+    }
+
+    const [ openUpdatingTypePanneDialog, setopenUpdatingTypePanneDialog ] = useState(false);
+    const handleopenUpdatingPanneTypeDialog = (code) => {
+        setCurrentCode(code);
+        setopenUpdatingTypePanneDialog(true);
+    }
+
+    const handleClose = () => {
+        setCurrentCode(null);
+        setOpen(false);
+        setOpenUpdate(false);
+        setopenCreateTypePanneDialog(false);
+        setopenDeleteTypePanneDialog(false);
+        setopenUpdatingTypePanneDialog(false);
+    }
+
+    const columnsTypePanne = [
+        {
+            name: "typepanneAssociation",
+            label: "Type",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "code",
+            label: " ",
+            options: {
+                sort: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return (
+                        <div>
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type && isUpdate &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingPanneTypeDialog(value)}>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleopenDeletePanneTypeDialog(value)}>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    )
+                }
+            }
+        },
+    ]; 
 
 
         //-----------------------------------API------------------------------------------
     
-        // fetching Panne data
+    // fetching Panne data
     const fetchPanneData = async () => {
         try {
             const response = await fetch(
@@ -124,6 +187,41 @@ const TakeInChargePanne = () => {
         queryFn: fetchTechnicianData,
         enabled: !!user?.token,
         refetchOnWindowFocus: true,
+    });
+    // fetching PanneTypeAssignment data
+    const fetchPanneTypeAssignmentData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/pannetypeassignment/${code}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des PanneTypeAssignments");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: PanneTypeAssignmentData, error: PanneTypeAssignmenterror, Loading: isPanneTypeAssignmentLoading, refetch: PanneTypeAssignmentrefetch } = useQuery({
+        queryKey: ['PanneTypeAssignmentData', user?.token],
+        queryFn: fetchPanneTypeAssignmentData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
     // Fetch family data
     const fetchfamilyData = async () => {
@@ -382,6 +480,40 @@ const TakeInChargePanne = () => {
         }
     }
 
+    const handleDeletePanneType = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/pannetypeassignment/${currentCode}/${decodedToken?.code}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                PanneTypeAssignmentrefetch();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting type panne: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting type panne");
+            }
+        }
+    }
+
 
     if (isPanneLoading) {
         return (
@@ -442,7 +574,6 @@ const TakeInChargePanne = () => {
                             <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Type pannes' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation.marque} label='Marque' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation.model} label='Modele' color={'#fff'} type='text' readOnly />
@@ -459,15 +590,6 @@ const TakeInChargePanne = () => {
                             />
                             <TextFieldComponent DefaultValue={ligne} label='Ligne' color={'#fff'} type='text' 
                                 onChange={handleLigneChange}
-                            />
-                            <SelectFieldComponent
-                                label="Type pannes" 
-                                initialHelperText="Selectionner un type de panne" 
-                                onChange={handleSelectedTypepanneChange}
-                                obligatory={false}
-                                options={PanneTypeList}
-                                optionName='name'
-                                optionIdentifier='code'
                             />
                             <SelectFieldComponent
                                 label="Atelier" 
@@ -509,17 +631,17 @@ const TakeInChargePanne = () => {
                         </>
                     }
                 </div>
-                {/*Product */}
+                {/* Panne types */}
                 <div className="taken-panne-page-header-container">
-                    <h1>Produit :</h1>
-                    <div className="icon-taken-panne-page-header-container" onClick={() => Redirection(`/produit/${PanneData?.productAssociation?.code}`)}>
-                        <VisibilityIcon className='view-icon-taken-panne-page-header-container' />
-                        <p>voir</p>
-                    </div>
+                    <h1>Types de panne :</h1>
+                    {isUpdate &&
+                        <div className="icon-taken-panne-page-header-container" onClick={handleopenCreateActionCorectiveDialog}>
+                            <AddCircleOutlineIcon className='view-icon-taken-panne-page-header-container' />
+                        </div>
+                    }
                 </div>
-                <div className="taken-panne-page-form-container">
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
+                <div className="taken-panne-page-dataTable-container">
+                    <DataTable rows={5} data={PanneTypeAssignmentData} columns={columnsTypePanne} download={false} viewColumns={true} filter={true} search={false} />
                 </div>
             </div>
             <ConfirmTakeInChargeDialog 
@@ -537,6 +659,10 @@ const TakeInChargePanne = () => {
                 handleOnConfirm={onHandleClickUpdatePanne} 
                 handleClose={handleClose} 
             />
+            <CreateTypePanneDialog agent={decodedToken.code} code={code} user={user} open={openCreateTypePanneDialog} handleClose={handleClose} handleRefetchData={PanneTypeAssignmentrefetch} TypeList={PanneTypeList}/>
+            <UpdateTypePanneDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatingTypePanneDialog} handleClose={handleClose} handleRefetchData={PanneTypeAssignmentrefetch} TypeList={PanneTypeList}/>
+            <DeletingDialog name={'d\'un type de panne'} loading={submitionLoading} open={openDeleteTypePanneDialog} handleClose={handleClose} handleOnDelete={handleDeletePanneType}/>
+                                
             <ToastContainer />
         </div>
     );

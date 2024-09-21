@@ -48,6 +48,41 @@ body {
   gap: 10px;
   margin-inline-end: 10px;
 }
+.panne-types-field-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto;
+}
+.panne-types-field-container-card{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+.panne-types-field-container-card label{
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #191919;
+}
+.panne-types-field-container-card-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  color: #DA171B;
+  cursor: pointer;
+}
 /*medea screen*/
 @media screen and (max-width: 768px){
   .pages-container{

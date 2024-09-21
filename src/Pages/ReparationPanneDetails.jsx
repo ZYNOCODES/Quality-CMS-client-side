@@ -73,6 +73,41 @@ const ReparationPanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching PanneTypeAssignment data
+    const fetchPanneTypeAssignmentData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/pannetypeassignment/${code}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des PanneTypeAssignments");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: PanneTypeAssignmentData, error: PanneTypeAssignmenterror, Loading: isPanneTypeAssignmentLoading, refetch: PanneTypeAssignmentrefetch } = useQuery({
+        queryKey: ['PanneTypeAssignmentData', user?.token],
+        queryFn: fetchPanneTypeAssignmentData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     // fetching ActionCorrective data
     const fetchActionCorrectiveData = async () => {
         try {
@@ -404,6 +439,19 @@ const ReparationPanne = () => {
             </div>
         );
     };
+    const columnsTypePanne = [
+        {
+            name: "typepanneAssociation",
+            label: "Type",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.name}</p>;
+                },
+            },
+        },
+    ]; 
     const columnsAction = [
         {
             name: "actionAssociation",
@@ -574,7 +622,6 @@ const ReparationPanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseur} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={PanneData?.typepanneAssociation?.name} label='Panne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
                 </div>
@@ -582,6 +629,15 @@ const ReparationPanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#fff'} type='text' readOnly />
                     <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
+                </div>
+                {/* Panne types */}
+                <div className="Action-PDR-panne-page-header-content">
+                    <div className='Action-PDR-panne-navbar-page-content'>
+                        <div className="Action-PDR-panne-navbar-page-container">
+                            <h1>Types de panne</h1>
+                        </div>
+                    </div>
+                    <DataTable rows={5} data={PanneTypeAssignmentData} columns={columnsTypePanne} download={false} viewColumns={true} filter={true} search={false} />
                 </div>
                 {/*Action corrective et consommation PDR */}
                 <div className="Action-PDR-panne-page-header-container">

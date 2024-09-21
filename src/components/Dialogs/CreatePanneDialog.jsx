@@ -7,8 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, DialogContent, List } from '@mui/material';
-import TextFieldComponent from '../forms/TextField';
-import SelectFieldComponent from '../forms/SelectField';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -70,10 +68,30 @@ export default function PanneDialog(props) {
     const handleLigneChange = (event) => {
         setLigne(event.target.value);
     }
+    const [selectedPannes, setSelectedPannes] = useState([]);
+    const handleSelectedPannesChange = (value) => {
+        setSelectedPannes([...selectedPannes, value]);
+    }
+    const handleDeleteSelectedPannes = (code) => {
+        setSelectedPannes(selectedPannes.filter((panne) => panne.code !== code));
+    }
     const [panne, setPanne] = useState('');
     const handlePanneChange = (event) => {
-        setPanne(event.target.value);
-    }
+        const selectedValue = event.target.value;
+        setPanne(selectedValue);
+    
+        // Find the corresponding option based on the selected value
+        const selectedOption = PanneTypeList.find(option => option.name == selectedValue);
+        
+        // Check if the selected option is already in the selectedPannes array
+        const isAlreadySelected = selectedOption && selectedPannes.some(panne => panne.code === selectedOption.code);
+        if (!isAlreadySelected) {
+            handleSelectedPannesChange({
+                value: selectedOption.name,
+                code: selectedOption.code,
+            });
+        }
+    };
     const [sn, setSN] = useState('');
     const handleSNChange = (event) => {
         setSN(event.target.value);
@@ -303,7 +321,7 @@ export default function PanneDialog(props) {
                     family: family,
                     workshop: atelier,
                     fournisseur: fournisseur,
-                    panne: panne,
+                    panne: selectedPannes,
                     ligne: ligne,
                     sn: sn,
                 }, 
@@ -543,15 +561,30 @@ export default function PanneDialog(props) {
                             className='input-select-field-form'
                             value={panne}
                             onChange={handlePanneChange}
-                        >
+                            >
                             <option value="" disabled>{'Selectionner un type de panne'}</option>
                             {PanneTypeList?.map((option, index) => (
-                            <option key={index} value={option.code}>
-                                {option.name}
-                            </option>
+                                <option key={option.code} value={option.name}>
+                                    {option.name}
+                                </option>
                             ))}
                         </select>
                     </div>
+                    {selectedPannes.length > 0 &&
+                            <div className='panne-types-field-container'>
+                                {selectedPannes.map((item, index) => (
+                                    <div className='panne-types-field-container-card' key={index}>
+                                        <label>
+                                            {item.value}
+                                        </label>
+                                        <HighlightOffIcon 
+                                            className='panne-types-field-container-card-icon' 
+                                            onClick={()=>handleDeleteSelectedPannes(item.code)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                    }
                     <div className='input-select-field-container'>
                         <label className='input-select-field-label'>
                             Atelier *:

@@ -248,20 +248,6 @@ const EnReparationPanne = () => {
             },
         },
         {
-            name: "typepanneAssociation",
-            label: "Panne",
-            options: {
-                filter: true,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value.name}</p>;
-                },
-                customExport: (value) => {
-                    return value?.name || ''; // ensure only the name is exported
-                }
-            },
-        },
-        {
             name: "dateDeclaration",
             label: "Date de declaration",
             options: {

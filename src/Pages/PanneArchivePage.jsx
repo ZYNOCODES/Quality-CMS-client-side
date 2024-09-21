@@ -259,14 +259,20 @@ const ArchivePanne = () => {
             },
         },
         {
-            name: "typepanneAssociation",
-            label: "Panne",
+            name: "typePannesNames",
+            label: "Pannes",
             options: {
                 display: false,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.name}</p>;
+                    return <div>
+                        {
+                            value?.map((type, index) => {
+                                return <p key={index}>{type}</p>
+                            })
+                        }
+                    </div>;
                 },
             },
         },
