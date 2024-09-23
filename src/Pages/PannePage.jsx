@@ -267,7 +267,18 @@ const PannePage = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value || 'Non assosier'}</p>; // Show 'N/A' if technician is null
+                    return <p>{value || 'Non assosier'}</p>;
+                },
+            },
+        },
+        {
+            name: "sn",
+            label: "SN",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
                 },
             },
         },

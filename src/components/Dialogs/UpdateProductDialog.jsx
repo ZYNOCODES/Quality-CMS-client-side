@@ -56,10 +56,6 @@ export default function UpdateProductDialog(props) {
   const handleTailleLotChange = (event) => {
       setTailleLot(event.target.value);
   };
-  const [sn, setSN] = useState('');
-  const handleSNChange = (event) => {
-      setSN(event.target.value);
-  }
 
   // empty all fields
   const clearFields = () => {
@@ -69,7 +65,6 @@ export default function UpdateProductDialog(props) {
     setZone('');
     setLot('');
     setTailleLot('');
-    setSN('');
   }
   const handleSave = async () => {
     try {
@@ -81,7 +76,6 @@ export default function UpdateProductDialog(props) {
           zone: zone,
           lot: lot,
           tailleLot: TailleLot,
-          sn: sn
         }, 
         {
           headers: {
@@ -169,17 +163,6 @@ export default function UpdateProductDialog(props) {
                 obligatory={true}
                 color='#fff'
                 DefaultValue={Modele}
-            />
-            <TextFieldComponent 
-                type="text" 
-                label="SN" 
-                initialHelperText="Entrer le sn de votre produit" 
-                minLength={0} 
-                maxLength={100} 
-                onChange={handleSNChange}
-                obligatory={true}
-                color='#fff'
-                DefaultValue={sn}
             />
             <SelectFieldComponent 
                 label="Lot" 

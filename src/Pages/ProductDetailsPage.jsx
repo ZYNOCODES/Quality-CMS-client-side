@@ -130,6 +130,16 @@ const ProductDetails = () => {
 
     const columns = [
         {
+            name: "sn",
+            label: "SN",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
             name: "fournisseur",
             label: "Fournisseur",
             options: {
@@ -231,7 +241,6 @@ const ProductDetails = () => {
                     <TextFieldComponent DefaultValue={ProductData?.tailleLot} label='Taille du lot' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#fff'} type='text' readOnly />
-                    <TextFieldComponent DefaultValue={ProductData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.zoneAssociation?.name} label='Zone' color={'#fff'} type='text' readOnly />
                 </div>
