@@ -206,7 +206,7 @@ const EnReparationPanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value.fullname}</p>;
+                    return <p>{value?.fullname}</p>;
                 },
             },
         },
