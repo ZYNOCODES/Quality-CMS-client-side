@@ -313,8 +313,8 @@ const TakeInChargePanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-     // fetching Lot data
-     const fetchLotData = async () => {
+    // fetching Lot data
+    const fetchLotData = async () => {
         const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/lot`,
             {
                 method: "GET",
@@ -343,6 +343,37 @@ const TakeInChargePanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Arrival data
+    const fetchArrivalData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/arrival`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Arrival data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: ArrivalList, error: Arrivalerror, Loading: isArrivalLoading, refetch: Arrivalrefetch } = useQuery({
+        queryKey: ['ArrivalList', user?.token],
+        queryFn: fetchArrivalData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+
     const onHandleClicktakeInChargePanne = async (technician) => {
         try {
             setSubmitionLoading(true);
@@ -415,10 +446,15 @@ const TakeInChargePanne = () => {
     const handleSelectedLotChange = (e) => {
         setSelectedLot(e.target.value);
     }
+    const [selectedArrival, setSelectedArrival] = useState('');
+    const handleSelectedArrivalChange = (e) => {
+        setSelectedArrival(e.target.value);
+    }
     const [selectedFamily, setSelectedFamily] = useState('');
     const handleSelectedFamilyChange = (e) => {
         setSelectedFamily(e.target.value);
     }
+
 
     const clearForm = () => {
         setFournisseur('');
@@ -429,6 +465,7 @@ const TakeInChargePanne = () => {
         setModel('');
         setSn('');
         setSelectedLot('');
+        setSelectedArrival('');
         setSelectedFamily('');
     }
     
@@ -447,6 +484,7 @@ const TakeInChargePanne = () => {
                     sn: sn,
                     lot: selectedLot,
                     family: selectedFamily,
+                    arrival: selectedArrival,
                 },
                 {
                     headers: {
@@ -579,6 +617,7 @@ const TakeInChargePanne = () => {
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation.model} label='Modele' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.arrivalAssociation?.name ? PanneData?.productAssociation.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
                         </>
                         :
@@ -615,6 +654,15 @@ const TakeInChargePanne = () => {
                                 onChange={handleSelectedLotChange}
                                 obligatory={false}
                                 options={LotList}
+                                optionName='name'
+                                optionIdentifier='code'
+                            />
+                            <SelectFieldComponent
+                                label="Arriavge" 
+                                initialHelperText="Selectionner un arrivage" 
+                                onChange={handleSelectedArrivalChange}
+                                obligatory={false}
+                                options={ArrivalList}
                                 optionName='name'
                                 optionIdentifier='code'
                             />

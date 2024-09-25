@@ -239,6 +239,7 @@ const ProductDetails = () => {
                     <TextFieldComponent DefaultValue={ProductData?.code} label='Code' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.tailleLot} label='Taille du lot' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={ProductData?.arrivalAssociation?.name ? ProductData?.arrivalAssociation?.name : 'N/A' } label='Arrivage' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.marque} label='Marque' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.model} label='Modele' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={ProductData?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />

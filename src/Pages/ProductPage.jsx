@@ -9,6 +9,8 @@ import CreateFamilyDialog from '../components/Dialogs/CreateFamilyDialog';
 import UpdateFamilyDialog from '../components/Dialogs/UpdateFamilyDialog';
 import CreateLotDialog from '../components/Dialogs/CreateLotDialog';
 import UpdateLotDialog from '../components/Dialogs/UpdateLotDialog';
+import CreateArrivalDialog from '../components/Dialogs/CreateArrivalDialog';
+import UpdateArrivalDialog from '../components/Dialogs/UpdateArrivalDialog';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
@@ -33,6 +35,9 @@ const ProductPage = () => {
     const [openCreateLotDialog, setOpenCreateLotDialog] = useState(false);
     const [openUpdateLotDialog, setOpenUpdateLotDialog] = useState(false);
     const [openDeleteLotDialog, setOpenDeleteLotDialog] = useState(false);
+    const [openCreateArrivalDialog, setOpenCreateArrivalDialog] = useState(false);
+    const [openUpdateArrivalDialog, setOpenUpdateArrivalDialog] = useState(false);
+    const [openDeleteArrivalDialog, setOpenDeleteArrivalDialog] = useState(false);
 
     const [currentCode, setCurrentCode] = useState(null);
     const [submitionLoading, setSubmitionLoading] = useState(false);
@@ -49,6 +54,10 @@ const ProductPage = () => {
     const handleLotChange = (event) => {
         setLot(event.target.value);
     }
+    const [Arrival, setArrival] = useState('');
+    const handleArrivalChange = (event) => {
+        setArrival(event.target.value);
+    }
 
     const handleClose = () => {
         setCurrentCode(null);
@@ -61,6 +70,9 @@ const ProductPage = () => {
         setOpenCreateLotDialog(false);
         setOpenUpdateLotDialog(false);
         setOpenDeleteLotDialog(false);
+        setOpenCreateArrivalDialog(false);
+        setOpenUpdateArrivalDialog(false);
+        setOpenDeleteArrivalDialog(false);
     };
 
     const Redirection = (path) => {
@@ -131,6 +143,20 @@ const ProductPage = () => {
                     return (
                         <p>
                             {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            name: "arrivalAssociation",
+            label: "Arrivage",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value?.name}
                         </p>
                     )
                 }
@@ -319,6 +345,73 @@ const ProductPage = () => {
         },
     ];
 
+    {/* Arrival Dialog */}
+    const handleClickOpenCreateArrivalDialog = () => {
+        setOpenCreateArrivalDialog(true);
+    };
+    const handleClickOpenUpdateArrivalDialog = (code) => {
+        setCurrentCode(code);
+        setOpenUpdateArrivalDialog(true);
+    };
+    const handleClickOpenDeleteArrivalDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteArrivalDialog(true);
+    };
+    const columnsArrival = [
+        {
+            name: "code",
+            label: "Code",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            name: "name",
+            label: "Nom",
+            options: {
+                sort: false,
+                customBodyRender: (value) => {
+                    return (
+                        <p>
+                            {value}
+                        </p>
+                    )
+                }
+            }
+        },
+        {
+            name: "code",
+            label: " ",
+            options: {
+                sort: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return (
+                        <div>
+                            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateArrivalDialog(value) }>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteArrivalDialog(value) }>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    )
+                }
+            }
+        },
+    ];
+
     // fetching products data
     const fetchProductsData = async () => {
         let response;
@@ -452,13 +545,50 @@ const ProductPage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-    // Function to refetch data
-    const handleRefetchDataChange = () => {
-        refetch();
-        Zonesrefetch();
+    // fetching Arrival data
+    const fetchArrivalData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/arrival`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving arrival data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: ArrivalList, error: Arrivalerror, Loading: isArrivalLoading, refetch: Arrivalrefetch } = useQuery({
+        queryKey: ['ArrivalList', user?.token],
+        queryFn: fetchArrivalData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+
+    const handleRefetchFamilyData = () => {
         Familyrefetch();
-        Lotrefetch();
+        refetch();
     }
+    const handleRefetchLotData = () => {
+        Lotrefetch();
+        refetch();
+    }
+    const handleRefetchArrivalData = () => {
+        Arrivalrefetch();
+        refetch();
+    }
+
     //delete product
     const handleDeleteProduct = async () => {
         try {
@@ -473,7 +603,7 @@ const ProductPage = () => {
             );
             if (response.status === 200) {
                 notifySuccess(response.data.message);
-                handleRefetchDataChange();
+                refetch();
                 setSubmitionLoading(false);
                 handleClose();
             } else {
@@ -507,7 +637,7 @@ const ProductPage = () => {
             );
             if (response.status === 200) {
                 notifySuccess(response.data.message);
-                handleRefetchDataChange();
+                Familyrefetch();
                 setSubmitionLoading(false);
                 handleClose();
             } else {
@@ -541,7 +671,7 @@ const ProductPage = () => {
             );
             if (response.status === 200) {
                 notifySuccess(response.data.message);
-                handleRefetchDataChange();
+                Lotrefetch();
                 setSubmitionLoading(false);
                 handleClose();
             } else {
@@ -561,15 +691,50 @@ const ProductPage = () => {
             }
         }
     };
+    //delete Arrival
+    const handleDeleteArrival = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/arrival/${currentCode}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                Arrivalrefetch();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting Arrival: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting Arrival");
+            }
+        }
+    };
 
     // Filter ProductsData by selected zone or familly
     const filteredProductsData = ProductsData?.filter(product => 
         (Zone == '' || product.zone == Zone) &&
         (Family == '' || product.family == Family) &&
-        (Lot == '' || product.lot == Lot)
+        (Lot == '' || product.lot == Lot) &&
+        (Arrival == '' || product.arrival == Arrival)
     );
 
-    if (isLoading || isZonesLoading || isFamilyLoading) {
+    if (isLoading || isZonesLoading || isFamilyLoading || isLotLoading || isArrivalLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -579,7 +744,7 @@ const ProductPage = () => {
           </div>
         );
     }
-    if (error || Zoneserror || Familyerror) {
+    if (error || Zoneserror || Familyerror || Loterror || Arrivalerror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
@@ -592,30 +757,38 @@ const ProductPage = () => {
             <TableHeader name={'Liste des produits'} type={decodedToken.type} handleClickOpen={handleClickOpen} 
                 handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} 
                 handleZoneChange={handleZoneChange} ZoneList={ZoneList}
-                handleLotChange={handleLotChange} LotList={LotList}    
+                handleLotChange={handleLotChange} LotList={LotList}  
+                handleArrivalChange={handleArrivalChange} ArrivalList={ArrivalList}  
             />
             <DataTable title={'Liste des produits'} data={filteredProductsData} columns={columns} rows={11} download={true} viewColumns={true} filter={true} search={true}/>
 
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     {/* Product Table */}
-                    <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} familyList={FamilyList} zoneList={ZoneList} lotList={LotList}/>
-                    <UpdateProductDialog  name={'d\'un produit'} code={currentCode} user={user} open={openUpdateProductDialog} handleClose={handleClose} refetchData={handleRefetchDataChange} familyList={FamilyList} zoneList={ZoneList} lotList={LotList}/>
+                    <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} arrivalList={ArrivalList}/>
+                    <UpdateProductDialog  name={'d\'un produit'} code={currentCode} user={user} open={openUpdateProductDialog} handleClose={handleClose} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} arrivalList={ArrivalList}/>
                     <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeleteProductDialog} handleClose={handleClose} handleOnDelete={handleDeleteProduct}/>
                     
                     {/* Family Table */}
                     <TableHeader name={'Liste des familles'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFamilyDialog}/>
                     <DataTable title={'Liste des familles'} data={FamilyList} columns={columnsFamily} rows={3}  download={true} viewColumns={true} filter={true} search={true}/>
-                    <CreateFamilyDialog  open={openCreateFamilyDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
-                    <UpdateFamilyDialog  name={'d\'une famille'} code={currentCode} user={user} open={openUpdateFamilyDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+                    <CreateFamilyDialog  open={openCreateFamilyDialog} handleClose={handleClose} user={user} refetchData={handleRefetchFamilyData}/>
+                    <UpdateFamilyDialog  name={'d\'une famille'} code={currentCode} user={user} open={openUpdateFamilyDialog} handleClose={handleClose} handleRefetchData={handleRefetchFamilyData} />
                     <DeletingDialog name={'d\'une famille'} loading={submitionLoading} open={openDeleteFamilyDialog} handleClose={handleClose} handleOnDelete={handleDeleteFamily}/>
                     
                     {/* Lot Table */}
                     <TableHeader name={'Liste des lots'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateLotDialog}/>
                     <DataTable title={'Liste des lots'} data={LotList} columns={columnsLot} rows={3}  download={true} viewColumns={true} filter={true} search={true}/>
-                    <CreateLotDialog  open={openCreateLotDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange}/>
-                    <UpdateLotDialog  name={'d\'un lot'} code={currentCode} user={user} open={openUpdateLotDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+                    <CreateLotDialog  open={openCreateLotDialog} handleClose={handleClose} user={user} refetchData={handleRefetchLotData}/>
+                    <UpdateLotDialog  name={'d\'un lot'} code={currentCode} user={user} open={openUpdateLotDialog} handleClose={handleClose} handleRefetchData={handleRefetchLotData} />
                     <DeletingDialog name={'d\'un lot'} loading={submitionLoading} open={openDeleteLotDialog} handleClose={handleClose} handleOnDelete={handleDeleteLot}/>
+                    
+                    {/* Arrivals Table */}
+                    <TableHeader name={'Liste des arrivages'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateArrivalDialog}/>
+                    <DataTable title={'Liste des arrivages'} data={ArrivalList} columns={columnsArrival} rows={3}  download={true} viewColumns={true} filter={true} search={true}/>
+                    <CreateArrivalDialog  open={openCreateArrivalDialog} handleClose={handleClose} user={user} refetchData={handleRefetchArrivalData}/>
+                    <UpdateArrivalDialog  name={'d\'un arrivage'} code={currentCode} user={user} open={openUpdateArrivalDialog} handleClose={handleClose} handleRefetchData={handleRefetchArrivalData} />
+                    <DeletingDialog name={'d\'un arrivage'} loading={submitionLoading} open={openDeleteArrivalDialog} handleClose={handleClose} handleOnDelete={handleDeleteArrival}/>
                     
                 </>
             }

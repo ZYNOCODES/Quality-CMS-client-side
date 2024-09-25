@@ -6,6 +6,7 @@ const TableHeader = (props) => {
         <div className="pages-header">
             <h1 className="pages-title">{props.name}</h1>
             <div className="pages-selects-container">
+                {/* select fields */}
                 {props.PanneTypeList && props.handlePanneTypeChange &&
                     <div className='pages-input-select-field-container'>
                     <select
@@ -70,6 +71,22 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
+                {props.ArrivalList && props.handleArrivalChange &&
+                    <div className='pages-input-select-field-container'>
+                    <select
+                        className='pages-input-select-field'
+                        onChange={props.handleArrivalChange}
+                        placeholder="Sélectionnez un atelier"
+                    >
+                        <option value={''}>Sélectionnez un arrivage</option>
+                        {props.ArrivalList?.map((option, index) => (
+                            <option key={index} value={option.id}>
+                                {option.name}
+                            </option>
+                        ))}
+                    </select>
+                    </div>
+                }
                 {props.ZoneList && props.handleZoneChange && import.meta.env.VITE_MANAGER_TYPE == props.type &&
                     <div className='pages-input-select-field-container'>
                     <select
@@ -86,6 +103,8 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
+
+                {/* buttons */}
                 {(
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des produits'
                  ) &&
@@ -162,7 +181,13 @@ const TableHeader = (props) => {
                     import.meta.env.VITE_AGENT_TYPE == props.type && props.name == 'Liste des pannes non restituées'
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleOpenConfirmationDialog}>Restitution</button>
-                }                     
+                }  
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des arrivages'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un arrivage</button>
+                }                    
             </div>
         </div>
     );

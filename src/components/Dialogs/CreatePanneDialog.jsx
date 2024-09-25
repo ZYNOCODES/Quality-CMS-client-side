@@ -60,6 +60,10 @@ export default function PanneDialog(props) {
     const handlelotChange = (event) => {
         setLot(event.target.value);
     };
+    const [arrival, setArrival] = useState('');
+    const handleArrivalChange = (event) => {
+        setArrival(event.target.value);
+    };
     const [fournisseur, setFournisseur] = useState('');
     const handleFournisseurChange = (event) => {
         setFournisseur(event.target.value);
@@ -143,7 +147,7 @@ export default function PanneDialog(props) {
         setMarque(selectedProduct.marque);
         setFamily(selectedProduct.familyAssociation.code);
         setLot(selectedProduct.lotAssociation.name);
-        setSN(selectedProduct.sn);
+        setArrival(selectedProduct.arrivalAssociation.code);
     }
 
 
@@ -170,6 +174,7 @@ export default function PanneDialog(props) {
             setMarque(selectedProduct.marque);
             setFamily(selectedProduct.familyAssociation.code);
             setLot(selectedProduct.lotAssociation.name);
+            setArrival(selectedProduct.arrivalAssociation.code);
             setSN(Copiedsn);
         }else{
             setModele(Copiedmodele);
@@ -189,6 +194,7 @@ export default function PanneDialog(props) {
         setLigne('');
         setPanne('');
         setSN('');
+        setArrival('');
         setCopiedText('');
     };
     // Fetch family data
@@ -281,8 +287,8 @@ export default function PanneDialog(props) {
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
-     // fetching Lot data
-     const fetchLotData = async () => {
+    // fetching Lot data
+    const fetchLotData = async () => {
         const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/lot`,
             {
                 method: "GET",
@@ -311,6 +317,36 @@ export default function PanneDialog(props) {
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Arrival data
+    const fetchArrivalData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/arrival`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${props.user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Arrival data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: ArrivalList, error: Arrivalerror, Loading: isArrivalLoading, refetch: Arrivalrefetch } = useQuery({
+        queryKey: ['ArrivalList', props.user?.token],
+        queryFn: fetchArrivalData,
+        enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     //save the panne
     const handleSave = async () => {
         try {
@@ -325,6 +361,7 @@ export default function PanneDialog(props) {
                     panne: selectedPannes,
                     ligne: ligne,
                     sn: sn,
+                    arrival: arrival,
                 }, 
                 {
                     headers: {
@@ -478,28 +515,49 @@ export default function PanneDialog(props) {
                         <label className='input-select-field-label'>
                             Lot *:
                         </label>
-                        {!CopiedText && CopiedText == '' ?
+                        <div style={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: '10px',
+                        }}>
+                            {!CopiedText && CopiedText == '' ?
+                                <select
+                                    className='input-select-field-form'
+                                    value={lot}
+                                    onChange={handlelotChange}
+                                >
+                                    <option value="" disabled>{'Selectionner un lot'}</option>
+                                    {LotList?.map((option, index) => (
+                                    <option key={index} value={option.name}>
+                                        {option.name}
+                                    </option>
+                                    ))}
+                                </select>
+                                :
+                                <input
+                                    className={`input-text-field-form`}
+                                    type='text'
+                                    value={lot}
+                                    onChange={handlelotChange}
+                                    placeholder='Entrer le lot de votre produit'
+                                />
+                            }
                             <select
                                 className='input-select-field-form'
-                                value={lot}
-                                onChange={handlelotChange}
+                                value={arrival}
+                                onChange={handleArrivalChange}
                             >
-                                <option value="" disabled>{'Selectionner un lot'}</option>
-                                {LotList?.map((option, index) => (
-                                <option key={index} value={option.name}>
+                                <option value="" disabled>{'Selectionner un arrivage'}</option>
+                                {ArrivalList?.map((option, index) => (
+                                <option key={index} value={option.code}>
                                     {option.name}
                                 </option>
                                 ))}
                             </select>
-                            :
-                            <input
-                                className={`input-text-field-form`}
-                                type='text'
-                                value={lot}
-                                onChange={handlelotChange}
-                                placeholder='Entrer le lot de votre produit'
-                            />
-                        }
+                        </div>
                     </div>
                     <div className='input-text-field-container'>
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >

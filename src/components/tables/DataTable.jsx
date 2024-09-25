@@ -61,6 +61,9 @@ const DataTable = (props) => {
                     if (column.name === 'lotAssociation') {
                         return cellValue?.name || ''; 
                     }
+                    if (column.name === 'arrivalAssociation') {
+                        return cellValue?.name || ''; 
+                    }
                     if (column.name === 'dureeDintervention') {
                         return formatDuration(cellValue) || ''; 
                     }
@@ -78,6 +81,8 @@ const DataTable = (props) => {
                                 return cellValue?.model || '';
                             case 'Lot':
                                 return cellValue?.lotAssociation?.name || '';
+                            case 'Arrivage':
+                            return cellValue?.arrivalAssociation?.name || '';
                             default:
                                 return '';
                         }

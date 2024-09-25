@@ -261,13 +261,38 @@ const PannePage = () => {
 
     const columns = [
         {
-            name: "technician",
-            label: "Technician",
+            name: "productAssociation",
+            label: "Marque",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value || 'Non assosier'}</p>;
+                    return <p>{value?.marque}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Modele",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.model}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Arrivage",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A'}</p>;
                 },
             },
         },
@@ -275,6 +300,7 @@ const PannePage = () => {
             name: "sn",
             label: "SN",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -283,9 +309,23 @@ const PannePage = () => {
             },
         },
         {
-            name: "fournisseur",
-            label: "Fournisseur",
+            name: "productAssociation",
+            label: "Famille",
             options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.familyAssociation?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "ligne",
+            label: "Ligne",
+            options: {
+                display: true,
+                filter: false,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
@@ -294,33 +334,13 @@ const PannePage = () => {
         },
         {
             name: "workshopAssociation",
-            label: "Workshop",
+            label: "Atelier",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.name}</p>;
-                },
-            },
-        },
-        {
-            name: "ligne",
-            label: "Ligne",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value}</p>;
-                },
-            },
-        },
-        {
-            name: "dateDeclaration",
-            label: "Date de declaration",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{formatDateTime(value)}</p>;
+                    return <p>{value.name}</p>;
                 },
             },
         },

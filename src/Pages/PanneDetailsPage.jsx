@@ -744,7 +744,7 @@ const PanneDetails = () => {
                         </div>
                     </>
                 }
-                {/*Technician */}
+                {/*Agent */}
                 {(PanneData?.agent != null && PanneData?.agentAssociation) &&
                     <>
                         <div className="panne-page-header-container">

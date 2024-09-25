@@ -200,21 +200,57 @@ const EnReparationPanne = () => {
 
     const columns = [
         {
-            name: "tempInitial",
-            label: "Temp initial",
+            name: "technicianAssociation",
+            label: "Technicien",
             options: {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{formatDateTime(value) || 'g'}</p>;
+                    return <p>{value.fullname}</p>;
                 },
             },
         },
         {
-            name: "fournisseur",
-            label: "Fournisseur",
+            name: "productAssociation",
+            label: "Modele",
             options: {
                 filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.model}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Lot",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.lotAssociation?.name}</p>;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Arrivage",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A'}</p>;
+                },
+            },
+        },
+        {
+            name: "sn",
+            label: "SN",
+            options: {
+                display: true,
+                filter: false,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value}</p>;
@@ -222,29 +258,20 @@ const EnReparationPanne = () => {
             },
         },
         {
-            name: "workshopAssociation",
-            label: "Workshop",
+            name: "typePannesNames",
+            label: "Type de panne",
             options: {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.name}</p>;
+                    return <div>
+                        {
+                            value?.map((type, index) => {
+                                return <p key={index}>{type}</p>
+                            })
+                        }
+                    </div>;
                 },
-                customExport: (value) => {
-                    return value?.name || ''; // Ensure only the name is exported or empty if undefined
-                }
-            },
-        },
-        {
-            name: "ligne",
-            label: "Ligne",
-            options: {
-                filter: true,
-                sort: false,
-                customBodyRender: (value) => {
-                    return <p>{value}</p>;
-                },
-                
             },
         },
         {
@@ -255,6 +282,18 @@ const EnReparationPanne = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{formatDateTime(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "workshopAssociation",
+            label: "Atelier",
+            options: {
+                display: true,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value.name}</p>;
                 },
             },
         },

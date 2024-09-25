@@ -9,8 +9,10 @@ import './css/TakeInChargePannePageStyle.css';
 import UpdateStepTwoPanneDialog from '../components/Dialogs/UpdateStepTwoPanneDialog'
 import CreateActionCorrectiveDialog from '../components/Dialogs/CreateActionCorrectiveDialog'
 import CreateConsommationPDRDialog from '../components/Dialogs/CreateConsommationPDRDialog'
+import CreateTypePanneDialog from '../components/Dialogs/CreateTypePanneDialog'
 import UpdateConsommationPDRDialog from '../components/Dialogs/UpdateConsommationPDRDialog'
 import UpdateActionCorrectiveDialog from '../components/Dialogs/UpdateActionCorrectiveDialog'
+import UpdateTypePanneDialog from '../components/Dialogs/UpdateTypePanneDialog'
 import DeletingDialog from '../components/Dialogs/DeletingDialog'
 import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog'
 import { useEffect, useState } from 'react';
@@ -29,12 +31,16 @@ const ReparationPanne = () => {
     const { user } = useAuthContext();
     const [ openCreateActionCorrectiveDialog, setopenCreateActionCorrectiveDialog ] = useState(false);
     const [ openCreateConsommationPDRDialog, setopenCreateConsommationPDRDialog ] = useState(false);
+    const [ openCreatePanneTypeDialog, setopenCreatePanneTypeDialog ] = useState(false);
     const [ openDeleteActionCorrectiveDialog, setopenDeleteActionCorrectiveDialog ] = useState(false);
     const [ openDeleteConsommationPDRDialog, setopenDeleteConsommationPDRDialog ] = useState(false);
+    const [ openDeletePanneTypeDialog, setopenDeletePanneTypeDialog ] = useState(false);
     const [ openUpdatingActionCorrectiveDialog, setopenUpdatingActionCorrectiveDialog ] = useState(false);
     const [ openUpdatingConsommationPDRDialog, setopenUpdatingConsommationPDRDialog ] = useState(false);
+    const [ openUpdatePanneTypeDialog, setopenUpdatePanneTypeDialog ] = useState(false);
     const [ openConfirmationDialog, setopenConfirmationDialog ] = useState(false);
     const [ openConfirmationStepTwoDialog, setopenConfirmationStepTwoDialog ] = useState(false);
+
     const [submitionLoading, setSubmitionLoading] = useState(false);
     const [currentCode, setCurrentCode] = useState(null);
     const [ red, setRed ] = useState(false);
@@ -248,13 +254,50 @@ const ReparationPanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching PanneType data
+    const fetchPanneTypeData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/pannetype`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des type de pannes");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: PanneTypesData, error: PanneTypeerror, Loading: isPanneTypeLoading, refetch: PanneTyperefetch } = useQuery({
+        queryKey: ['PanneTypesData', user?.token],
+        queryFn: fetchPanneTypeData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     // Function to refetch data
     const handleRefetchDataChange = () => {
         Pannerefetch();
         ActionCorrectiverefetch();
         ConsommationPDRrefetch();
+        PanneTypeAssignmentrefetch();
         Piecerefetch();
         Actionrefetch();
+        PanneTyperefetch();
     }
     // Redirection function
     const Redirection = (path) => {
@@ -265,6 +308,13 @@ const ReparationPanne = () => {
     }
     const handleopenCreateActionCorectiveDialog = () => {
         setopenCreateActionCorrectiveDialog(true);
+    }
+    const handleopenCreatePanneTypeDialog = () => {
+        setopenCreatePanneTypeDialog(true);
+    }
+    const handleopenDeletePanneTypeDialog = (code) => {
+        setCurrentCode(code);
+        setopenDeletePanneTypeDialog(true);
     }
     const handleopenDeleteConsommationPDRDialog = (code) => {
         setCurrentCode(code);
@@ -282,6 +332,10 @@ const ReparationPanne = () => {
         setCurrentCode(code);
         setopenUpdatingActionCorrectiveDialog(true);
     }
+    const handleopenUpdatingPanneTypeDialog = (code) => {
+        setCurrentCode(code);
+        setopenUpdatePanneTypeDialog(true);
+    }
     const handleopenConfirmationDialog = () => {
         setopenConfirmationDialog(true);
     }
@@ -292,10 +346,13 @@ const ReparationPanne = () => {
         setCurrentCode(null);
         setopenCreateConsommationPDRDialog(false);
         setopenCreateActionCorrectiveDialog(false);
+        setopenCreatePanneTypeDialog(false);
         setopenDeleteActionCorrectiveDialog(false);
         setopenDeleteConsommationPDRDialog(false);
+        setopenDeletePanneTypeDialog(false);
         setopenUpdatingActionCorrectiveDialog(false);
         setopenUpdatingConsommationPDRDialog(false);
+        setopenUpdatePanneTypeDialog(false);
         setopenConfirmationDialog(false);
         setopenConfirmationStepTwoDialog(false);
     }
@@ -362,6 +419,39 @@ const ReparationPanne = () => {
             } else {
                 // Something happened in setting up the request that triggered an Error
                 console.error("Error deleting Consommation PDR");
+            }
+        }
+    };
+    const handleDeletePanneType = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/pannetypeassignment/${currentCode}/${decodedToken?.code}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                handleRefetchDataChange();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting Panne type: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting Panne type");
             }
         }
     };
@@ -450,6 +540,30 @@ const ReparationPanne = () => {
                     return <p>{value?.name}</p>;
                 },
             },
+        },
+        {
+            name: "code",
+            label: " ",
+            options: {
+                sort: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return (
+                        <div>
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingPanneTypeDialog(value)}>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleopenDeletePanneTypeDialog(value)}>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    )
+                }
+            }
         },
     ]; 
     const columnsAction = [
@@ -614,6 +728,17 @@ const ReparationPanne = () => {
                     <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
                 </div>
+                {/*Technician */}
+                {(PanneData?.technician != null && PanneData?.technicianAssociation) &&
+                    <>
+                        <div className="panne-page-header-container">
+                            <h1>Technicien :</h1>
+                        </div>
+                        <div className="panne-page-form-container">
+                            <TextFieldComponent DefaultValue={PanneData?.technicianAssociation?.fullname} label='Nom complet' color={'#fff'} type='text' readOnly />
+                        </div>
+                    </>
+                }
                 {/*Panne */}
                 <div className="taken-panne-page-header-container">
                     <h1>Détails :</h1>
@@ -637,6 +762,7 @@ const ReparationPanne = () => {
                         <div className="Action-PDR-panne-navbar-page-container">
                             <h1>Types de panne</h1>
                         </div>
+                        <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreatePanneTypeDialog}>Ajouter un type de panne</button>
                     </div>
                     <DataTable rows={5} data={PanneTypeAssignmentData} columns={columnsTypePanne} download={false} viewColumns={true} filter={true} search={false} />
                 </div>
@@ -663,12 +789,19 @@ const ReparationPanne = () => {
                 </div>
             </div>
             <UpdateStepTwoPanneDialog agent={decodedToken.code} code={code} user={user} open={openConfirmationStepTwoDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+            
+            <CreateTypePanneDialog agent={decodedToken.code} code={code} user={user} open={openCreatePanneTypeDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} TypeList={PanneTypesData}/>
+            <UpdateTypePanneDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatePanneTypeDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} TypeList={PanneTypesData}/>
+            <DeletingDialog name={'d\'un type de panne'} loading={submitionLoading} open={openDeletePanneTypeDialog} handleClose={handleClose} handleOnDelete={handleDeletePanneType}/>
+            
             <CreateActionCorrectiveDialog agent={decodedToken.code} code={code} user={user} open={openCreateActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
             <UpdateActionCorrectiveDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatingActionCorrectiveDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ActionList={ActionsData}/>
             <DeletingDialog name={'d\'une action corrective'} loading={submitionLoading} open={openDeleteActionCorrectiveDialog} handleClose={handleClose} handleOnDelete={handleDeleteActionCorrective}/>
+            
             <CreateConsommationPDRDialog agent={decodedToken.code} code={code} user={user} open={openCreateConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
             <UpdateConsommationPDRDialog agent={decodedToken.code} code={currentCode} user={user} open={openUpdatingConsommationPDRDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} PieceList={PiecesData}/>
             <DeletingDialog name={'d\'une consommation PDR'} loading={submitionLoading} open={openDeleteConsommationPDRDialog} handleClose={handleClose} handleOnDelete={handleDeleteConsommationPDR}/>
+            
             <ConfirmationDialog open={openConfirmationDialog} name={'clôture'} loading={submitionLoading} handleOnConfirm={handleClickCloturePanne} handleClose={handleClose} />
             <ToastContainer />
         </div>
