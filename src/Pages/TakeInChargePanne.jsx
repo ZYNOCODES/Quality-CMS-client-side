@@ -613,12 +613,12 @@ const TakeInChargePanne = () => {
                             <TextFieldComponent DefaultValue={PanneData?.fournisseurAssociation?.fullname} label='Fournisseur' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.workshopAssociation?.name} label='Atelier' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.marque} label='Marque' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.model} label='Modele' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.marque} label='Marque' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.arrivalAssociation?.name ? PanneData?.productAssociation.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.arrivalAssociation?.name ? PanneData?.productAssociation.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
                         </>
                         :
                         <>

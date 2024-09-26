@@ -38,7 +38,6 @@
     font-weight: 600;
 }
 .update-button{
-    width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +50,6 @@
     font-weight: 600;
 }
 .cancel-button{
-    width: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,10 +125,20 @@
     font-size: 1rem;
     color: #0056ac;
 }
-.taken-panne-page-form-container.green{
+.taken-panne-page-form-timeCounter-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 50%;
+    padding: 20px;
+    border-radius: 10px;
+}
+.taken-panne-page-form-timeCounter-container.green{
     background-color: #20a200;
 }
-.taken-panne-page-form-container.red{
+.taken-panne-page-form-timeCounter-container.red{
     background-color: #fe0000;
 }
 .time-counter-container{

@@ -20,7 +20,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { TokenDecoder } from "../util/DecodeToken";
 import DataTable from '../components/tables/DataTable';
-import { formatDateTime, formatDate } from '../util/UseFullFunctions';
+import { formatDateTime } from '../util/UseFullFunctions';
 import moment from 'moment';
 
 const ReparationPanne = () => {
@@ -40,7 +40,8 @@ const ReparationPanne = () => {
     const [ openUpdatePanneTypeDialog, setopenUpdatePanneTypeDialog ] = useState(false);
     const [ openConfirmationDialog, setopenConfirmationDialog ] = useState(false);
     const [ openConfirmationStepTwoDialog, setopenConfirmationStepTwoDialog ] = useState(false);
-
+    const [ openPauseConfirmationDialog, setopenPauseConfirmationDialog ] = useState(false);
+    const [ openResumeConfirmationDialog, setopenResumeConfirmationDialog ] = useState(false);
     const [submitionLoading, setSubmitionLoading] = useState(false);
     const [currentCode, setCurrentCode] = useState(null);
     const [ red, setRed ] = useState(false);
@@ -289,6 +290,41 @@ const ReparationPanne = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Repairtime data
+    const fetchRepairtimeData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/repairtime/last/${code}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des repairtimes");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: RepairtimeData, error: Repairtimeerror, Loading: isRepairtimeLoading, refetch: Repairtimerefetch } = useQuery({
+        queryKey: ['RepairtimesData', user?.token],
+        queryFn: fetchRepairtimeData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     // Function to refetch data
     const handleRefetchDataChange = () => {
         Pannerefetch();
@@ -298,6 +334,7 @@ const ReparationPanne = () => {
         Piecerefetch();
         Actionrefetch();
         PanneTyperefetch();
+        Repairtimerefetch();
     }
     // Redirection function
     const Redirection = (path) => {
@@ -342,6 +379,12 @@ const ReparationPanne = () => {
     const handleopenConfirmationStepTwoDialog = () => {
         setopenConfirmationStepTwoDialog(true);
     }
+    const handleopenPauseConfirmationDialog = () => {
+        setopenPauseConfirmationDialog(true);
+    }
+    const handleopenResumeConfirmationDialog = () => {
+        setopenResumeConfirmationDialog(true);
+    }
     const handleClose = () => {
         setCurrentCode(null);
         setopenCreateConsommationPDRDialog(false);
@@ -355,6 +398,8 @@ const ReparationPanne = () => {
         setopenUpdatePanneTypeDialog(false);
         setopenConfirmationDialog(false);
         setopenConfirmationStepTwoDialog(false);
+        setopenPauseConfirmationDialog(false);
+        setopenResumeConfirmationDialog(false);
     }
     const handleDeleteActionCorrective = async () => {
         try {
@@ -491,9 +536,86 @@ const ReparationPanne = () => {
             }
         }
     }
+    const handleClickPausePanne = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/repairtime/pause/${code}`, 
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                handleRefetchDataChange();
+                notifySuccess(response.data.message);
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error pausing panne: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error pausing panne");
+            }
+        }
+    }
+    const handleClickResumePanne = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.patch(import.meta.env.VITE_APP_URL_BASE+`/repairtime/resume/${code}`, 
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                handleRefetchDataChange();
+                notifySuccess(response.data.message);
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error resuming panne: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error resuming panne");
+            }
+        }
+    }
+    const [ isPause, setisPause ] = useState(false);
+
+    useEffect(() => {
+        if (PanneData) {
+            setisPause(PanneData.isPaused);
+        }
+    }, [PanneData, isPause, RepairtimeData]);
+
     // TimeCounter component
     const TimeCounter = ({ startTime }) => {
         const [elapsedTime, setElapsedTime] = useState('');
+        console.log(startTime)
         useEffect(() => {
             if (!startTime) return;
     
@@ -550,7 +672,7 @@ const ReparationPanne = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type && !isPause && !PanneData?.isPaused &&
                                 <>
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingPanneTypeDialog(value)}>
                                         Edit
@@ -609,7 +731,7 @@ const ReparationPanne = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type && !isPause && !PanneData?.isPaused &&
                                 <>
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingActionCorectiveDialog(value)}>
                                         Edit
@@ -656,7 +778,7 @@ const ReparationPanne = () => {
                 customBodyRender: (value) => {
                     return (
                         <div>
-                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
+                            {import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&  !isPause && !PanneData?.isPaused &&
                                 <>
                                     <button style={{backgroundColor: '#1988ff'}} onClick={() => handleopenUpdatingConsommationPDRDialog(value)}>
                                         Edit
@@ -672,7 +794,7 @@ const ReparationPanne = () => {
             }
         },
     ]; 
-    
+
     if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading || 
         isActionLoading || isPieceLoading
     ) {
@@ -706,15 +828,26 @@ const ReparationPanne = () => {
                     </div>
                     <h1>Détails du Panne</h1>
                 </div>
-                <button className="take-in-charge-button" onClick={handleopenConfirmationDialog}>Clôture</button>
-
+                {!isPause && !PanneData?.isPaused ?
+                    <button className="update-button" onClick={handleopenPauseConfirmationDialog}>Pause</button>
+                    :
+                    <button className="update-button" onClick={handleopenResumeConfirmationDialog}>Reprendre</button>
+                }
+                {!isPause && !PanneData?.isPaused &&
+                    <button className="take-in-charge-button" onClick={handleopenConfirmationDialog}>Clôture</button>
+                }
             </div>
 
             <div className="taken-panne-page-details-content">
                 {/*Temps */}
-                <div className={`taken-panne-page-form-container green`}>
-                    <TextFieldComponent DefaultValue={formatDateTime(PanneData?.tempInitial)} label='Temps initiale' color={'#fff'} type='text' readOnly />
-                    <TimeCounter startTime={PanneData?.tempInitial}/>
+                <div className={`taken-panne-page-form-timeCounter-container ${!isPause ? 'green' : 'red'}`}>
+                    {!isPause && !PanneData?.isPaused ?
+                        <TimeCounter startTime={RepairtimeData?.start}/>
+                        :
+                        <div className='time-counter-container'>
+                            <h1>Temps de réparation est en mode pause</h1>
+                        </div>
+                    }
                 </div>
                 {/*Product */}
                 <div className="taken-panne-page-header-container">
@@ -754,7 +887,9 @@ const ReparationPanne = () => {
                 <div className="taken-panne-page-form-container">
                     <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#fff'} type='text' readOnly />
-                    <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
+                    {!isPause && !PanneData?.isPaused &&
+                        <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
+                    }
                 </div>
                 {/* Panne types */}
                 <div className="Action-PDR-panne-page-header-content">
@@ -762,7 +897,9 @@ const ReparationPanne = () => {
                         <div className="Action-PDR-panne-navbar-page-container">
                             <h1>Types de panne</h1>
                         </div>
-                        <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreatePanneTypeDialog}>Ajouter un type de panne</button>
+                        {!isPause && !PanneData?.isPaused &&  
+                            <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreatePanneTypeDialog}>Ajouter un type de panne</button>
+                        }   
                     </div>
                     <DataTable rows={5} data={PanneTypeAssignmentData} columns={columnsTypePanne} download={false} viewColumns={true} filter={true} search={false} />
                 </div>
@@ -773,7 +910,9 @@ const ReparationPanne = () => {
                             <div className="Action-PDR-panne-navbar-page-container">
                                 <h1>Action corrective</h1>
                             </div>
-                            <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreateActionCorectiveDialog}>Ajouter une action</button>
+                            {!isPause && !PanneData?.isPaused &&                            
+                                <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreateActionCorectiveDialog}>Ajouter une action</button>
+                            }
                         </div>
                         <DataTable rows={5} data={ActionCorrectiveData} columns={columnsAction} download={false} viewColumns={true} filter={true} search={true} />
                     </div>
@@ -782,7 +921,9 @@ const ReparationPanne = () => {
                             <div className="Action-PDR-panne-navbar-page-container">
                                 <h1>Consommation PDR</h1>
                             </div>
-                            <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreateConsommationPDRDialog}>Ajouter une piece</button>
+                            {!isPause && !PanneData?.isPaused &&      
+                                <button className="Action-PDR-panne-navbar-page-content-button" onClick={handleopenCreateConsommationPDRDialog}>Ajouter une piece</button>
+                            }           
                         </div>
                         <DataTable rows={5} data={ConsommationPDRData} columns={columnsPDR} download={false} viewColumns={true} filter={true} search={true} />
                     </div>
@@ -803,6 +944,9 @@ const ReparationPanne = () => {
             <DeletingDialog name={'d\'une consommation PDR'} loading={submitionLoading} open={openDeleteConsommationPDRDialog} handleClose={handleClose} handleOnDelete={handleDeleteConsommationPDR}/>
             
             <ConfirmationDialog open={openConfirmationDialog} name={'clôture'} loading={submitionLoading} handleOnConfirm={handleClickCloturePanne} handleClose={handleClose} />
+            <ConfirmationDialog open={openPauseConfirmationDialog} name={'mettre en pause la réparation'} loading={submitionLoading} handleOnConfirm={handleClickPausePanne} handleClose={handleClose} />
+            <ConfirmationDialog open={openResumeConfirmationDialog} name={'reprendre la réparation'} loading={submitionLoading} handleOnConfirm={handleClickResumePanne} handleClose={handleClose} />
+            
             <ToastContainer />
         </div>
     );
