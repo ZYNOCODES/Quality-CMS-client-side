@@ -347,6 +347,39 @@ export default function PanneDialog(props) {
         enabled: !!props.user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Fournisseur data
+    const fetchFournisseurData = async () => {
+        let response;
+        if (import.meta.env.VITE_AGENT_TYPE == decodedToken.type) {
+            response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/fournisseur`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+        }
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Fournisseur data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: FournisseurData, error: errorFournisseur, isLoading: isLoadingFournisseur, refetch: refetchFournisseur } = useQuery({
+        queryKey: ['FournisseurData', user?.token],
+        queryFn: fetchFournisseurData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     //save the panne
     const handleSave = async () => {
         try {
@@ -390,6 +423,7 @@ export default function PanneDialog(props) {
             }
         }
     };
+
     return (
         <React.Fragment>
         <Dialog
@@ -588,17 +622,22 @@ export default function PanneDialog(props) {
                             ))}
                         </select>
                     </div>
-                    <div className='input-text-field-container'>
-                        <label style={{ color: '#fff'}} className={`input-text-field-label`} >
+                    <div className='input-select-field-container'>
+                        <label className='input-select-field-label'>
                             Fournisseur *:
                         </label>
-                        <input
-                            className={`input-text-field-form`}
-                            type='text'
+                        <select
+                            className='input-select-field-form'
                             value={fournisseur}
                             onChange={handleFournisseurChange}
-                            placeholder='Entrer le fournisseur de votre produit'
-                        />
+                        >
+                            <option value="" disabled>{'Selectionner un fournisseur'}</option>
+                            {FournisseurData?.map((option, index) => (
+                            <option key={index} value={option.code}>
+                                {option.fullname}
+                            </option>
+                            ))}
+                        </select>
                     </div>
                     <div className='input-text-field-container'>
                         <label style={{ color: '#fff'}} className={`input-text-field-label`} >

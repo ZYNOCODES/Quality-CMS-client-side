@@ -4,9 +4,11 @@ import { CircularProgress } from '@mui/material';
 import DataTable from '../components/tables/DataTable';
 import CreateZoneDialog from '../components/Dialogs/CreateZoneDialog';
 import CreateWorkshopDialog from '../components/Dialogs/CreateWorkshopDialog';
+import CreateFournisseurDialog from '../components/Dialogs/CreateFournisseurDialog';
 import DeletingDialog from '../components/Dialogs/DeletingDialog';
 import UpdateZoneDialog from '../components/Dialogs/UpdateZoneDialog';
 import UpdateWorkshopDialog from '../components/Dialogs/UpdateWorkshopDialog';
+import UpdateFournisseurDialog from '../components/Dialogs/UpdateFournisseurDialog';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
@@ -20,10 +22,13 @@ const ZonePage = () => {
     const { user } = useAuthContext();
     const [openCreateZoneDialog, setOpenCreateZoneDialog] = useState(false);
     const [openCreateWorkshopDialog, setOpenCreateWorkshopDialog] = useState(false);
+    const [openCreateFournisseurDialog, setOpenCreateFournisseurDialog] = useState(false);
     const [openUpdateZoneDialog, setOpenUpdateZoneDialog] = useState(false);
     const [openUpdateWorkshopDialog, setOpenUpdateWorkshopDialog] = useState(false);
+    const [openUpdateFournisseurDialog, setOpenUpdateFournisseurDialog] = useState(false);
     const [openDeleteZoneDialog, setOpenDeleteZoneDialog] = useState(false);
     const [openDeleteWorkshopDialog, setOpenDeleteWorkshopDialog] = useState(false);
+    const [openDeleteFournisseurDialog, setOpenDeleteFournisseurDialog] = useState(false);
     const [currentCode, setCurrentCode] = useState(null);
     const [submitionLoading, setSubmitionLoading] = useState(false);
     const [Zone, setZone] = useState('');
@@ -31,6 +36,57 @@ const ZonePage = () => {
     const handleZoneChange = (event) => {
         setZone(event.target.value);
     }
+
+    const handleClickOpenCreateZoneDialog = (code) => {
+        setCurrentCode(code);
+        setOpenCreateZoneDialog(true);
+    };
+    const handleClickOpenCreateWorkshopDialog = (code) => {
+        setCurrentCode(code);
+        setOpenCreateWorkshopDialog(true);
+    };
+    const handleClickOpenCreateFournisseurDialog = (code) => {
+        setCurrentCode(code);
+        setOpenCreateFournisseurDialog(true);
+    }
+    const handleClickOpenUpdateZoneDialog = (code) => {
+        setCurrentCode(code);
+        setOpenUpdateZoneDialog(true);
+    };
+    const handleClickOpenUpdateWorkshopDialog = (code) => {
+        setCurrentCode(code);
+        setOpenUpdateWorkshopDialog(true);
+    };
+    const handleClickOpenUpdateFournisseurDialog = (code) => {
+        setCurrentCode(code);
+        setOpenUpdateFournisseurDialog(true);
+    }
+    const handleClickOpenDeleteZoneDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteZoneDialog(true);
+    };
+    const handleClickOpenDeleteWorkshopDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteWorkshopDialog(true);
+    };
+    const handleClickOpenDeleteFournisseurDialog = (code) => {
+        setCurrentCode(code);
+        setOpenDeleteFournisseurDialog(true);
+    }
+    const handleClose = () => {
+        setCurrentCode(null);
+        setOpenCreateZoneDialog(false);
+        setOpenCreateWorkshopDialog(false);
+        setOpenCreateFournisseurDialog(false);
+        setOpenUpdateZoneDialog(false);
+        setOpenUpdateWorkshopDialog(false);
+        setOpenUpdateFournisseurDialog(false);
+        setOpenDeleteZoneDialog(false);
+        setOpenDeleteWorkshopDialog(false);
+        setOpenDeleteFournisseurDialog(false);
+    };
+
+
     // fetching Zonnes data
     const fetchZonesData = async () => {
         const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/zone`,
@@ -91,48 +147,49 @@ const ZonePage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Fournisseur data
+    const fetchFournisseurData = async () => {
+        const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/fournisseur`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user?.token}`,
+                },
+            }
+        );
+
+        // Handle the error state
+        if (!response.ok) {
+            const errorData = await response.json();
+            if(errorData.error.statusCode == 404)
+                return [];
+            else
+                throw new Error("Error receiving Fournisseur data");
+        }
+        // Return the data
+        return await response.json();
+    };
+    // useQuery hook to fetch data
+    const { data: FournisseurList, error: Fournisseurerror, isLoading: isFournisseurLoading, refetch: Fournisseurrefetch } = useQuery({
+        queryKey: ['FournisseurData', user?.token],
+        queryFn: fetchFournisseurData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
+
     // Filter WorkshopsData by selected workshop
     const filteredWorkshopsData = workshopList?.filter(workshop => 
         Zone == '' || workshop.zone == Zone
     );
+
     // Function to refetch data
     const handleRefetchDataChange = () => {
         Zonerefetch();
         Workshopsrefetch();
+        Fournisseurrefetch();
     }
-    const handleClickOpenCreateZoneDialog = (code) => {
-        setCurrentCode(code);
-        setOpenCreateZoneDialog(true);
-    };
-    const handleClickOpenCreateWorkshopDialog = (code) => {
-        setCurrentCode(code);
-        setOpenCreateWorkshopDialog(true);
-    };
-    const handleClickOpenUpdateZoneDialog = (code) => {
-        setCurrentCode(code);
-        setOpenUpdateZoneDialog(true);
-    };
-    const handleClickOpenUpdateWorkshopDialog = (code) => {
-        setCurrentCode(code);
-        setOpenUpdateWorkshopDialog(true);
-    };
-    const handleClickOpenDeleteZoneDialog = (code) => {
-        setCurrentCode(code);
-        setOpenDeleteZoneDialog(true);
-    };
-    const handleClickOpenDeleteWorkshopDialog = (code) => {
-        setCurrentCode(code);
-        setOpenDeleteWorkshopDialog(true);
-    };
-    const handleClose = () => {
-        setCurrentCode(null);
-        setOpenCreateZoneDialog(false);
-        setOpenCreateWorkshopDialog(false);
-        setOpenUpdateZoneDialog(false);
-        setOpenUpdateWorkshopDialog(false);
-        setOpenDeleteZoneDialog(false);
-        setOpenDeleteWorkshopDialog(false);
-    };
+
     const handleDeleteZone = async () => {
         try {
             setSubmitionLoading(true);
@@ -199,6 +256,40 @@ const ZonePage = () => {
             }
         }
     };
+    const handleDeleteFournisseur = async () => {
+        try {
+            setSubmitionLoading(true);
+            const response = await axios.delete(import.meta.env.VITE_APP_URL_BASE+`/fournisseur/${currentCode}`, 
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    }
+                }
+            );
+            if (response.status === 200) {
+                notifySuccess(response.data.message);
+                handleRefetchDataChange();
+                setSubmitionLoading(false);
+                handleClose();
+            } else {
+                notifyFailed(response.data.message);
+                setSubmitionLoading(false);
+            }
+        } catch (error) {
+            if (error.response) {
+                notifyFailed(error.response.data.message);
+                setSubmitionLoading(false);
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Error deleting fournisseur: No response received");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error deleting fournisseur");
+            }
+        }
+    };
+
     const columnsZone = [
         {
             name: "code",
@@ -306,8 +397,56 @@ const ZonePage = () => {
             }
         },
     ]; 
+    const columnsFournisseur = [
+        {
+            name: "code",
+            label: "Code",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
+            name: "fullname",
+            label: "Nom",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value}</p>;
+                },
+            },
+        },
+        {
+            name: "code",
+            label: " ",
+            options: {
+                sort: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return (
+                        <div>
+                            {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
+                                <>
+                                    <button style={{backgroundColor: '#1988ff'}} onClick={() => handleClickOpenUpdateFournisseurDialog(value)}>
+                                        Edit
+                                    </button>
+                                    <button style={{backgroundColor: '#DA171B'}} onClick={() => handleClickOpenDeleteFournisseurDialog(value)}>
+                                        Supprimer
+                                    </button>
+                                </>
+                            }
+                        </div>
+                    )
+                }
+            }
+        },
+    ];
 
-    if (isZoneLoading || isWorkshopsLoading) {
+    if (isZoneLoading || isWorkshopsLoading || isFournisseurLoading) {
         return (
           <div className="CircularProgress-app">
             <div className="CircularProgress-container">
@@ -317,7 +456,7 @@ const ZonePage = () => {
           </div>
         );
     }
-    if (Zoneerror || Workshopserror) {
+    if (Zoneerror || Workshopserror || Fournisseurerror) {
         return (
             <div className="CircularProgress-app">
                 <h1>Une erreur s'est produite</h1>
@@ -338,12 +477,21 @@ const ZonePage = () => {
             <CreateZoneDialog open={openCreateZoneDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone}/>
             <UpdateZoneDialog  name={'d\'une zone'} code={currentCode} user={user} open={openUpdateZoneDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
             <DeletingDialog name={'d\'une zone'} loading={submitionLoading} open={openDeleteZoneDialog} handleClose={handleClose} handleOnDelete={handleDeleteZone}/>
+            
             {/* workshops */}
             <TableHeader name={'Liste des ateliers'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateWorkshopDialog} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
             <DataTable title={'Liste des ateliers'} data={filteredWorkshopsData} columns={columnsWorkshop} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
             <CreateWorkshopDialog open={openCreateWorkshopDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} zone={decodedToken.zone} ZoneList={ZonesData}/>
             <UpdateWorkshopDialog  name={'d\'un atelier'} code={currentCode} user={user} open={openUpdateWorkshopDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} ZoneList={ZonesData}/>
             <DeletingDialog name={'d\'un atelier'} loading={submitionLoading} open={openDeleteWorkshopDialog} handleClose={handleClose} handleOnDelete={handleDeleteWorkshop}/>
+            
+            {/* fournisseur */}
+            <TableHeader name={'Liste des fournisseurs'} type={decodedToken.type} handleClickOpen={handleClickOpenCreateFournisseurDialog} />
+            <DataTable title={'Liste des fournisseurs'} data={FournisseurList} columns={columnsFournisseur} rows={4} download={true} viewColumns={true} filter={true} search={true}/>
+            <CreateFournisseurDialog open={openCreateFournisseurDialog} handleClose={handleClose} user={user} refetchData={handleRefetchDataChange} />
+            <UpdateFournisseurDialog  name={'d\'un fournisseur'} code={currentCode} user={user} open={openUpdateFournisseurDialog} handleClose={handleClose} handleRefetchData={handleRefetchDataChange} />
+            <DeletingDialog name={'d\'un fournisseur'} loading={submitionLoading} open={openDeleteFournisseurDialog} handleClose={handleClose} handleOnDelete={handleDeleteFournisseur}/>
+            
             <ToastContainer/>
         </div>
     );

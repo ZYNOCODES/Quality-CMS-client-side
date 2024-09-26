@@ -188,6 +188,12 @@ const TableHeader = (props) => {
                  ) &&
                     <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un arrivage</button>
                 }                    
+                {
+                (
+                    import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des fournisseurs'
+                 ) &&
+                    <button className='pages-buttonfield' onClick={props.handleClickOpen}>Ajouter un fournisseur</button>
+                }    
             </div>
         </div>
     );
