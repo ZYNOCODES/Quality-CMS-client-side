@@ -831,7 +831,7 @@ const ReparationPanne = () => {
                 {!isPause && !PanneData?.isPaused ?
                     <button className="update-button" onClick={handleopenPauseConfirmationDialog}>Pause</button>
                     :
-                    <button className="update-button" onClick={handleopenResumeConfirmationDialog}>Reprendre</button>
+                    <button className="cancel-button" onClick={handleopenResumeConfirmationDialog}>Reprendre</button>
                 }
                 {!isPause && !PanneData?.isPaused &&
                     <button className="take-in-charge-button" onClick={handleopenConfirmationDialog}>Clôture</button>

@@ -459,11 +459,47 @@ const PanneDetails = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
     });
+    // fetching Repairtime data
+    const fetchRepairtimeData = async () => {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_APP_URL_BASE}/repairtime/last/${code}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.error && errorData.error.statusCode === 404) {
+                    return [];
+                } else {
+                    throw new Error("Erreur lors de la récupération des données des repairtimes");
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: RepairtimeData, error: Repairtimeerror, Loading: isRepairtimeLoading, refetch: Repairtimerefetch } = useQuery({
+        queryKey: ['RepairtimesData', user?.token],
+        queryFn: fetchRepairtimeData,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+    });
     //re-fetch data
     const handleRefetchDataChange = () => {
         ActionCorrectiverefetch();
         ConsommationPDRrefetch();
         PanneTypeAssignmentrefetch();
+        Repairtimerefetch();
     }
     //delivred panne
     const onHandleClickDelivredPanne = async () => {
@@ -650,13 +686,10 @@ const PanneDetails = () => {
     useEffect(() => {
         if (PanneData?.livraison) {
             setIsUpdate(false);
-        }
-        if(PanneData?.reouverture) {
-            setIsUpdate(true);
         }else{
-            setIsUpdate(false);
+            setIsUpdate(PanneData?.reouverture);
         }
-    }, [PanneData, PanneData?.reouvertureTempInitial, PanneData?.reouvertureTempFinal]);
+    }, [PanneData, PanneData?.reouverture]);
 
 
     if (isPanneLoading || isActionCorrectiveLoading || isConsommationPDRLoading || isPanneTypeAssignmentLoading) {
@@ -709,9 +742,8 @@ const PanneDetails = () => {
                 {isUpdate && PanneData?.reouverture && import.meta.env.VITE_AGENT_TYPE == decodedToken.type &&
                     <>
                         {/*Temps */}
-                        <div className={`taken-panne-page-form-container green`}>
-                            <TextFieldComponent DefaultValue={formatDateTime(PanneData?.reouvertureTempInitial)} label='Date de réouverture' color={'#fff'} type='text' readOnly />
-                            <TimeCounter startTime={PanneData?.reouvertureTempInitial}/>
+                        <div className={`taken-panne-page-form-timeCounter-container green`}>
+                            <TimeCounter startTime={RepairtimeData?.start}/>
                         </div>
                     </>
                 }
