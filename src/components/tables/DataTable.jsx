@@ -70,6 +70,9 @@ const DataTable = (props) => {
                     if (column.name === 'technicianAssociation') {
                         return cellValue?.fullname || ''; 
                     }
+                    if (column.name === 'fournisseurAssociation') {
+                        return cellValue?.fullname || ''; 
+                    }
                     if (column.name === 'productAssociation') {
                         // Handle productAssociation fields
                         switch (column.label) {

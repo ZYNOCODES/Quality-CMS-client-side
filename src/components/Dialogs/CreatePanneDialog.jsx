@@ -196,6 +196,7 @@ export default function PanneDialog(props) {
         setSN('');
         setArrival('');
         setCopiedText('');
+        setSelectedPannes([]);
     };
     // Fetch family data
     const fetchfamilyData = async () => {

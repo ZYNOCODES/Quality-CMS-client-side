@@ -199,14 +199,14 @@ const ArchivePanne = () => {
             },
         },
         {
-            name: "fournisseur",
+            name: "fournisseurAssociation",
             label: "Fournisseur",
             options: {
                 display: false,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return value.fullname;
                 },
             },
         },
