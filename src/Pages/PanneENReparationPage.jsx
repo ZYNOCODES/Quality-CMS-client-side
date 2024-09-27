@@ -203,10 +203,10 @@ const EnReparationPanne = () => {
             name: "technicianAssociation",
             label: "Technicien",
             options: {
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.fullname}</p>;
+                    return value?.fullname;
                 },
             },
         },
@@ -217,7 +217,7 @@ const EnReparationPanne = () => {
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.model}</p>;
+                    return value?.model;
                 },
             },
         },
@@ -226,10 +226,10 @@ const EnReparationPanne = () => {
             label: "Lot",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.lotAssociation?.name}</p>;
+                    return value?.lotAssociation?.name;
                 },
             },
         },
@@ -238,10 +238,10 @@ const EnReparationPanne = () => {
             label: "Arrivage",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A'}</p>;
+                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
                 },
             },
         },
@@ -294,6 +294,24 @@ const EnReparationPanne = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value.name}</p>;
+                },
+            },
+        },
+        {
+            name: "isPaused",
+            label: "mode pause",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customFilterListOptions: { render: v => `${v ? 'Oui' : 'Non'}` },
+                customBodyRender: (value) => {
+                    return <p style={{
+                        color: value ? 'red' : 'green',
+                        fontWeight: 'bold'
+                    }}>
+                        {value ? 'Oui' : 'Non'}
+                    </p>;
                 },
             },
         },

@@ -182,7 +182,7 @@ const ArchivePanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.marque}</p>;
+                    return value?.marque;
                 },
             },
         },
@@ -214,12 +214,12 @@ const ArchivePanne = () => {
             name: "productAssociation",
             label: "Modele",
             options: {
-                display: false,
-                filter: false,
+                display: true,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.model}</p>;
-                },
+                    return value.model;
+                }
             },
         },
         {
@@ -238,11 +238,23 @@ const ArchivePanne = () => {
             name: "productAssociation",
             label: "Lot",
             options: {
-                display: false,
-                filter: false,
+                display: true,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.lotAssociation?.name}</p>;
+                    return value?.lotAssociation?.name;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Arrivage",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
                 },
             },
         },
@@ -250,11 +262,11 @@ const ArchivePanne = () => {
             name: "technicianAssociation",
             label: "Technician",
             options: {
-                display: false,
-                filter: false,
+                display: true,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.fullname}</p>;
+                    return value?.fullname;
                 },
             },
         },
@@ -262,7 +274,7 @@ const ArchivePanne = () => {
             name: "typePannesNames",
             label: "Pannes",
             options: {
-                display: false,
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -304,6 +316,7 @@ const ArchivePanne = () => {
             name: "dateReparation",
             label: "Date de reparation",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -387,6 +400,7 @@ const ArchivePanne = () => {
             name: "DateLivraison",
             label: "Date de livraison",
             options: {
+                display: true,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -398,6 +412,7 @@ const ArchivePanne = () => {
             name: "tempInitial",
             label: "Temp initial",
             options: {
+                display: false,
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
@@ -421,10 +436,23 @@ const ArchivePanne = () => {
             name: "dureeDintervention",
             label: "Duree d'intervention",
             options: {
-                filter: true,
+                display: true,
+                filter: false,
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{formatDuration(value)}</p>;
+                },
+            },
+        },
+        {
+            name: "workshopAssociation",
+            label: "Atelier",
+            options: {
+                display: false,
+                filter: false,
+                sort: false,
+                customBodyRender: (value) => {
+                    return <p>{value.name}</p>;
                 },
             },
         },

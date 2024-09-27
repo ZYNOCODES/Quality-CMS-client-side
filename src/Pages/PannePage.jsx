@@ -265,10 +265,10 @@ const PannePage = () => {
             label: "Marque",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.marque}</p>;
+                    return value?.marque;
                 },
             },
         },
@@ -277,10 +277,10 @@ const PannePage = () => {
             label: "Modele",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.model}</p>;
+                    return value?.model;
                 },
             },
         },
@@ -289,10 +289,10 @@ const PannePage = () => {
             label: "Arrivage",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A'}</p>;
+                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
                 },
             },
         },
@@ -313,10 +313,10 @@ const PannePage = () => {
             label: "Famille",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.familyAssociation?.name}</p>;
+                    return value?.familyAssociation?.name;
                 },
             },
         },
@@ -325,10 +325,10 @@ const PannePage = () => {
             label: "Ligne",
             options: {
                 display: true,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value}</p>;
+                    return value;
                 },
             },
         },
