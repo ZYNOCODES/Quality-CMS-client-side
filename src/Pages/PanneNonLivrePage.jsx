@@ -239,7 +239,7 @@ const ArchivePanne = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value.fullname;
+                    return value?.fullname;
                 },
             },
         },
