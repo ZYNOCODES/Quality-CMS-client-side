@@ -1,5 +1,7 @@
 import React from 'react';
 import './css/TableHeaderStyle.css';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 const TableHeader = (props) => {
     return (
@@ -103,7 +105,17 @@ const TableHeader = (props) => {
                     </select>
                     </div>
                 }
-
+                {props.handleOpenDatePickers && props.handleCloseDatePickers &&
+                    (!props.openDatePickers ?
+                            <div className='open-date-picker-container' onClick={props.handleOpenDatePickers}>
+                                <EventNoteIcon className='open-date-picker-container-icon' />
+                            </div>
+                        :
+                            <div className='open-date-picker-container' onClick={props.handleCloseDatePickers}>
+                                <EventBusyIcon className='open-date-picker-container-icon'/>
+                            </div>)
+                        
+                }
                 {/* buttons */}
                 {(
                     import.meta.env.VITE_MANAGER_TYPE == props.type && props.name == 'Liste des produits'

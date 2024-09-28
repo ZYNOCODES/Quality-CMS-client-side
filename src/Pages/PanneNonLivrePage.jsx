@@ -11,6 +11,8 @@ import './css/TakeInChargePannePageStyle.css';
 import { toast, ToastContainer } from 'react-toastify';
 import ConfirmationDialog from '../components/Dialogs/ConfirmationDialog';
 import axios from 'axios';
+import BasicDateRangePicker from '../components/forms/DateRangePicker';
+import moment from "moment/moment";
 
 const ArchivePanne = () => {
     const notifyFailed = (message) => toast.info(message);
@@ -42,6 +44,25 @@ const ArchivePanne = () => {
         navigate(`${path}`)
     }
 
+    const [openDatePickers, setOpenDatePickers] = useState(false);
+    const handleOpenDatePickers = () => {
+        setOpenDatePickers(true);
+    }
+    const [DateRange, setDateRange] = useState({
+        startDate: null,
+        endDate: null,
+    });
+    const handleDateRangeChange = (dateRange) => {
+        setDateRange(dateRange);
+    }
+    const handleCloseDatePickers = () => {
+        setOpenDatePickers(false);
+        setDateRange({
+            startDate: null,
+            endDate: null,
+        });
+    }
+    
 
     // fetching Pannes data
     const fetchPannesData = async () => {
@@ -178,7 +199,11 @@ const ArchivePanne = () => {
     );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
-        workshop == '' || panne.workshop == workshop
+        (workshop == '' || panne.workshop == workshop) &&
+        (!DateRange.startDate || !DateRange.endDate || 
+            (moment(DateRange.startDate).startOf('day').isSameOrBefore(moment(panne.dateReparation).startOf('day')) && 
+             moment(DateRange.endDate).startOf('day').isSameOrAfter(moment(panne.dateReparation).startOf('day'))))
+    
     );
 
     const columns = [
@@ -552,7 +577,16 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes non restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handleOpenConfirmationDialog={handleOpenConfirmationDialog}/>
+            <TableHeader name={'Liste des pannes non restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handleOpenConfirmationDialog={handleOpenConfirmationDialog} handleOpenDatePickers={handleOpenDatePickers} handleCloseDatePickers={handleCloseDatePickers} openDatePickers={openDatePickers}/>
+            {openDatePickers &&
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <BasicDateRangePicker onChange={handleDateRangeChange} />
+                </div>
+            }
             <DataTable title={'Liste des pannes non restituées'} data={filteredPannesData} selectable={import.meta.env.VITE_AGENT_TYPE == decodedToken.type ? true : false} getSelectedPanneIDs={getSelectedPanneIDs} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ConfirmationDialog open={openConfirmation} name={'restitution'} loading={submitionLoading} handleOnConfirm={MakeMultiplePannesDelivred} handleClose={handleClose} />
             <ToastContainer/>

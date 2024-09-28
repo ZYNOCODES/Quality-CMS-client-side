@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { TokenDecoder } from "../util/DecodeToken";
 import TableHeader from '../components/tables/TableHeader';
 import { formatDateTime, formatDuration } from '../util/UseFullFunctions';
+import BasicDateRangePicker from '../components/forms/DateRangePicker';
+import moment from "moment/moment";
 
 const ArchivePanne = () => {
     const { user } = useAuthContext();
@@ -22,6 +24,26 @@ const ArchivePanne = () => {
     const handleZoneChange = (event) => {
         setZone(event.target.value);
     }
+
+    const [openDatePickers, setOpenDatePickers] = useState(false);
+    const handleOpenDatePickers = () => {
+        setOpenDatePickers(true);
+    }
+    const [DateRange, setDateRange] = useState({
+        startDate: null,
+        endDate: null,
+    });
+    const handleDateRangeChange = (dateRange) => {
+        setDateRange(dateRange);
+    }
+    const handleCloseDatePickers = () => {
+        setOpenDatePickers(false);
+        setDateRange({
+            startDate: null,
+            endDate: null,
+        });
+    }
+    
     // fetching Pannes data
     const fetchPannesData = async () => {
         try{
@@ -157,7 +179,10 @@ const ArchivePanne = () => {
     );
     // Filter PannesData by selected workshop
     const filteredPannesData = PannesData?.filter(panne => 
-        workshop == '' || panne.workshop == workshop
+        (workshop == '' || panne.workshop == workshop) &&
+        (!DateRange.startDate || !DateRange.endDate || 
+            (moment(DateRange.startDate).startOf('day').isSameOrBefore(moment(panne.dateReparation).startOf('day')) && 
+             moment(DateRange.endDate).startOf('day').isSameOrAfter(moment(panne.dateReparation).startOf('day'))))
     );
     // Function to refetch data
     const handleRefetchDataChange = () => {
@@ -500,7 +525,16 @@ const ArchivePanne = () => {
     }
     return (
         <div className="pages-container">
-            <TableHeader name={'Liste des pannes restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData}/>
+            <TableHeader name={'Liste des pannes restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handleOpenDatePickers={handleOpenDatePickers} handleCloseDatePickers={handleCloseDatePickers} openDatePickers={openDatePickers}/>
+            {openDatePickers &&
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <BasicDateRangePicker onChange={handleDateRangeChange} />
+                </div>
+            }
             <DataTable title={'Liste des pannes restituées'} data={filteredPannesData} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>
             <ToastContainer/>
         </div>
