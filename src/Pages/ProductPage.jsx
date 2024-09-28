@@ -98,11 +98,7 @@ const ProductPage = () => {
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <p>
-                            {value}
-                        </p>
-                    )
+                    return value
                 }
             }
         },
@@ -112,11 +108,7 @@ const ProductPage = () => {
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <p>
-                            {value}
-                        </p>
-                    )
+                    return value
                 }
             }
         },
@@ -126,11 +118,7 @@ const ProductPage = () => {
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <p>
-                            {value.name}
-                        </p>
-                    )
+                    return value.name
                 }
             }
         },
@@ -140,11 +128,7 @@ const ProductPage = () => {
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <p>
-                            {value}
-                        </p>
-                    )
+                    return value
                 }
             }
         },
@@ -154,11 +138,7 @@ const ProductPage = () => {
             options: {
                 sort: false,
                 customBodyRender: (value) => {
-                    return (
-                        <p>
-                            {value?.name}
-                        </p>
-                    )
+                    return value?.name ? value?.name : 'N/A'
                 }
             }
         },
@@ -169,7 +149,7 @@ const ProductPage = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.name}</p>;
+                    return value?.name;
                 },
             }
         },
@@ -180,7 +160,7 @@ const ProductPage = () => {
                 filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value?.name}</p>;
+                    return value?.name;
                 },
             }
         },

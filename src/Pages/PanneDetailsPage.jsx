@@ -556,6 +556,7 @@ const PanneDetails = () => {
             );
             if (response.status === 200) {
                 Pannerefetch();
+                Repairtimerefetch();
                 notifySuccess(response.data.message);
                 setSubmitionLoading(false);
                 handleClose();
@@ -689,6 +690,7 @@ const PanneDetails = () => {
         }else{
             setIsUpdate(PanneData?.reouverture);
         }
+
     }, [PanneData, PanneData?.reouverture]);
 
 
