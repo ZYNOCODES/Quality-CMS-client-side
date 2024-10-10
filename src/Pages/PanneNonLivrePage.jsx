@@ -55,9 +55,20 @@ const ArchivePanne = () => {
     const handleDateRangeChange = (dateRange) => {
         setDateRange(dateRange);
     }
+    const [DateReparationRange, setDateReparationRange] = useState({
+        startDate: null,
+        endDate: null,
+    });
+    const handleDateReparationRangeChange = (DateReparationRange) => {
+        setDateReparationRange(DateReparationRange);
+    }
     const handleCloseDatePickers = () => {
         setOpenDatePickers(false);
         setDateRange({
+            startDate: null,
+            endDate: null,
+        });
+        setDateReparationRange({
             startDate: null,
             endDate: null,
         });
@@ -201,9 +212,11 @@ const ArchivePanne = () => {
     const filteredPannesData = PannesData?.filter(panne => 
         (workshop == '' || panne.workshop == workshop) &&
         (!DateRange.startDate || !DateRange.endDate || 
-            (moment(DateRange.startDate).startOf('day').isSameOrBefore(moment(panne.dateReparation).startOf('day')) && 
-             moment(DateRange.endDate).startOf('day').isSameOrAfter(moment(panne.dateReparation).startOf('day'))))
-    
+            (moment(DateRange.startDate).startOf('day').isSameOrBefore(moment(panne.dateDeclaration).startOf('day')) && 
+             moment(DateRange.endDate).startOf('day').isSameOrAfter(moment(panne.dateDeclaration).startOf('day')))) &&
+             (!DateReparationRange.startDate || !DateReparationRange.endDate || 
+                (moment(DateReparationRange.startDate).startOf('day').isSameOrBefore(moment(panne.dateReparation).startOf('day')) && 
+                 moment(DateReparationRange.endDate).startOf('day').isSameOrAfter(moment(panne.dateReparation).startOf('day'))))
     );
 
     const columns = [
@@ -280,14 +293,14 @@ const ArchivePanne = () => {
             },
         },
         {
-            name: "productAssociation",
+            name: "arrivalAssociation",
             label: "Arrivage",
             options: {
                 display: true,
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
+                    return value?.name ? value?.name : 'N/A';
                 },
             },
         },
@@ -580,11 +593,42 @@ const ArchivePanne = () => {
             <TableHeader name={'Liste des pannes non restituées'} type={decodedToken.type} handleWorkshopChange={handleWorkshopChange} workshopList={filteredWorkshopsData} handleZoneChange={handleZoneChange} ZoneList={ZonesData} handleOpenConfirmationDialog={handleOpenConfirmationDialog} handleOpenDatePickers={handleOpenDatePickers} handleCloseDatePickers={handleCloseDatePickers} openDatePickers={openDatePickers}/>
             {openDatePickers &&
                 <div style={{
+                    width: '100%',
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
                     alignItems: 'center',
                 }}>
-                    <BasicDateRangePicker onChange={handleDateRangeChange} />
+                    <div
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color: 'gray',
+                            gap: '10px',
+                        }}
+                    >
+                        <BasicDateRangePicker onChange={handleDateRangeChange} />
+                        <p>Date de declaration</p>
+                    </div>
+                    <div
+                        style={{
+                            flex: 1,
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color: 'gray',
+                            gap: '10px',
+                        }}
+                    >
+                        <BasicDateRangePicker onChange={handleDateReparationRangeChange} />
+                        <p>Date de reparation</p>
+                    </div>
                 </div>
             }
             <DataTable title={'Liste des pannes non restituées'} data={filteredPannesData} selectable={import.meta.env.VITE_AGENT_TYPE == decodedToken.type ? true : false} getSelectedPanneIDs={getSelectedPanneIDs} columns={columns}  download={true} viewColumns={true} filter={true} search={true}/>

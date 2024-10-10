@@ -802,6 +802,7 @@ const PanneDetails = () => {
                 <div className="panne-page-form-container">
                     <TextFieldComponent DefaultValue={PanneData?.code} label='Code' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.arrivalAssociation?.name ? PanneData.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.fournisseurAssociation?.fullname} label='Fournisseur' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.ligne} label='Ligne' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={formatDateTime(PanneData?.dateDeclaration)} label='Date de declaration' color={'#fff'} type='text' readOnly />

@@ -54,10 +54,6 @@ const ProductPage = () => {
     const handleLotChange = (event) => {
         setLot(event.target.value);
     }
-    const [Arrival, setArrival] = useState('');
-    const handleArrivalChange = (event) => {
-        setArrival(event.target.value);
-    }
 
     const handleClose = () => {
         setCurrentCode(null);
@@ -129,16 +125,6 @@ const ProductPage = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return value
-                }
-            }
-        },
-        {
-            name: "arrivalAssociation",
-            label: "Arrivage",
-            options: {
-                sort: false,
-                customBodyRender: (value) => {
-                    return value?.name ? value?.name : 'N/A'
                 }
             }
         },
@@ -710,8 +696,7 @@ const ProductPage = () => {
     const filteredProductsData = ProductsData?.filter(product => 
         (Zone == '' || product.zone == Zone) &&
         (Family == '' || product.family == Family) &&
-        (Lot == '' || product.lot == Lot) &&
-        (Arrival == '' || product.arrival == Arrival)
+        (Lot == '' || product.lot == Lot)
     );
 
     if (isLoading || isZonesLoading || isFamilyLoading || isLotLoading || isArrivalLoading) {
@@ -738,15 +723,14 @@ const ProductPage = () => {
                 handleFamilyChange={handleFamilyChange} FamilyList={FamilyList} 
                 handleZoneChange={handleZoneChange} ZoneList={ZoneList}
                 handleLotChange={handleLotChange} LotList={LotList}  
-                handleArrivalChange={handleArrivalChange} ArrivalList={ArrivalList}  
             />
             <DataTable title={'Liste des produits'} data={filteredProductsData} columns={columns} rows={11} download={true} viewColumns={true} filter={true} search={true}/>
 
             {import.meta.env.VITE_MANAGER_TYPE == decodedToken.type &&
                 <>
                     {/* Product Table */}
-                    <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} arrivalList={ArrivalList}/>
-                    <UpdateProductDialog  name={'d\'un produit'} code={currentCode} user={user} open={openUpdateProductDialog} handleClose={handleClose} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} arrivalList={ArrivalList}/>
+                    <CreateProductDialog  open={open} handleClose={handleClose} user={user} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} />
+                    <UpdateProductDialog  name={'d\'un produit'} code={currentCode} user={user} open={openUpdateProductDialog} handleClose={handleClose} refetchData={refetch} familyList={FamilyList} zoneList={ZoneList} lotList={LotList} />
                     <DeletingDialog name={'d\'un produit'} loading={submitionLoading} open={openDeleteProductDialog} handleClose={handleClose} handleOnDelete={handleDeleteProduct}/>
                     
                     {/* Family Table */}
