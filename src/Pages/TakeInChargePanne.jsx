@@ -617,7 +617,7 @@ const TakeInChargePanne = () => {
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation?.model} label='Modele' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.sn} label='SN' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation?.lotAssociation?.name} label='Lot' color={'#fff'} type='text' readOnly />
-                            <TextFieldComponent DefaultValue={PanneData?.productAssociation?.arrivalAssociation?.name ? PanneData?.productAssociation.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.arrivalAssociation?.name ? PanneData.arrivalAssociation?.name : 'N/A'} label='Arrivage' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.productAssociation?.familyAssociation?.name} label='Famille' color={'#fff'} type='text' readOnly />
                         </>
                         :

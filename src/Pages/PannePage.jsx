@@ -272,6 +272,7 @@ const PannePage = () => {
                 },
             },
         },
+        
         {
             name: "productAssociation",
             label: "Modele",
@@ -286,13 +287,37 @@ const PannePage = () => {
         },
         {
             name: "productAssociation",
+            label: "Famille",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return value?.familyAssociation?.name;
+                },
+            },
+        },
+        {
+            name: "productAssociation",
+            label: "Lot",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return value?.lotAssociation?.name;
+                },
+            },
+        },
+        {
+            name: "arrivalAssociation",
             label: "Arrivage",
             options: {
                 display: true,
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
+                    return value?.name ? value?.name : 'N/A';
                 },
             },
         },
@@ -309,14 +334,19 @@ const PannePage = () => {
             },
         },
         {
-            name: "productAssociation",
-            label: "Famille",
+            name: "typePannesNames",
+            label: "Type de panne",
             options: {
-                display: true,
-                filter: true,
+                filter: false,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value?.familyAssociation?.name;
+                    return <div>
+                        {
+                            value?.map((type, index) => {
+                                return <p key={index}>{type}</p>
+                            })
+                        }
+                    </div>;
                 },
             },
         },
@@ -341,6 +371,17 @@ const PannePage = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value.name}</p>;
+                },
+            },
+        },
+        {
+            name: "dateDeclaration",
+            label: "Date de declaration",
+            options: {
+                display: false,
+                filter: false,
+                customBodyRender: (value) => {
+                    return <p>{formatDateTime(value)}</p>;
                 },
             },
         },

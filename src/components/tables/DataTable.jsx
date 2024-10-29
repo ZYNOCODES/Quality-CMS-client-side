@@ -26,6 +26,10 @@ const DataTable = (props) => {
         filter: props.filter,
         search: props.search,
         rowsSelected: selectedRowIndexes,
+        sortOrder: {
+            name: "dateDeclaration",
+            direction: "desc",
+        },
         onRowSelectionChange: (currentRowsSelected, allRowsSelected, rowsSelectedIndexes) => {
             // Update selected row indexes
             setSelectedRowIndexes(rowsSelectedIndexes);
@@ -84,8 +88,6 @@ const DataTable = (props) => {
                                 return cellValue?.model || '';
                             case 'Lot':
                                 return cellValue?.lotAssociation?.name || '';
-                            case 'Arrivage':
-                            return cellValue?.arrivalAssociation?.name || '';
                             default:
                                 return '';
                         }

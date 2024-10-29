@@ -234,14 +234,14 @@ const EnReparationPanne = () => {
             },
         },
         {
-            name: "productAssociation",
+            name: "arrivalAssociation",
             label: "Arrivage",
             options: {
                 display: true,
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value?.arrivalAssociation?.name ? value?.arrivalAssociation?.name : 'N/A';
+                    return value?.name ? value?.name : 'N/A';
                 },
             },
         },
@@ -275,6 +275,25 @@ const EnReparationPanne = () => {
             },
         },
         {
+            name: "isPaused",
+            label: " ",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customFilterListOptions: { render: v => `${v ? 'Oui' : 'Non'}` },
+                customBodyRender: (value) => {
+                    return <div style={{
+                        width: '30px',
+                        height: '30px',
+                        backgroundColor: value ? '#fe0000' : '#fe9800',
+                        padding: '5px',
+                        borderRadius: '100%',
+                    }}></div>;
+                },
+            },
+        }, 
+        {
             name: "dateDeclaration",
             label: "Date de declaration",
             options: {
@@ -294,24 +313,6 @@ const EnReparationPanne = () => {
                 sort: false,
                 customBodyRender: (value) => {
                     return <p>{value.name}</p>;
-                },
-            },
-        },
-        {
-            name: "isPaused",
-            label: "mode pause",
-            options: {
-                display: true,
-                filter: true,
-                sort: false,
-                customFilterListOptions: { render: v => `${v ? 'Oui' : 'Non'}` },
-                customBodyRender: (value) => {
-                    return <p style={{
-                        color: value ? 'red' : 'green',
-                        fontWeight: 'bold'
-                    }}>
-                        {value ? 'Oui' : 'Non'}
-                    </p>;
                 },
             },
         },

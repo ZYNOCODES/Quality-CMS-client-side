@@ -63,10 +63,6 @@ export default function ProductDialog(props) {
   const handleTailleLotChange = (event) => {
       setTailleLot(event.target.value);
   };
-  const [Arrival, setArrival] = useState('');
-  const handleArrivalChange = (event) => {
-      setArrival(event.target.value);
-  };
 
 
   // empty all fields
@@ -77,7 +73,6 @@ export default function ProductDialog(props) {
     setZone('');
     setLot('');
     setTailleLot('');
-    setArrival('');
   }
   const handleSave = async () => {
     try {
@@ -89,7 +84,6 @@ export default function ProductDialog(props) {
           zone: zone,
           lot: lot,
           tailleLot: TailleLot,
-          arrival: Arrival,
         }, 
         {
           headers: {
@@ -276,15 +270,6 @@ export default function ProductDialog(props) {
                 obligatory={true}
                 color='#fff'
                 DefaultValue={TailleLot}
-            />
-            <SelectFieldComponent 
-                label="Arrivage" 
-                initialHelperText="Selectionner un arrivage" 
-                onChange={handleArrivalChange}
-                obligatory={true}
-                options={props.arrivalList}
-                optionName='name'
-                optionIdentifier='code'
             />
             <SelectFieldComponent 
                 label="Famille" 
