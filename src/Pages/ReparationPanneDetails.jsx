@@ -887,6 +887,7 @@ const ReparationPanne = () => {
                 <div className="taken-panne-page-form-container">
                     <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'indéfini'} label='Source' color={'#fff'} type='text' readOnly />
                     <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'indéfini'} label='Etat' color={'#fff'} type='text' readOnly />
+                    <TextFieldComponent DefaultValue={PanneData?.origine ? PanneData?.origine : 'indéfini'} label='Origine' color={'#fff'} type='text' readOnly />
                     {!isPause && !PanneData?.isPaused &&
                         <button className="take-in-charge-button" onClick={handleopenConfirmationStepTwoDialog}>Modifier</button>
                     }

@@ -243,7 +243,7 @@ const ArchivePanne = () => {
                 filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return value.model;
+                    return value?.model;
                 }
             },
         },

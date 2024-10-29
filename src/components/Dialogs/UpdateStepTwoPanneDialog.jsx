@@ -17,6 +17,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import SelectFieldComponent from '../forms/SelectField';
 
 export default function UpdateStepTwoPanneDialog(props) {
     const notifyWarning = (message) => toast.warning(message);
@@ -25,11 +26,15 @@ export default function UpdateStepTwoPanneDialog(props) {
     const [ loading, setLoading ] = useState(false);
     const [ Source, setSource ] = useState('');
     const [ Etat, setEtat ] = useState('');
+    const [ Origine, setOrigine ] = useState('');
     const handleSourceChange = (event) => {
         setSource(event.target.value);
     }
     const handleEtatChange = (event) => {
         setEtat(event.target.value);
+    }
+    const handleOrigineChange = (event) => {
+        setOrigine(event.target.value);
     }
     const [ confirmation, setconfirmation ] = useState(false);
     const handleConfirmation = (event) => {
@@ -37,7 +42,7 @@ export default function UpdateStepTwoPanneDialog(props) {
     };
 
     const handleOnUpdate = async (event) => {
-        if(!Source && !Etat){
+        if(!Source && !Etat && !Origine){
             setconfirmation(false);
             notifyFailed("Un des champs doivent être remplis");
             return;
@@ -50,6 +55,7 @@ export default function UpdateStepTwoPanneDialog(props) {
                     {
                         source: Source,
                         etat: Etat,
+                        origine: Origine,
                         agent: props.agent,
                     },
                     {
@@ -107,27 +113,48 @@ export default function UpdateStepTwoPanneDialog(props) {
                         <DialogContentText>
                             Cette modification sera appliquée directement après la confirmation.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name="Source"
-                            label="Entrez la source"
-                            type="text"
-                            fullWidth
-                            variant="standard"
+                        <SelectFieldComponent
+                            label="Source" 
+                            initialHelperText="Selectionner une Source"
                             onChange={handleSourceChange}
+                            obligatory={true}
+                            options={[
+                                {name: 'U1', value: 'U1'},
+                                {name: 'U2', value: 'U2'},
+                                {name: 'EN', value: 'EN'},
+                                {name: 'RAS', value: 'RAS'},
+                                {name: 'FRS', value: 'FRS'},
+                            ]}
+                            optionName='name'
+                            optionIdentifier='value'
                         />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name="Etat"
-                            label="Entrez l'etat"
-                            type="text"
-                            fullWidth
-                            variant="standard"
+                        <SelectFieldComponent
+                            label="Etat" 
+                            initialHelperText="Selectionner une Etat"
                             onChange={handleEtatChange}
+                            obligatory={true}
+                            options={[
+                                {name: 'OK', value: 'OK'},
+                                {name: 'NG', value: 'NG'},
+                            ]}
+                            optionName='name'
+                            optionIdentifier='value'
+                        />
+                        <SelectFieldComponent
+                            label="Origine" 
+                            initialHelperText="Selectionner une Origine"
+                            onChange={handleOrigineChange}
+                            obligatory={true}
+                            options={[
+                                {name: 'Dalle', value: 'Dalle'},
+                                {name: 'Dalle/Accepte', value: 'Dalle/Accepte'},
+                                {name: 'Autre', value: 'Autre'},
+                                {name: 'RAS', value: 'RAS'},
+                                {name: 'MPCB', value: 'MPCB'},
+                                {name: 'Faut d\'execution', value: 'Faut d\'execution'},
+                            ]}
+                            optionName='name'
+                            optionIdentifier='value'
                         />
                         <FormControlLabel
                             sx={{ mt: 1 }}
