@@ -411,10 +411,10 @@ const ArchivePanne = () => {
             label: "Source",
             options: {
                 display: false,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value || ''}</p>;
+                    return value || '';
                 },
             },
         },
@@ -423,10 +423,22 @@ const ArchivePanne = () => {
             label: "Etat",
             options: {
                 display: false,
-                filter: false,
+                filter: true,
                 sort: false,
                 customBodyRender: (value) => {
-                    return <p>{value || ''}</p>;
+                    return value || '';
+                },
+            },
+        },
+        {
+            name: "origine",
+            label: "Origine",
+            options: {
+                display: false,
+                filter: true,
+                sort: false,
+                customBodyRender: (value) => {
+                    return value || '';
                 },
             },
         },

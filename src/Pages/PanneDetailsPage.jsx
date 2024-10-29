@@ -811,6 +811,7 @@ const PanneDetails = () => {
                         <>
                             <TextFieldComponent DefaultValue={PanneData?.source ? PanneData?.source : 'NON DÉFINI'} label='Source' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.etat ? PanneData?.etat : 'NON DÉFINI'} label='Etat' color={'#fff'} type='text' readOnly />
+                            <TextFieldComponent DefaultValue={PanneData?.origine ? PanneData?.origine : 'NON DÉFINI'} label='Origine' color={'#fff'} type='text' readOnly />
                             <TextFieldComponent DefaultValue={PanneData?.livraison ? 'libérer' : 'Non libérer'} label='Liberation' color={'#fff'} type='text' readOnly />
                             {PanneData?.livraison &&
                                 <TextFieldComponent DefaultValue={PanneData?.livraison == true ? formatDateTime(PanneData?.DateLivraison) : 'Non libérer'} label='Date de libiration' color={'#fff'} type='text' readOnly />

@@ -254,6 +254,76 @@ const HomePage = () => {
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
     });
+    //count top 5 Source corrective
+    const CountTop5Source = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/source`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top Source");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top5SourceData, error: Top5Sourceerror, isLoading: isTop5SourceLoading, refetch: Top5Sourcerefetch } = useQuery({
+        queryKey: ['Top5SourceData', user?.token],
+        queryFn: CountTop5Source,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
+    //count top 5 Origine corrective
+    const CountTop5Origine = async () => {
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/origine`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${user?.token}`,
+                    },
+                }
+            );
+            
+
+            // Handle the error state
+            if (!response.ok) {
+                const errorData = await response.json();
+                if(errorData.error.statusCode == 404)
+                    return [];
+                else
+                    throw new Error("Erreur lors de la comptage des top Origine");
+            }
+            // Return the data
+            return await response.json();
+        }catch(error){
+            throw new Error(error);
+        }
+    };
+    // useQuery hook to fetch data
+    const { data: Top5OrigineData, error: Top5Origineerror, isLoading: isTop5OrigineLoading, refetch: Top5Originerefetch } = useQuery({
+        queryKey: ['Top5OrigineData', user?.token],
+        queryFn: CountTop5Origine,
+        enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
+        refetchOnWindowFocus: false, // Optional: prevent refetching on window focus
+    });
     // useEffect to refetch data when the date range changes
     useEffect(() => {
         if (dateRange.startDate && dateRange.endDate) {
@@ -287,7 +357,7 @@ const HomePage = () => {
                             </>
                         :
                         <>
-                            <h1>En attente</h1>
+                            <h1>En attente de réparation</h1>
                             <p>{CountAllPannesData?.EnAttente}</p>
                         </>
                         )
@@ -307,7 +377,7 @@ const HomePage = () => {
                             </>
                         :
                             <>
-                                <h1>En réparation</h1>
+                                <h1>En cours de réparation</h1>
                                 <p>{CountAllPannesData?.EnReparation}</p>
                             </>
                         )
@@ -413,6 +483,48 @@ const HomePage = () => {
                                         <p>{`${item.averageRepairTime}`}</p>
                                     </div>
                                     <VisibilityIcon className='dashboard-view-card-item-icon' onClick={() => navigate(`/utilisateur/${item.technicianAssociation.code}`)}/>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
+                </div>
+            </div>
+            <div className="bottom-bar-dashboard-container">
+                <div className="bottom-bar-dashboard-card">
+                    {isTop4ActionLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top4Actionerror || Top4ActionData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top source</h1>
+                            {Top5SourceData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h2>{`${item.source}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
+                </div>
+                <div className="bottom-bar-dashboard-card">
+                    {isTop4ConsommationLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top4Consommationerror || Top4ConsommationData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top origine</h1>
+                            {Top5OrigineData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h2>{`${item.origine}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
                         </>

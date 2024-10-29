@@ -120,7 +120,7 @@ const HomePage = () => {
                                     </>
                                 :
                                 <>
-                                    <h1>En attente</h1>
+                                    <h1>En attente de réparation</h1>
                                     <p>{CountAllPannesByDayByDay?.EnAttente}</p>
                                 </>
                                 )
@@ -140,7 +140,7 @@ const HomePage = () => {
                                     </>
                                 :
                                     <>
-                                        <h1>En réparation</h1>
+                                        <h1>En cours de réparation</h1>
                                         <p>{CountAllPannesByDayByDay?.EnReparation}</p>
                                     </>
                                 )
@@ -202,7 +202,7 @@ const HomePage = () => {
                                 </>
                             :
                             <>
-                                <h1>En attente</h1>
+                                <h1>En attente de réparation</h1>
                                 <p>{CountAllPannesData?.EnAttente}</p>
                             </>
                             )
@@ -222,7 +222,7 @@ const HomePage = () => {
                                 </>
                             :
                                 <>
-                                    <h1>En réparation</h1>
+                                    <h1>En cours de réparation</h1>
                                     <p>{CountAllPannesData?.EnReparation}</p>
                                 </>
                             )
