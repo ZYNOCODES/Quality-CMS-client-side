@@ -152,15 +152,28 @@ const HomePage = () => {
     //count top 4 pannes
     const CountTop4Pannes = async () => {
         try{
-            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/panne`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${user?.token}`,
-                    },
-                }
-            );
+            let response;
+            if(dateRange.startDate != null && dateRange.endDate != null){
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/panne/count/?start=${dateRange.startDate}&end=${dateRange.endDate}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/panne`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }
             
 
             // Handle the error state
@@ -187,16 +200,28 @@ const HomePage = () => {
     //count top 4 action corrective
     const CountTop4Action = async () => {
         try{
-            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/action`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${user?.token}`,
-                    },
-                }
-            );
-            
+            let response;
+            if(dateRange.startDate != null && dateRange.endDate != null){
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/action/count/?start=${dateRange.startDate}&end=${dateRange.endDate}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/action`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }
 
             // Handle the error state
             if (!response.ok) {
@@ -222,16 +247,28 @@ const HomePage = () => {
     //count top 4 consommation PDR
     const CountTop4Consommation = async () => {
         try{
-            const response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/consommation`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${user?.token}`,
-                    },
-                }
-            );
-            
+            let response;
+            if(dateRange.startDate != null && dateRange.endDate != null){
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/consommation/count/?start=${dateRange.startDate}&end=${dateRange.endDate}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }else {
+                response = await fetch(import.meta.env.VITE_APP_URL_BASE+`/dashboard/top/consommation`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${user?.token}`,
+                        },
+                    }
+                );
+            }
 
             // Handle the error state
             if (!response.ok) {
@@ -326,10 +363,11 @@ const HomePage = () => {
     });
     // useEffect to refetch data when the date range changes
     useEffect(() => {
-        if (dateRange.startDate && dateRange.endDate) {
+        if ((dateRange.startDate && dateRange.endDate) || (!dateRange.startDate && !dateRange.endDate)) {
             CountAllPannesrefetch();
-        } else if (dateRange.startDate == null && dateRange.endDate == null) {
-            CountAllPannesrefetch();
+            Top4Pannesrefetch();
+            Top4Actionrefetch();
+            Top4Consommationrefetch();
         }
     }, [dateRange]);
 
@@ -492,48 +530,6 @@ const HomePage = () => {
             </div>
             <div className="bottom-bar-dashboard-container">
                 <div className="bottom-bar-dashboard-card">
-                    {isTop4ActionLoading ? 
-                        <div className="CircularProgress-container">
-                            <CircularProgress className='CircularProgress' />
-                        </div>
-                    : (Top4Actionerror || Top4ActionData.length <= 0 ? 
-                        <h1>Aucune donnée disponible</h1>
-                    :   
-                        <>
-                            <h1>Top source</h1>
-                            {Top5SourceData?.map((item, index) => (
-                                <div key={index} className="dashboard-view-card-item">
-                                    <h2>{`${item.source}`}</h2>
-                                    <h2>{`${item.count} fois`}</h2>
-                                </div>
-                            ))}
-                        </>
-                    )
-                    }
-                </div>
-                <div className="bottom-bar-dashboard-card">
-                    {isTop4ConsommationLoading ? 
-                        <div className="CircularProgress-container">
-                            <CircularProgress className='CircularProgress' />
-                        </div>
-                    : (Top4Consommationerror || Top4ConsommationData.length <= 0 ? 
-                        <h1>Aucune donnée disponible</h1>
-                    :   
-                        <>
-                            <h1>Top origine</h1>
-                            {Top5OrigineData?.map((item, index) => (
-                                <div key={index} className="dashboard-view-card-item">
-                                    <h2>{`${item.origine}`}</h2>
-                                    <h2>{`${item.count} fois`}</h2>
-                                </div>
-                            ))}
-                        </>
-                    )
-                    }
-                </div>
-            </div>
-            <div className="bottom-bar-dashboard-container">
-                <div className="bottom-bar-dashboard-card">
                     {isTop4PannesLoading ? 
                         <div className="CircularProgress-container">
                             <CircularProgress className='CircularProgress' />
@@ -587,6 +583,48 @@ const HomePage = () => {
                             {Top4ConsommationData?.map((item, index) => (
                                 <div key={index} className="dashboard-view-card-item">
                                     <h2>{`${item.pieceAssociation?.name}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
+                </div>
+            </div>
+            <div className="bottom-bar-dashboard-container">
+                <div className="bottom-bar-dashboard-card">
+                    {isTop5SourceLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top5Sourceerror || Top5SourceData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top source</h1>
+                            {Top5SourceData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h2>{`${item.source}`}</h2>
+                                    <h2>{`${item.count} fois`}</h2>
+                                </div>
+                            ))}
+                        </>
+                    )
+                    }
+                </div>
+                <div className="bottom-bar-dashboard-card">
+                    {isTop5OrigineLoading ? 
+                        <div className="CircularProgress-container">
+                            <CircularProgress className='CircularProgress' />
+                        </div>
+                    : (Top5Origineerror || Top5OrigineData.length <= 0 ? 
+                        <h1>Aucune donnée disponible</h1>
+                    :   
+                        <>
+                            <h1>Top origine</h1>
+                            {Top5OrigineData?.map((item, index) => (
+                                <div key={index} className="dashboard-view-card-item">
+                                    <h2>{`${item.origine}`}</h2>
                                     <h2>{`${item.count} fois`}</h2>
                                 </div>
                             ))}
