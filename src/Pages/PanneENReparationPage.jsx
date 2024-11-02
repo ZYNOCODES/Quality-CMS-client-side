@@ -275,25 +275,6 @@ const EnReparationPanne = () => {
             },
         },
         {
-            name: "isPaused",
-            label: " ",
-            options: {
-                display: true,
-                filter: true,
-                sort: false,
-                customFilterListOptions: { render: v => `${v ? 'Oui' : 'Non'}` },
-                customBodyRender: (value) => {
-                    return <div style={{
-                        width: '30px',
-                        height: '30px',
-                        backgroundColor: value ? '#fe0000' : '#fe9800',
-                        padding: '5px',
-                        borderRadius: '100%',
-                    }}></div>;
-                },
-            },
-        }, 
-        {
             name: "dateDeclaration",
             label: "Date de declaration",
             options: {
@@ -316,6 +297,25 @@ const EnReparationPanne = () => {
                 },
             },
         },
+        {
+            name: "isPaused",
+            label: " ",
+            options: {
+                display: true,
+                filter: true,
+                sort: false,
+                customFilterListOptions: { render: v => `${v ? 'Oui' : 'Non'}` },
+                customBodyRender: (value) => {
+                    return <div style={{
+                        width: '30px',
+                        height: '30px',
+                        backgroundColor: value ? '#fe0000' : '#fe9800',
+                        padding: '5px',
+                        borderRadius: '100%',
+                    }}></div>;
+                },
+            },
+        }, 
         {
             name: "code",
             label: " ",

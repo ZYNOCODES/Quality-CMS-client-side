@@ -54,6 +54,7 @@ const HomePage = () => {
         queryFn: CountAllPannes,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+        refetchInterval: 5000,
     });
 
     //count all pannes API
@@ -92,6 +93,7 @@ const HomePage = () => {
         queryFn: CountAllPannesByDay,
         enabled: !!user?.token, // Ensure the query runs only if the user is authenticated
         refetchOnWindowFocus: true, // Optional: prevent refetching on window focus
+        refetchInterval: 5000,
     });
 
     return (
